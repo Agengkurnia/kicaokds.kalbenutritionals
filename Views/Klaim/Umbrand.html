@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Klaim Umbrand | KICAO KDS</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+</head>
+<body style="background:#ecf0f5; padding:10px;">
+    <div id="app-content">
+        <section class="content-header">
+            <h1>Klaim Umbrand <small>Alokasi Umbrand</small></h1>
+        </section>
+        <section class="content">
+            <div class="box box-primary">
+                <div class="box-header with-border text-right">
+                    <button id="btnOK" class="btn btn-success"><i class="fa fa-floppy-o"></i> OK</button>
+                    <button id="btnCancel" class="btn btn-warning"><i class="fa fa-refresh"></i> Cancel</button>
+                </div>
+                <div class="box-body">
+                    <div class="row-form">
+                        <div class="col-md-2"><label class="control-label">Total Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_INVOICE_AMT</b>"></i></label></div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control text-right" id="txtTotalAmount" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel with-nav-tabs panel-default">
+                <div class="panel-heading">
+                    <ul class="nav nav-tabs"><li class="active"><a href="#tabUmbrand" data-toggle="tab">Umbrand</a></li></ul>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tabUmbrand">
+                            <table id="dtUmbrand" class="table table-condensed table-striped table-hover table-bordered">
+                                <thead>
+                                    <tr style="background:#36752d;color:white;">
+                                        <th>No</th>
+                                        <th>Umbrand Name <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_UMB</b><br>Field: <b>TXT_UMBRAND</b>"></i></th>
+                                        <th>Brand <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_UMB</b><br>Field: <b>TXT_BRAND</b>"></i></th>
+                                        <th>All Subbrand <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_UMB</b><br>Field: <b>BIT_ALL_SUBRAND</b>"></i></th>
+                                        <th style="text-align:right;">Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_UMB</b><br>Field: <b>DEC_AMOUNT</b>"></i></th>
+                                        <th>Subbrand <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_BRAN</b> (via Allocation)"></i></th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dtUmbrandBody"></tbody>
+                            </table>
+                            <div class="text-right" style="margin-top:10px;">
+                                <button class="btn btn-warning" id="btnAddUmbrand">Add Row</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="../../Scripts/customs/prototype/klaim-prototype.js"></script>
+    <script>
+        let basePath, detailIndex, claimData, umbRows = [];
+
+        const MOCK_UMBRAND = [
+            { umbrand: 'MILNA', brand: 'MILNA UHT' },
+            { umbrand: 'CHILKID', brand: 'CHILKID GOLD' },
+            { umbrand: 'Prenagen', brand: 'Prenagen Mommy' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            basePath = klaimDetectBasePath();
+            klaimLoadBlankAssets(basePath);
+            await klaimLoadBlankScripts(basePath);
+
+            detailIndex = parseInt(klaimGetQueryParam('intIndex') || '0', 10);
+            claimData = klaimGetData() || klaimDefaultClaimData();
+            const dtl = klaimEnsureDetail(claimData, detailIndex);
+
+            document.getElementById('txtTotalAmount').value = klaimFormatCurrency(dtl.DEC_INVOICE_AMT || 0);
+
+            if (dtl.XXSHP_KDS_T_KLAIM_UMB && dtl.XXSHP_KDS_T_KLAIM_UMB.length) {
+                umbRows = dtl.XXSHP_KDS_T_KLAIM_UMB.map(u => ({
+                    TXT_UMBRAND: u.TXT_UMBRAND || '',
+                    TXT_BRAND: u.TXT_BRAND || '',
+                    BIT_ALL_SUBRAND: u.BIT_ALL_SUBRAND === 'Y',
+                    DEC_AMOUNT: u.DEC_AMOUNT || 0,
+                    XXSHP_KDS_T_KLAIM_BRAN: u.XXSHP_KDS_T_KLAIM_BRAN || []
+                }));
+            } else {
+                umbRows = [{ TXT_UMBRAND: 'MILNA', TXT_BRAND: 'MILNA UHT', BIT_ALL_SUBRAND: false, DEC_AMOUNT: dtl.DEC_INVOICE_AMT || 0, XXSHP_KDS_T_KLAIM_BRAN: [] }];
+            }
+
+            renderTable();
+            document.getElementById('btnAddUmbrand').onclick = addRow;
+            document.getElementById('btnOK').onclick = handleOK;
+            document.getElementById('btnCancel').onclick = () => window.parent.$('#klaimPopupModal').modal('hide');
+            $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+        });
+
+        function renderTable() {
+            const tbody = document.getElementById('dtUmbrandBody');
+            tbody.innerHTML = '';
+            umbRows.forEach((row, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align:center;">${i + 1}</td>
+                    <td>
+                        <select class="form-control input-sm" onchange="updateUmbrand(${i}, this.value)">
+                            ${MOCK_UMBRAND.map(m => `<option value="${m.umbrand}" ${row.TXT_UMBRAND === m.umbrand ? 'selected' : ''}>${m.umbrand}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td><input class="form-control input-sm" value="${row.TXT_BRAND}" onchange="umbRows[${i}].TXT_BRAND=this.value"></td>
+                    <td style="text-align:center;"><input type="checkbox" ${row.BIT_ALL_SUBRAND ? 'checked' : ''} onchange="umbRows[${i}].BIT_ALL_SUBRAND=this.checked"></td>
+                    <td><input class="form-control input-sm text-right" value="${klaimFormatCurrency(row.DEC_AMOUNT)}" onchange="umbRows[${i}].DEC_AMOUNT=klaimCleanNumber(this.value); renderTable()"></td>
+                    <td><button class="btn btn-info btn-xs" onclick="openBrand(${i})"><i class="fa fa-sitemap"></i> Subbrand</button></td>
+                    <td style="text-align:center;"><button class="btn btn-danger btn-xs" onclick="deleteRow(${i})"><i class="fa fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateUmbrand(i, val) {
+            const found = MOCK_UMBRAND.find(m => m.umbrand === val);
+            umbRows[i].TXT_UMBRAND = val;
+            if (found) umbRows[i].TXT_BRAND = found.brand;
+            renderTable();
+        }
+
+        function addRow() {
+            umbRows.push({ TXT_UMBRAND: 'MILNA', TXT_BRAND: 'MILNA UHT', BIT_ALL_SUBRAND: false, DEC_AMOUNT: 0, XXSHP_KDS_T_KLAIM_BRAN: [] });
+            renderTable();
+        }
+
+        function deleteRow(i) {
+            bootbox.confirm('Delete this umbrand row?', res => { if (res) { umbRows.splice(i, 1); renderTable(); } });
+        }
+
+        function openBrand(umbIndex) {
+            const dtl = klaimEnsureDetail(claimData, detailIndex);
+            dtl.XXSHP_KDS_T_KLAIM_UMB = umbRows.map(r => ({
+                TXT_UMBRAND: r.TXT_UMBRAND,
+                TXT_BRAND: r.TXT_BRAND,
+                BIT_ALL_SUBRAND: r.BIT_ALL_SUBRAND ? 'Y' : 'N',
+                DEC_AMOUNT: r.DEC_AMOUNT,
+                XXSHP_KDS_T_KLAIM_BRAN: r.XXSHP_KDS_T_KLAIM_BRAN || []
+            }));
+            klaimSetData(claimData);
+            const url = `${basePath}Views/Klaim/Brand.html?intIndex=${umbIndex}&intDetailIndex=${detailIndex}`;
+            window.parent.openKlaimPopup(url, 'Klaim Brand');
+        }
+
+        function handleOK() {
+            const dtl = klaimEnsureDetail(claimData, detailIndex);
+            dtl.XXSHP_KDS_T_KLAIM_UMB = umbRows.map(r => ({
+                TXT_UMBRAND: r.TXT_UMBRAND,
+                TXT_BRAND: r.TXT_BRAND,
+                BIT_ALL_SUBRAND: r.BIT_ALL_SUBRAND ? 'Y' : 'N',
+                DEC_AMOUNT: r.DEC_AMOUNT,
+                XXSHP_KDS_T_KLAIM_BRAN: r.XXSHP_KDS_T_KLAIM_BRAN || []
+            }));
+            klaimSetData(claimData);
+            klaimNotifyParent();
+            window.parent.$('#klaimPopupModal').modal('hide');
+        }
+    </script>
+</body>
+</html>

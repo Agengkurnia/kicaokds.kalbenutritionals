@@ -121,20 +121,77 @@ class Layout {
     }
 
     async loadScript(src) {
+        if (src.includes('jquery-3.2.1.js') && window.jQuery) {
+            console.log('Skipping jQuery load, already exists');
+            return;
+        }
+        if (src.includes('bootstrap.js') && window.jQuery && window.jQuery.fn && window.jQuery.fn.modal) {
+            console.log('Skipping Bootstrap load, already exists');
+            return;
+        }
+        if (src.includes('bootstrap-datepicker.js') && window.jQuery && window.jQuery.fn && window.jQuery.fn.datepicker) {
+            console.log('Skipping Datepicker load, already exists');
+            return;
+        }
+        if (src.includes('moment.min.js') && window.moment) {
+            console.log('Skipping Moment load, already exists');
+            return;
+        }
+        if (src.includes('bootbox.min.js') && window.bootbox) {
+            console.log('Skipping Bootbox load, already exists');
+            return;
+        }
+        if (src.includes('autoNumeric.js') && window.jQuery && window.jQuery.fn && window.jQuery.fn.autoNumeric) {
+            console.log('Skipping AutoNumeric load, already exists');
+            return;
+        }
+
         return new Promise((resolve, reject) => {
             const fullSrc = this.basePath + src;
             if (document.querySelector(`script[src="${fullSrc}"]`)) {
+                console.log('Script tag already in DOM:', fullSrc);
                 resolve();
                 return;
             }
+
+            const prevJQuery = window.jQuery;
+            const prevS = window.$;
+
             const script = document.createElement('script');
             script.src = fullSrc;
-            script.onload = resolve;
+            script.onload = () => {
+                console.log('Loaded script:', fullSrc, 
+                    '| jQuery:', !!window.jQuery, 
+                    '| datepicker:', !!(window.jQuery && window.jQuery.fn && window.jQuery.fn.datepicker),
+                    '| modal:', !!(window.jQuery && window.jQuery.fn && window.jQuery.fn.modal)
+                );
+
+                if (prevJQuery && window.jQuery && window.jQuery !== prevJQuery) {
+                    console.warn('jQuery was overwritten by script:', fullSrc, '. Restoring and merging plugins.');
+                    try {
+                        for (const key in window.jQuery.fn) {
+                            if (window.jQuery.fn.hasOwnProperty(key) && 
+                                key !== 'constructor' && 
+                                key !== 'init' && 
+                                key !== 'jquery' && 
+                                key !== 'selector') {
+                                prevJQuery.fn[key] = window.jQuery.fn[key];
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Failed to merge jQuery plugins:', err);
+                    }
+                    window.jQuery = prevJQuery;
+                    window.$ = prevS;
+                }
+
+                resolve();
+            };
             script.onerror = (e) => {
                 console.error('Failed to load script:', fullSrc);
                 resolve(); // resolve anyway to avoid breaking chain
             };
-            document.body.appendChild(script);
+            document.head.appendChild(script);
         });
     }
 
@@ -327,7 +384,7 @@ class Layout {
             $('#menu-master-budget').addClass('active').closest('.treeview').addClass('active menu-open');
         } else if (path.includes('RFA/Index.html')) {
             $('#menu-tr-rfa').addClass('active').closest('.treeview').addClass('active menu-open');
-        } else if (path.includes('Klaim/Index.html')) {
+        } else if (path.includes('Klaim/')) {
             $('#menu-tr-klaim').addClass('active').closest('.treeview').addClass('active menu-open');
         } else {
             $('#menu-beranda').addClass('active');

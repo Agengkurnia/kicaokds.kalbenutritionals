@@ -6,6 +6,49 @@
     <link rel="icon" href="../../favicon.ico" type="image/x-icon">
     <title>Form Klaim | KICAO KDS</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <style>
+        /* Adjust LOV modals layout to match Fancybox iframe style */
+        #lovGroupAccountModal .modal-dialog,
+        #lovPartnerModal .modal-dialog,
+        #lovOutletModal .modal-dialog {
+            margin: 15px auto !important;
+            width: 90% !important;
+            max-width: 1100px !important;
+        }
+        #lovGroupAccountModal .modal-content,
+        #lovPartnerModal .modal-content,
+        #lovOutletModal .modal-content {
+            min-height: 550px;
+            border-radius: 0 !important;
+            box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        }
+        /* Style headers of tables in LOVs to match production exactly */
+        #lovGroupAccountModal table thead tr,
+        #lovPartnerModal table thead tr,
+        #lovOutletModal table thead tr {
+            background-color: #36752d !important;
+            color: #ffffff !important;
+        }
+        #lovGroupAccountModal table thead tr td,
+        #lovPartnerModal table thead tr td,
+        #lovOutletModal table thead tr td {
+            color: #ffffff !important;
+            border-bottom: 2px solid #36752d !important;
+        }
+        /* Style table rows inside LOV tables to have the light green background */
+        #lovGroupAccountModal table tbody tr td,
+        #lovPartnerModal table tbody tr td,
+        #lovOutletModal table tbody tr td {
+            background-color: #eefceb !important;
+            border-top: 1px solid #dcdcdc !important;
+        }
+        /* Hover effect on LOV rows */
+        #lovGroupAccountModal table tbody tr:hover td,
+        #lovPartnerModal table tbody tr:hover td,
+        #lovOutletModal table tbody tr:hover td {
+            background-color: #dff0d8 !important;
+        }
+    </style>
 </head>
 <body>
     <div id="app-content">
@@ -54,7 +97,7 @@
                                 <div class="row">
                                     <div class="row-form">
                                         <div class="col-md-2">
-                                            <label id="lblID" class="control-label">ID</label>
+                                            <label id="lblID" class="control-label">ID / Doc No <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Fields: <b>INT_KLAIM_HDR_ID</b> (ID), <b>TXT_DOC_NO</b> (Doc No)"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="input-group">
@@ -66,7 +109,7 @@
                                         </div>
                                         <div class="col-md-1"></div>
                                         <div class="col-md-1">
-                                            <label id="lblDate" class="control-label">Date</label>
+                                            <label id="lblDate" class="control-label">Date <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Field: <b>CREATION_DATE</b>"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" class="form-control" style="width:100px;" id="dtmDate" disabled>
@@ -76,14 +119,14 @@
                                 <div class="row">
                                     <div class="row-form">
                                         <div class="col-md-2">
-                                            <label class="control-label">Doc No MKPP</label>
+                                            <label class="control-label">Doc No MKPP <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Field: <b>TXT_DOCNO_MKPP</b>"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" class="form-control" id="txtDocNoMkpp" disabled placeholder="-">
                                         </div>
                                         <div class="col-md-1"></div>
                                         <div class="col-md-1">
-                                            <label id="lblStatus" class="control-label">Status</label>
+                                            <label id="lblStatus" class="control-label">Status <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Field: <b>TXT_STATUSFLOW</b>"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <label id="lblStatusFlow" class="control-label text-blue" style="font-size: 16px;">NEW</label>
@@ -93,7 +136,7 @@
                                 <div class="row">
                                     <div class="row-form">
                                         <div class="col-md-2">
-                                            <label class="control-label">Group Account</label>
+                                            <label class="control-label">Group Account <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Field: <b>TXT_GROUP_ACCOUNT</b><br>Master: <b>XXSHP_KPP_VENDOR_SITE_ALL_V</b>"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="input-group">
@@ -105,12 +148,12 @@
                                         </div>
                                         <div class="col-md-1"></div>
                                         <div class="col-md-1">
-                                            <label class="control-label">Partner</label>
+                                            <label class="control-label">Partner <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Field: <b>TXT_PARTNER</b>"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="input-group">
                                                 <div class="input-group-btn">
-                                                    <button type="button" class="btn btn-danger" id="btnLOVPartner" onclick="openPartnerLov()"> <i class="fa fa-search"></i></button>
+                                                    <button type="button" class="btn btn-danger" id="btnLOVPartner" onclick="openPartnerLov()" style="display: none;"> <i class="fa fa-search"></i></button>
                                                 </div>
                                                 <input type="text" class="form-control" id="txtPartner" disabled placeholder="Partner Name">
                                             </div>
@@ -120,7 +163,7 @@
                                 <div class="row">
                                     <div class="row-form">
                                         <div class="col-md-2">
-                                            <label class="control-label">Outlet</label>
+                                            <label class="control-label">Outlet <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: N/A (Derived)<br>Resolved from <b>XXSHP_KDS_M_KSUP_DTL</b> based on Group Account"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="input-group">
@@ -132,7 +175,7 @@
                                         </div>
                                         <div class="col-md-1"></div>
                                         <div class="col-md-1">
-                                            <label class="control-label">Supplier Site</label>
+                                            <label class="control-label">Supplier Site <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Fields: <b>INT_SUPPLIER_SITE_ID</b> (ID), <b>TXT_SUPPLIER_SITE_NAME</b> (Name)"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="input-group">
@@ -147,14 +190,14 @@
                                 <div class="row">
                                     <div class="row-form">
                                         <div class="col-md-2">
-                                            <label class="control-label">Supplier Code</label>
+                                            <label class="control-label">Supplier Code <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Field: <b>TXT_SUPPLIER_CODE</b>"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" class="form-control" id="txtSupplierCode" disabled placeholder="Supplier Code">
                                         </div>
                                         <div class="col-md-1"></div>
                                         <div class="col-md-1">
-                                            <label class="control-label">Branch</label>
+                                            <label class="control-label">Branch <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Field: <b>TXT_BRANCH</b>"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" class="form-control" id="txtBranchName" disabled placeholder="Branch Name">
@@ -164,7 +207,7 @@
                                 <div class="row">
                                     <div class="row-form">
                                         <div class="col-md-2">
-                                            <label class="control-label">Supplier Name</label>
+                                            <label class="control-label">Supplier Name <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Fields: <b>INT_SUPPLIER_ID</b> (ID), <b>TXT_SUPPLIER_NAME</b> (Name)"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="input-group">
@@ -176,7 +219,7 @@
                                         </div>
                                         <div class="col-md-1"></div>
                                         <div class="col-md-1">
-                                            <label class="control-label">Source</label>
+                                            <label class="control-label">Source <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Field: <b>TXT_SOURCE_DOC</b>"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" class="form-control" id="txtSourceDoc" disabled value="PORTAL KDS">
@@ -186,7 +229,7 @@
                                 <div class="row">
                                     <div class="row-form">
                                         <div class="col-md-2">
-                                            <label class="control-label">Remark</label>
+                                            <label class="control-label">Remark <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Field: <b>TXT_REMARK</b>"></i></label>
                                         </div>
                                         <div class="col-md-4">
                                             <textarea id="txtRemark" rows="3" class="form-control text-uppercase" placeholder="Enter remarks..."></textarea>
@@ -196,7 +239,7 @@
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="row-form">
                                         <div class="col-md-2">
-                                            <label class="control-label">Ready to Submit</label>
+                                            <label class="control-label">Ready to Submit <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_HDR</b><br>Fields: <b>BIT_READY_SUBMIT</b> (Flag), <b>TXT_REASON_READY_SUBMIT</b> (Note)"></i></label>
                                         </div>
                                         <div class="col-md-4" style="display:flex; gap: 15px;">
                                             <label style="font-weight:normal; cursor:pointer;"><input type="radio" id="rdoReadySubmitYes" name="ReadySubmit" value="Y"> Yes</label>
@@ -223,30 +266,30 @@
                                 <table id="dtDetail" class="table table-condensed table-striped table-hover table-bordered" style="min-width: 1800px;">
                                     <thead>
                                         <tr style="background: #36752d; color: white;">
-                                            <th style="width:40px; text-align:center;">No</th>
-                                            <th style="width:120px;">Activity</th>
-                                            <th style="width:250px;">Program Desc</th>
-                                            <th style="width:120px;">Period From</th>
-                                            <th style="width:120px;">To</th>
-                                            <th style="width:120px;">Invoice No</th>
-                                            <th style="width:120px;">Invoice Date</th>
-                                            <th style="width:150px;">Faktur Pajak No</th>
-                                            <th style="width:120px;">Faktur Pajak Date</th>
-                                            <th style="width:130px; text-align:right;">Invoice Amount</th>
-                                            <th style="width:120px;">PPH Type</th>
-                                            <th style="width:80px; text-align:right;">Tarif PPH(%)</th>
-                                            <th style="width:110px; text-align:right;">PPH Amount</th>
-                                            <th style="width:130px; text-align:right;">Final Amount</th>
-                                            <th style="width:110px;">PPN Type</th>
-                                            <th style="width:110px; text-align:right;">PPN Amount</th>
-                                            <th style="width:130px; text-align:right;">Total Amount</th>
-                                            <th style="width:80px; text-align:center;">All Brand</th>
-                                            <th style="width:80px; text-align:center;">Umbrand</th>
-                                            <th style="width:150px;">Attachment</th>
-                                            <th style="width:60px; text-align:center;">Delete</th>
-                                            <th style="width:100px;">Status</th>
-                                            <th style="width:150px;">Description</th>
-                                            <th style="width:70px; text-align:center;">Include</th>
+                                             <th style="width:40px; text-align:center;">No</th>
+                                             <th style="width:120px;">Activity <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_ACTIVITY</b><br>Master: <b>XXSHP_KDS_M_PRM_DTL</b>"></i></th>
+                                             <th style="width:250px;">Program Desc <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_PROGRAM_DESC</b><br>Master: <b>XXSHP_KDS_M_PRM_HDR</b>"></i></th>
+                                             <th style="width:120px;">Period From <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_PERIOD_FROM</b>"></i></th>
+                                             <th style="width:120px;">To <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_PERIOD_TO</b>"></i></th>
+                                             <th style="width:120px;">Invoice No <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_INVOICE_NO</b>"></i></th>
+                                             <th style="width:120px;">Invoice Date <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_INVOICE</b>"></i></th>
+                                             <th style="width:150px;">Faktur Pajak No <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_FKT_PJK_NO</b>"></i></th>
+                                             <th style="width:120px;">Faktur Pajak Date <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_FKT_PJK</b>"></i></th>
+                                             <th style="width:130px; text-align:right;">Invoice Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_INVOICE_AMT</b>"></i></th>
+                                             <th style="width:120px;">PPH Type <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_PPH_JENIS</b><br>Master: <b>XXSHP_KDS_M_PPH_HDR</b>"></i></th>
+                                             <th style="width:80px; text-align:right;">Tarif PPH(%) <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_PERSEN_PPH</b>"></i></th>
+                                             <th style="width:110px; text-align:right;">PPH Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_PPH</b>"></i></th>
+                                             <th style="width:130px; text-align:right;">Final Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Calculated field:<br><b>DEC_INVOICE_AMT - DEC_PPH</b>"></i></th>
+                                             <th style="width:110px;">PPN Type <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_PPNTAXRATE_CODE</b>"></i></th>
+                                             <th style="width:110px; text-align:right;">PPN Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_PPN</b>"></i></th>
+                                             <th style="width:130px; text-align:right;">Total Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Calculated field:<br><b>Final Amount + DEC_PPN</b>"></i></th>
+                                             <th style="width:80px; text-align:center;">All Brand <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>BIT_ALLBRAND</b>"></i></th>
+                                             <th style="width:80px; text-align:center;">Umbrand <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_UMB</b><br>Field: <b>TXT_UMBRAND</b> (via Allocation)"></i></th>
+                                             <th style="width:150px;">Attachment <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL_ATT</b>"></i></th>
+                                             <th style="width:60px; text-align:center;">Delete</th>
+                                             <th style="width:100px;">Status <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_STATUSKLAIM</b>"></i></th>
+                                             <th style="width:150px;">Description <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_STATUS_DESC</b>"></i></th>
+                                             <th style="width:70px; text-align:center;">Include <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>BIT_INCLUDE</b>"></i></th>
                                         </tr>
                                     </thead>
                                     <tbody id="dtBodyKlaim">
@@ -270,116 +313,236 @@
         </section>
 
         <!-- Group Account LOV -->
-        <div class="modal fade" id="lovGroupAccountModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+        <div class="modal" id="lovGroupAccountModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" style="width:90%; max-width:1100px;" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Select Group Account</h4>
+                    <div class="modal-header" style="background-color:#00a65a; color:white; border-bottom: none;">
+                        <button type="button" class="close" data-dismiss="modal" style="color:white; opacity:1;">&times;</button>
+                        <h4 class="modal-title" style="color:white; font-weight:bold;">List Of Value</h4>
                     </div>
-                    <div class="modal-body">
-                        <table class="table table-bordered table-striped table-hover">
+                    <div class="modal-body" style="padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px;">
+                            <div>
+                                Show 
+                                <select class="form-control input-sm" style="display: inline-block; width: auto; height: 30px; padding: 5px 10px;">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div>
+                                Search: <input type="text" class="form-control input-sm" style="display: inline-block; width: 180px; height: 30px; padding: 5px 10px;" placeholder="">
+                            </div>
+                        </div>
+
+                        <table class="table table-condensed table-hover" style="width: 100%;">
                             <thead>
-                                <tr style="background: #36752d; color: white;">
-                                    <th>Account Name</th>
-                                    <th>Supplier Code</th>
-                                    <th>Select</th>
+                                <tr>
+                                    <td><div style="font-weight:bold">Pilih</div></td>
+                                    <td><div style="font-weight:bold">Group Account</div></td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>KALBE DISTRIBUTOR SYSTEM</td>
-                                    <td>SPL-KDS-001</td>
-                                    <td><button class="btn btn-xs btn-success" onclick="selectGroupAccount('KALBE DISTRIBUTOR SYSTEM', 'SPL-KDS-001', 'PT KALBE KDS HO', 'SITE-HO-JKT')">Select</button></td>
+                                    <td><button class="btn btn-default btn-xs" onclick="selectGroupAccount('BRAVO', 'SPL-BRAVO-001', 'PT SANGHIANG PERKASA', 'SITE-BRAVO')">Pilih</button></td>
+                                    <td>BRAVO</td>
                                 </tr>
                                 <tr>
-                                    <td>MILNA DISTRIBUTOR ACC</td>
-                                    <td>SPL-MIL-002</td>
-                                    <td><button class="btn btn-xs btn-success" onclick="selectGroupAccount('MILNA DISTRIBUTOR ACC', 'SPL-MIL-002', 'PT MILNA INDO', 'SITE-MILNA')">Select</button></td>
+                                    <td><button class="btn btn-default btn-xs" onclick="selectGroupAccount('ENSEVAL', 'SPL-ENSEVAL-002', 'PT SANGHIANG PERKASA', 'SITE-ENSEVAL')">Pilih</button></td>
+                                    <td>ENSEVAL</td>
+                                </tr>
+                                <tr>
+                                    <td><button class="btn btn-default btn-xs" onclick="selectGroupAccount('KMMD', 'SPL-KMMD-003', 'PT SANGHIANG PERKASA', 'SITE-KMMD')">Pilih</button></td>
+                                    <td>KMMD</td>
+                                </tr>
+                                <tr>
+                                    <td><button class="btn btn-default btn-xs" onclick="selectGroupAccount('RM VI JATENG', 'SPL-RM6-004', 'PT SANGHIANG PERKASA', 'SITE-RM6')">Pilih</button></td>
+                                    <td>RM VI JATENG</td>
                                 </tr>
                             </tbody>
                         </table>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 13px;">
+                            <div class="lov-info">
+                                Showing 1 to 4 of 4 entries
+                            </div>
+                            <div>
+                                <ul class="pagination pagination-sm" style="margin: 0;">
+                                    <li class="disabled"><a href="#">Previous</a></li>
+                                    <li class="active"><a href="#">1</a></li>
+                                    <li class="disabled"><a href="#">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Partner LOV -->
-        <div class="modal fade" id="lovPartnerModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+        <div class="modal" id="lovPartnerModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" style="width:90%; max-width:1100px;" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Select Partner</h4>
+                    <div class="modal-header" style="background-color:#00a65a; color:white; border-bottom: none;">
+                        <button type="button" class="close" data-dismiss="modal" style="color:white; opacity:1;">&times;</button>
+                        <h4 class="modal-title" style="color:white; font-weight:bold;">List Of Value</h4>
                     </div>
-                    <div class="modal-body">
-                        <table class="table table-bordered table-striped table-hover">
+                    <div class="modal-body" style="padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px;">
+                            <div>
+                                Show 
+                                <select class="form-control input-sm" style="display: inline-block; width: auto; height: 30px; padding: 5px 10px;">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div>
+                                Search: <input type="text" class="form-control input-sm" style="display: inline-block; width: 180px; height: 30px; padding: 5px 10px;" placeholder="">
+                            </div>
+                        </div>
+
+                        <table class="table table-condensed table-hover" style="width: 100%;">
                             <thead>
-                                <tr style="background: #36752d; color: white;">
-                                    <th>Partner ID</th>
-                                    <th>Partner Name</th>
-                                    <th>Select</th>
+                                <tr>
+                                    <td><div style="font-weight:bold">Pilih</div></td>
+                                    <td><div style="font-weight:bold">SITE</div></td>
+                                    <td><div style="font-weight:bold">BRANCH NAME</div></td>
+                                    <td><div style="font-weight:bold">SUPPLIER NAME</div></td>
+                                    <td><div style="font-weight:bold">GROUP ACCOUNT</div></td>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>PRT-01</td>
-                                    <td>PT ENSVAL PUTRA MEGASURYA</td>
-                                    <td><button class="btn btn-xs btn-success" onclick="selectPartner('PT ENSVAL PUTRA MEGASURYA')">Select</button></td>
-                                </tr>
-                                <tr>
-                                    <td>PRT-02</td>
-                                    <td>PT TIGARAKSA SATRIA TBK</td>
-                                    <td><button class="btn btn-xs btn-success" onclick="selectPartner('PT TIGARAKSA SATRIA TBK')">Select</button></td>
-                                </tr>
+                            <tbody id="lovPartnerTableBody">
+                                <!-- Dynamically populated based on Group Account -->
                             </tbody>
                         </table>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 13px;">
+                            <div class="lov-info">
+                                Showing 0 to 0 of 0 entries
+                            </div>
+                            <div>
+                                <ul class="pagination pagination-sm" style="margin: 0;">
+                                    <li class="disabled"><a href="#">Previous</a></li>
+                                    <li class="active"><a href="#">1</a></li>
+                                    <li class="disabled"><a href="#">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Outlet LOV -->
-        <div class="modal fade" id="lovOutletModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+        <div class="modal" id="lovOutletModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" style="width:90%; max-width:1100px;" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#00a65a; color:white; border-bottom: none;">
+                        <button type="button" class="close" data-dismiss="modal" style="color:white; opacity:1;">&times;</button>
+                        <h4 class="modal-title" style="color:white; font-weight:bold;">List Of Value</h4>
+                    </div>
+                    <div class="modal-body" style="padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px;">
+                            <div>
+                                Show 
+                                <select class="form-control input-sm" style="display: inline-block; width: auto; height: 30px; padding: 5px 10px;">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div>
+                                Search: <input type="text" class="form-control input-sm" style="display: inline-block; width: 180px; height: 30px; padding: 5px 10px;" placeholder="">
+                            </div>
+                        </div>
+
+                        <table class="table table-condensed table-hover" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <td><div style="font-weight:bold">Pilih</div></td>
+                                    <td><div style="font-weight:bold">SITE</div></td>
+                                    <td><div style="font-weight:bold">SUPPLIER ID</div></td>
+                                    <td><div style="font-weight:bold">SUPPLIER NAME</div></td>
+                                    <td><div style="font-weight:bold">BRANCH</div></td>
+                                </tr>
+                            </thead>
+                            <tbody id="lovOutletTableBody">
+                                <!-- Dynamically populated based on Group Account -->
+                            </tbody>
+                        </table>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 13px;">
+                            <div class="lov-info">
+                                Showing 0 to 0 of 0 entries
+                            </div>
+                            <div>
+                                <ul class="pagination pagination-sm" style="margin: 0;">
+                                    <li class="disabled"><a href="#">Previous</a></li>
+                                    <li class="active"><a href="#">1</a></li>
+                                    <li class="disabled"><a href="#">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popup iframe modal (menggantikan fancybox di MVC) -->
+        <div class="modal" id="klaimPopupModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" style="width:90%; max-width:1100px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Select Outlet</h4>
+                        <h4 class="modal-title" id="klaimPopupTitle">Klaim</h4>
                     </div>
-                    <div class="modal-body">
-                        <table class="table table-bordered table-striped table-hover">
-                            <thead>
-                                <tr style="background: #36752d; color: white;">
-                                    <th>Outlet Code</th>
-                                    <th>Outlet Name</th>
-                                    <th>Branch</th>
-                                    <th>Select</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>OUT-001</td>
-                                    <td>APOTEK HIDUP SEHAT JAKARTA</td>
-                                    <td>JAKARTA HO</td>
-                                    <td><button class="btn btn-xs btn-success" onclick="selectOutlet('APOTEK HIDUP SEHAT JAKARTA', 'JAKARTA HO')">Select</button></td>
-                                </tr>
-                                <tr>
-                                    <td>OUT-002</td>
-                                    <td>GUARDIAN GIANT MALL SURABAYA</td>
-                                    <td>SURABAYA BRANCH</td>
-                                    <td><button class="btn btn-xs btn-success" onclick="selectOutlet('GUARDIAN GIANT MALL SURABAYA', 'SURABAYA BRANCH')">Select</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="modal-body" style="padding:0;">
+                        <iframe id="klaimPopupFrame" style="width:100%; height:520px; border:none;"></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="../../Scripts/customs/prototype/klaim-prototype.js"></script>
     <script src="../../Scripts/layout.js"></script>
     <script>
+        // Enriched Data Arrays
+        const partnersData = [
+            {"site": "ENSEVAL PUTERA MEGATRADING, TBK PT BEKASI", "branch": "BEKASI", "supplier_name": "ENSEVAL PUTERA MEGATRADING, TBK PT", "group_account": "ENSEVAL", "code": "1709", "supplier_id": "1709", "site_id": "4698", "supplier_site_name": "NAN-KDS-EPM1A"},
+            {"site": "ENSEVAL PUTERA MEGATRADING, TBK PT ACEH", "branch": "ACEH", "supplier_name": "ENSEVAL PUTERA MEGATRADING, TBK PT", "group_account": "ENSEVAL", "code": "1709", "supplier_id": "1709", "site_id": "4698", "supplier_site_name": "NAN-KDS-EPM1A"},
+            {"site": "ENSEVAL PUTERA MEGATRADING, TBK PT", "branch": "JAKARTA 1", "supplier_name": "ENSEVAL PUTERA MEGATRADING, TBK PT", "group_account": "ENSEVAL", "code": "1709", "supplier_id": "1709", "site_id": "4698", "supplier_site_name": "NAN-KDS-EPM1A"},
+            {"site": "AGUS JUSAK KURNIAWAN (UD AJEKA ADITAMA DISTRIBUSINDO)", "branch": "JAKARTA 1", "supplier_name": "AGUS JUSAK KURNIAWAN (UD AJEKA ADITAMA DISTRIBUSINDO)", "group_account": "KMMD", "code": "3102", "supplier_id": "3102", "site_id": "5001", "supplier_site_name": "NAN-KDS-AJEKA"},
+            {"site": "AL IQBAL (PERMATA BUNDA MART)", "branch": "JAKARTA 1", "supplier_name": "AL IQBAL (PERMATA BUNDA MART)", "group_account": "KMMD", "code": "3103", "supplier_id": "3103", "site_id": "5002", "supplier_site_name": "NAN-KDS-IQBAL"},
+            {"site": "ANEKA KARYA UNGGUL, CV", "branch": "JAKARTA 1", "supplier_name": "ANEKA KARYA UNGGUL, CV", "group_account": "KMMD", "code": "3104", "supplier_id": "3104", "site_id": "5003", "supplier_site_name": "NAN-KDS-ANEKA"},
+            {"site": "BINTANG LIMA IMADA, PT", "branch": "BATAM", "supplier_name": "BINTANG LIMA IMADA, PT", "group_account": "KMMD", "code": "3105", "supplier_id": "3105", "site_id": "5004", "supplier_site_name": "NAN-KDS-BINTANG"},
+            {"site": "CV. ANDARIA NIAGA - SANGGAU", "branch": "PONTIANAK", "supplier_name": "ANDARIA NIAGA. CV", "group_account": "KMMD", "code": "3106", "supplier_id": "3106", "site_id": "5005", "supplier_site_name": "NAN-KDS-ANDARIA"},
+            {"site": "CV. DADI MAKMUR ABADI - PURWOKERTO", "branch": "PURWOKERTO", "supplier_name": "DADI MAKMUR ABADI, CV", "group_account": "KMMD", "code": "3107", "supplier_id": "3107", "site_id": "5006", "supplier_site_name": "NAN-KDS-DADI"},
+            {"site": "CV. KOMPAS SEJAHTERA MERAH - SURABAYA", "branch": "SURABAYA 2", "supplier_name": "KOMPAS SEJAHTERA, CV", "group_account": "KMMD", "code": "3108", "supplier_id": "3108", "site_id": "5007", "supplier_site_name": "NAN-KDS-KOMPAS"},
+            {"site": "CV. NAGATA WIRA WIJAYA - MANADO", "branch": "MANADO", "supplier_name": "NAGATA WIRA WIJAYA, CV", "group_account": "KMMD", "code": "3109", "supplier_id": "3109", "site_id": "5008", "supplier_site_name": "NAN-KDS-NAGATA"},
+            {"site": "PT. CATUR SENTOSA ANUGERAH - JAKARTA SELATAN", "branch": "JAKARTA 1", "supplier_name": "CATUR SENTOSA ANUGERAH, PT", "group_account": "KMMD", "code": "3110", "supplier_id": "3110", "site_id": "5009", "supplier_site_name": "NAN-KDS-CATUR"}
+        ];
+
+        const outletsData = [
+            {"site": "ENSEVAL PUTERA MEGATRADING, TBK PT BEKASI", "supplier_id": "1709", "supplier_name": "ENSEVAL PUTERA MEGATRADING, TBK PT", "branch": "BEKASI", "group_account": "ENSEVAL", "supplier_site_id": "4698", "supplier_site_name": "NAN-KDS-EPM1A"},
+            {"site": "ENSEVAL PUTERA MEGATRADING, TBK PT ACEH", "supplier_id": "1709", "supplier_name": "ENSEVAL PUTERA MEGATRADING, TBK PT", "branch": "ACEH", "group_account": "ENSEVAL", "supplier_site_id": "4698", "supplier_site_name": "NAN-KDS-EPM1A"},
+            {"site": "ENSEVAL PUTERA MEGATRADING, TBK PT", "supplier_id": "1709", "supplier_name": "ENSEVAL PUTERA MEGATRADING, TBK PT", "branch": "JAKARTA 1", "group_account": "ENSEVAL", "supplier_site_id": "4698", "supplier_site_name": "NAN-KDS-EPM1A"},
+            {"site": "AGUS JUSAK KURNIAWAN (UD AJEKA ADITAMA DISTRIBUSINDO)", "supplier_id": "3102", "supplier_name": "AGUS JUSAK KURNIAWAN (UD AJEKA ADITAMA DISTRIBUSINDO)", "branch": "JAKARTA 1", "group_account": "KMMD", "supplier_site_id": "5001", "supplier_site_name": "NAN-KDS-AJEKA"},
+            {"site": "AL IQBAL (PERMATA BUNDA MART)", "supplier_id": "3103", "supplier_name": "AL IQBAL (PERMATA BUNDA MART)", "branch": "JAKARTA 1", "group_account": "KMMD", "supplier_site_id": "5002", "supplier_site_name": "NAN-KDS-IQBAL"},
+            {"site": "ANEKA KARYA UNGGUL, CV", "supplier_id": "3104", "supplier_name": "ANEKA KARYA UNGGUL, CV", "branch": "JAKARTA 1", "group_account": "KMMD", "supplier_site_id": "5003", "supplier_site_name": "NAN-KDS-ANEKA"},
+            {"site": "BINTANG LIMA IMADA, PT", "supplier_id": "3105", "supplier_name": "BINTANG LIMA IMADA, PT", "branch": "BATAM", "group_account": "KMMD", "supplier_site_id": "5004", "supplier_site_name": "NAN-KDS-BINTANG"},
+            {"site": "CV. ANDARIA NIAGA - SANGGAU", "supplier_id": "3106", "supplier_name": "ANDARIA NIAGA. CV", "branch": "PONTIANAK", "group_account": "KMMD", "supplier_site_id": "5005", "supplier_site_name": "NAN-KDS-ANDARIA"},
+            {"site": "CV. DADI MAKMUR ABADI - PURWOKERTO", "supplier_id": "3107", "supplier_name": "DADI MAKMUR ABADI, CV", "branch": "PURWOKERTO", "group_account": "KMMD", "supplier_site_id": "5006", "supplier_site_name": "NAN-KDS-DADI"},
+            {"site": "APOTEK BRAVO HUSADA BANDUNG", "supplier_id": "2201", "supplier_name": "PT BRAVO HUSADA", "branch": "BANDUNG", "group_account": "BRAVO", "supplier_site_id": "4101", "supplier_site_name": "SITE-BRAVO-BDG"},
+            {"site": "APOTEK BRAVO FARMA TANGERANG", "supplier_id": "2202", "supplier_name": "PT BRAVO HUSADA", "branch": "TANGERANG", "group_account": "BRAVO", "supplier_site_id": "4102", "supplier_site_name": "SITE-BRAVO-TNG"},
+            {"site": "APOTEK RM JATENG SEMARANG", "supplier_id": "5501", "supplier_name": "RM VI JATENG CO", "branch": "SEMARANG", "group_account": "RM VI JATENG", "supplier_site_id": "6101", "supplier_site_name": "SITE-RM6-SMG"},
+            {"site": "APOTEK RM JATENG TEGAL", "supplier_id": "5502", "supplier_name": "RM VI JATENG CO", "branch": "TEGAL", "group_account": "RM VI JATENG", "supplier_site_id": "6102", "supplier_site_name": "SITE-RM6-TGL"}
+        ];
+
         let detailRows = [
             {
                 activity: 'ACT-KCO-01',
@@ -397,16 +560,174 @@
                 ppnTarif: 11,
                 allBrand: true,
                 umbrand: 'CH-MILNA',
+                umbrandData: [{ TXT_UMBRAND: 'MILNA', TXT_BRAND: 'MILNA UHT', DEC_AMOUNT: 250000000, XXSHP_KDS_T_KLAIM_BRAN: [] }],
                 status: 'OPEN',
                 description: 'Initial Milna promotion claim',
                 include: true
             }
         ];
 
-        document.addEventListener('layoutReady', () => {
-            document.getElementById('dtmDate').value = moment().format('DD-MMM-YYYY');
-            renderTable();
+        let basePath = '../../';
+
+         document.addEventListener('layoutReady', () => {
+             // Move modals to body to prevent backdrop stacking issues
+             $('.modal').appendTo('body');
+
+             basePath = (typeof klaimDetectBasePath === 'function') ? klaimDetectBasePath() : '../../';
+             document.getElementById('dtmDate').value = moment().format('DD-MMM-YYYY');
+             
+             // First read from storage
+             syncFromStorage();
+             
+             // Explicitly handle initial visibility of Partner button based on loaded Group Account
+             const initialGrp = document.getElementById('txtGroupAccount').value;
+             if (initialGrp && initialGrp.trim().toUpperCase() === 'ENSEVAL') {
+                 $('#btnLOVPartner').show();
+             } else {
+                 $('#btnLOVPartner').hide();
+             }
+             
+             renderTable();
+             $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+         });
+
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'klaimUpdated') {
+                syncFromStorage();
+                renderTable();
+            }
         });
+
+        window.openKlaimPopup = function(url, title) {
+            document.getElementById('klaimPopupTitle').textContent = title || 'Klaim';
+            document.getElementById('klaimPopupFrame').src = url;
+            $('#klaimPopupModal').modal('show');
+        };
+
+        function syncToStorage() {
+            const data = klaimGetData() || klaimDefaultClaimData();
+            data.TXT_GROUP_ACCOUNT = document.getElementById('txtGroupAccount').value;
+            data.TXT_PARTNER = document.getElementById('txtPartner').value;
+            data.TXT_BRANCH = document.getElementById('txtBranchName').value;
+            data.TXT_DOC_NO = document.getElementById('txtDocNo').value;
+            data.TXT_STATUSFLOW = document.getElementById('lblStatusFlow').textContent;
+            
+            data.TXT_SUPPLIER_CODE = document.getElementById('txtSupplierCode').value;
+            data.TXT_SUPPLIER_NAME = document.getElementById('txtSupplierName').value;
+            data.TXT_SUPPLIER_ID = document.getElementById('txtSupplierID').value;
+            data.TXT_SUPPLIER_SITE_ID = document.getElementById('txtSupplierSiteID').value;
+            data.TXT_SUPPLIER_SITE_NAME = document.getElementById('txtSupplierSiteName').value;
+            data.TXT_REMARK = document.getElementById('txtRemark').value;
+            data.TXT_REASON_READY_SUBMIT = document.getElementById('txtReasonReadySubmit').value;
+            data.BIT_READY_SUBMIT = document.getElementById('rdoReadySubmitYes').checked ? 'Y' : 'N';
+
+            data.XXSHP_KDS_T_KLAIM_DTL = detailRows.map(r => ({
+                TXT_ACTIVITY: r.activity,
+                TXT_PROGRAM_DESC: r.programDesc,
+                DTM_PERIOD_FROM: r.periodFrom,
+                DTM_PERIOD_TO: r.periodTo,
+                TXT_INVOICE_NO: r.invoiceNo,
+                DTM_INVOICE: r.invoiceDate,
+                TXT_FKT_PJK_NO: r.fakturNo,
+                DTM_FKT_PJK: r.fakturDate,
+                DEC_INVOICE_AMT: r.invoiceAmount,
+                TXT_PPH_JENIS: r.pphType,
+                DEC_PERSEN_PPH: r.pphTarif,
+                DEC_PPH: r.invoiceAmount * (r.pphTarif / 100),
+                TXT_PPNTAXRATE_CODE: r.ppnType,
+                DEC_PPN_PERCENTAGE: r.ppnTarif,
+                BIT_ALLBRAND: r.allBrand ? 'Y' : 'N',
+                BIT_INCLUDE: r.include ? 'Y' : 'N',
+                TXT_STATUSKLAIM: r.status,
+                TXT_STATUS_DESC: r.description,
+                XXSHP_KDS_T_KLAIM_UMB: r.umbrandData || []
+            }));
+            klaimSetData(data);
+        }
+
+        function syncFromStorage() {
+            const data = klaimGetData();
+            if (!data) return;
+
+            if (data.TXT_GROUP_ACCOUNT !== undefined) {
+                document.getElementById('txtGroupAccount').value = data.TXT_GROUP_ACCOUNT || '';
+                if (data.TXT_GROUP_ACCOUNT.trim().toUpperCase() === 'ENSEVAL') {
+                    $('#btnLOVPartner').show();
+                } else {
+                    $('#btnLOVPartner').hide();
+                }
+            }
+            if (data.TXT_PARTNER !== undefined) document.getElementById('txtPartner').value = data.TXT_PARTNER || '';
+            if (data.TXT_BRANCH !== undefined) document.getElementById('txtBranchName').value = data.TXT_BRANCH || '';
+            if (data.TXT_DOC_NO !== undefined) document.getElementById('txtDocNo').value = data.TXT_DOC_NO || '';
+            if (data.INT_KLAIM_HDR_ID !== undefined && data.INT_KLAIM_HDR_ID !== 0) document.getElementById('txtID').value = data.INT_KLAIM_HDR_ID || '';
+            
+            if (data.TXT_SUPPLIER_CODE !== undefined) document.getElementById('txtSupplierCode').value = data.TXT_SUPPLIER_CODE || '';
+            if (data.TXT_SUPPLIER_NAME !== undefined) document.getElementById('txtSupplierName').value = data.TXT_SUPPLIER_NAME || '';
+            if (data.TXT_SUPPLIER_ID !== undefined) document.getElementById('txtSupplierID').value = data.TXT_SUPPLIER_ID || '';
+            if (data.TXT_SUPPLIER_SITE_ID !== undefined) document.getElementById('txtSupplierSiteID').value = data.TXT_SUPPLIER_SITE_ID || '';
+            if (data.TXT_SUPPLIER_SITE_NAME !== undefined) document.getElementById('txtSupplierSiteName').value = data.TXT_SUPPLIER_SITE_NAME || '';
+            if (data.TXT_REMARK !== undefined) document.getElementById('txtRemark').value = data.TXT_REMARK || '';
+            if (data.TXT_REASON_READY_SUBMIT !== undefined) document.getElementById('txtReasonReadySubmit').value = data.TXT_REASON_READY_SUBMIT || '';
+            if (data.BIT_READY_SUBMIT !== undefined) {
+                if (data.BIT_READY_SUBMIT === 'Y') {
+                    document.getElementById('rdoReadySubmitYes').checked = true;
+                } else {
+                    document.getElementById('rdoReadySubmitNo').checked = true;
+                }
+            }
+
+            if (data.TXT_STATUSFLOW !== undefined) {
+                document.getElementById('lblStatusFlow').textContent = data.TXT_STATUSFLOW || 'NEW';
+                const status = data.TXT_STATUSFLOW;
+                const lbl = document.getElementById('lblStatusFlow');
+                if (status === 'DRAFT') {
+                    lbl.className = 'control-label text-yellow';
+                    document.getElementById('btnSubmit').style.display = 'inline-block';
+                } else if (status === 'SUBMITTED') {
+                    lbl.className = 'control-label text-orange';
+                    document.getElementById('btnSubmit').style.display = 'none';
+                    document.getElementById('btnCopy').style.display = 'inline-block';
+                    document.getElementById('btnClose').style.display = 'inline-block';
+                    document.getElementById('btnReject').style.display = 'inline-block';
+                    document.getElementById('btnApprovalHistory').style.display = 'inline-block';
+                } else if (status === 'CLOSED') {
+                    lbl.className = 'control-label text-muted';
+                    document.getElementById('divClose').style.display = 'block';
+                } else if (status === 'REJECTED') {
+                    lbl.className = 'control-label text-red';
+                } else {
+                    lbl.className = 'control-label text-blue';
+                }
+            }
+
+            if (!data.XXSHP_KDS_T_KLAIM_DTL || !data.XXSHP_KDS_T_KLAIM_DTL.length) {
+                detailRows = [];
+                return;
+            }
+
+            detailRows = data.XXSHP_KDS_T_KLAIM_DTL.map(d => ({
+                activity: d.TXT_ACTIVITY || '',
+                programDesc: d.TXT_PROGRAM_DESC || '',
+                periodFrom: d.DTM_PERIOD_FROM || moment().format('DD-MMM-YYYY'),
+                periodTo: d.DTM_PERIOD_TO || moment().add(30, 'days').format('DD-MMM-YYYY'),
+                invoiceNo: d.TXT_INVOICE_NO || '',
+                invoiceDate: d.DTM_INVOICE || moment().format('DD-MMM-YYYY'),
+                fakturNo: d.TXT_FKT_PJK_NO || '',
+                fakturDate: d.DTM_FKT_PJK || moment().format('DD-MMM-YYYY'),
+                invoiceAmount: d.DEC_INVOICE_AMT || 0,
+                pphType: d.TXT_PPH_JENIS || 'NON PPH',
+                pphTarif: d.DEC_PERSEN_PPH || 0,
+                ppnType: d.TXT_PPNTAXRATE_CODE || 'NON PPN',
+                ppnTarif: d.DEC_PPN_PERCENTAGE || 0,
+                allBrand: d.BIT_ALLBRAND === 'Y',
+                umbrand: (d.XXSHP_KDS_T_KLAIM_UMB && d.XXSHP_KDS_T_KLAIM_UMB[0]) ? d.XXSHP_KDS_T_KLAIM_UMB[0].TXT_UMBRAND : '',
+                umbrandData: d.XXSHP_KDS_T_KLAIM_UMB || [],
+                status: d.TXT_STATUSKLAIM || 'OPEN',
+                description: d.TXT_STATUS_DESC || '',
+                include: d.BIT_INCLUDE !== 'N'
+            }));
+        }
 
         function formatCurrency(val) {
             return new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(val);
@@ -441,7 +762,14 @@
                     <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.periodTo}" onchange="updateCell(${index}, 'periodTo', this.value)"></td>
                     <td><input type="text" class="form-control input-sm" value="${item.invoiceNo}" onchange="updateCell(${index}, 'invoiceNo', this.value)"></td>
                     <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.invoiceDate}" onchange="updateCell(${index}, 'invoiceDate', this.value)"></td>
-                    <td><input type="text" class="form-control input-sm" value="${item.fakturNo}" onchange="updateCell(${index}, 'fakturNo', this.value)"></td>
+                    <td>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" value="${item.fakturNo}" onchange="updateCell(${index}, 'fakturNo', this.value)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-info btn-sm" type="button" onclick="openScanFaktur(${index})" title="Scan Faktur Pajak"><i class="fa fa-qrcode"></i></button>
+                            </span>
+                        </div>
+                    </td>
                     <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.fakturDate}" onchange="updateCell(${index}, 'fakturDate', this.value)"></td>
                     
                     <td><input type="text" class="form-control input-sm text-right autonumeric" value="${formatCurrency(item.invoiceAmount)}" onchange="updateCellNumber(${index}, 'invoiceAmount', this.value)"></td>
@@ -470,7 +798,11 @@
                     <td style="text-align:center; vertical-align:middle;">
                         <input type="checkbox" ${item.allBrand ? 'checked' : ''} onchange="updateCell(${index}, 'allBrand', this.checked)">
                     </td>
-                    <td><input type="text" class="form-control input-sm" value="${item.umbrand}" onchange="updateCell(${index}, 'umbrand', this.value)"></td>
+                    <td>
+                        <button class="btn btn-default btn-sm btn-block" onclick="openUmbrand(${index})" title="Alokasi Umbrand">
+                            <i class="fa fa-sitemap"></i> ${item.umbrand || 'Umbrand'}
+                        </button>
+                    </td>
                     
                     <td><input type="file" class="form-control input-sm"></td>
                     <td style="text-align:center; vertical-align:middle;">
@@ -488,13 +820,16 @@
 
             document.getElementById('lblGrandTotal').textContent = formatCurrency(grandTotal);
 
-            // Re-bind datepicker to cells
-            $('.datepicker-cell').datepicker({
-                format: 'dd-M-yyyy',
-                autoclose: true,
-                todayHighlight: true
-            });
-        }
+             // Re-bind datepicker to cells
+             $('.datepicker-cell').datepicker({
+                 format: 'dd-M-yyyy',
+                 autoclose: true,
+                 todayHighlight: true
+             });
+
+             // Re-bind tooltips
+             $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+         }
 
         function updateCell(index, key, val) {
             detailRows[index][key] = val;
@@ -531,6 +866,16 @@
             });
         }
 
+        function openUmbrand(index) {
+            syncToStorage();
+            openKlaimPopup(`${basePath}Views/Klaim/Umbrand.html?intIndex=${index}`, 'Klaim Umbrand');
+        }
+
+        function openScanFaktur(index) {
+            syncToStorage();
+            openKlaimPopup(`${basePath}Views/Klaim/ScanFakturPajak.html?intIndex=${index}`, 'Scan Faktur Pajak');
+        }
+
         function handleAddDetail() {
             detailRows.push({
                 activity: 'ACT-KCO-01',
@@ -548,10 +893,12 @@
                 ppnTarif: 0,
                 allBrand: true,
                 umbrand: '',
+                umbrandData: [],
                 status: 'OPEN',
                 description: '',
                 include: true
             });
+            syncToStorage();
             renderTable();
         }
 
@@ -561,33 +908,173 @@
         }
 
         function selectGroupAccount(name, code, supplierName, site) {
+            const prevName = document.getElementById('txtGroupAccount').value;
+            if (prevName !== name) {
+                // Reset dependent fields if group account changed
+                document.getElementById('txtPartner').value = '';
+                document.getElementById('txtOutlet').value = '';
+                document.getElementById('txtBranchName').value = '';
+            }
+
             document.getElementById('txtGroupAccount').value = name;
             document.getElementById('txtSupplierCode').value = code;
             document.getElementById('txtSupplierName').value = supplierName;
-            document.getElementById('txtSupplierID').value = 'SUP-' + code.split('-')[2];
+            
+            const parts = code.split('-');
+            const supCode = parts.length > 2 ? parts[2] : code;
+            document.getElementById('txtSupplierID').value = 'SUP-' + supCode;
+            
             document.getElementById('txtSupplierSiteID').value = site;
             document.getElementById('txtSupplierSiteName').value = site + ' OFFICE';
+
+            // Regulation: Partner search button is only shown if Group Account === "ENSEVAL"
+            if (name.trim().toUpperCase() === "ENSEVAL") {
+                $('#btnLOVPartner').show();
+            } else {
+                $('#btnLOVPartner').hide();
+            }
+
             $('#lovGroupAccountModal').modal('hide');
+            syncToStorage();
         }
 
         function openPartnerLov() {
+            const grpAcc = document.getElementById('txtGroupAccount').value;
+            if (!grpAcc) {
+                bootbox.alert("Please select a Group Account first!");
+                return;
+            }
+
+            const tbody = document.getElementById('lovPartnerTableBody');
+            tbody.innerHTML = '';
+            
+            // Reset search box value
+            $('#lovPartnerModal input[type="text"]').val('');
+
+            // Filter partners by selected Group Account
+            const filtered = partnersData.filter(p => p.group_account.trim().toUpperCase() === grpAcc.trim().toUpperCase());
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No partners available for this Group Account</td></tr>';
+                $('#lovPartnerModal .lov-info').text('Showing 0 to 0 of 0 entries');
+            } else {
+                filtered.forEach((p) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <button class="btn btn-default btn-xs" onclick="selectPartner('${p.site.replace(/'/g, "\\'")}', '${p.branch.replace(/'/g, "\\'")}', '${p.supplier_name.replace(/'/g, "\\'")}', '${p.code.replace(/'/g, "\\'")}', '${p.supplier_id.replace(/'/g, "\\'")}', '${p.site_id.replace(/'/g, "\\'")}', '${p.supplier_site_name ? p.supplier_site_name.replace(/'/g, "\\'") : ''}')">Pilih</button>
+                        </td>
+                        <td>${p.site}</td>
+                        <td>${p.branch}</td>
+                        <td>${p.supplier_name}</td>
+                        <td>${p.group_account}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                $('#lovPartnerModal .lov-info').text(`Showing 1 to ${filtered.length} of ${filtered.length} entries`);
+            }
             $('#lovPartnerModal').modal('show');
         }
 
-        function selectPartner(name) {
-            document.getElementById('txtPartner').value = name;
+        function selectPartner(site, branch, supplierName, code, supplierId, siteId, siteName) {
+            document.getElementById('txtPartner').value = site;
+            document.getElementById('txtBranchName').value = branch;
+            document.getElementById('txtSupplierName').value = supplierName;
+            document.getElementById('txtSupplierCode').value = code;
+            document.getElementById('txtSupplierID').value = supplierId;
+            document.getElementById('txtSupplierSiteID').value = siteId;
+            document.getElementById('txtSupplierSiteName').value = siteName || (siteId + ' OFFICE');
+            
             $('#lovPartnerModal').modal('hide');
+            syncToStorage();
         }
 
         function openOutletLov() {
+            const grpAcc = document.getElementById('txtGroupAccount').value;
+            if (!grpAcc) {
+                bootbox.alert("Please select a Group Account first!");
+                return;
+            }
+
+            const tbody = document.getElementById('lovOutletTableBody');
+            tbody.innerHTML = '';
+            
+            // Reset search box value
+            $('#lovOutletModal input[type="text"]').val('');
+
+            // Filter outlets by selected Group Account
+            const filtered = outletsData.filter(o => o.group_account.trim().toUpperCase() === grpAcc.trim().toUpperCase());
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No outlets available for this Group Account</td></tr>';
+                $('#lovOutletModal .lov-info').text('Showing 0 to 0 of 0 entries');
+            } else {
+                filtered.forEach(o => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <button class="btn btn-default btn-xs" onclick="selectOutlet('${o.site.replace(/'/g, "\\'")}', '${o.supplier_id.replace(/'/g, "\\'")}', '${o.supplier_name.replace(/'/g, "\\'")}', '${o.branch.replace(/'/g, "\\'")}', '${o.supplier_site_id.replace(/'/g, "\\'")}', '${o.supplier_site_name.replace(/'/g, "\\'")}')">Pilih</button>
+                        </td>
+                        <td>${o.site}</td>
+                        <td>${o.supplier_id}</td>
+                        <td>${o.supplier_name}</td>
+                        <td>${o.branch}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                $('#lovOutletModal .lov-info').text(`Showing 1 to ${filtered.length} of ${filtered.length} entries`);
+            }
             $('#lovOutletModal').modal('show');
         }
 
-        function selectOutlet(name, branch) {
-            document.getElementById('txtOutlet').value = name;
+        function selectOutlet(site, supplierId, supplierName, branch, supplierSiteId, supplierSiteName) {
+            document.getElementById('txtOutlet').value = site;
+            document.getElementById('txtSupplierCode').value = supplierId;
+            document.getElementById('txtSupplierID').value = supplierId;
+            document.getElementById('txtSupplierName').value = supplierName;
             document.getElementById('txtBranchName').value = branch;
+            document.getElementById('txtSupplierSiteID').value = supplierSiteId;
+            document.getElementById('txtSupplierSiteName').value = supplierSiteName;
+            
             $('#lovOutletModal').modal('hide');
+            syncToStorage();
         }
+
+        // Live filtering event handlers for search inputs
+        $(document).on('keyup', '#lovGroupAccountModal input[type="text"]', function() {
+            var val = $(this).val().toLowerCase();
+            var visibleCount = 0;
+            $('#lovGroupAccountModal tbody tr').each(function() {
+                var show = $(this).text().toLowerCase().indexOf(val) > -1;
+                $(this).toggle(show);
+                if (show) visibleCount++;
+            });
+            $('#lovGroupAccountModal .lov-info').text('Showing 1 to ' + visibleCount + ' of 4 entries');
+        });
+
+        $(document).on('keyup', '#lovPartnerModal input[type="text"]', function() {
+            var val = $(this).val().toLowerCase();
+            var visibleCount = 0;
+            var totalCount = $('#lovPartnerTableBody tr').length;
+            $('#lovPartnerTableBody tr').each(function() {
+                var show = $(this).text().toLowerCase().indexOf(val) > -1;
+                $(this).toggle(show);
+                if (show) visibleCount++;
+            });
+            $('#lovPartnerModal .lov-info').text('Showing 1 to ' + visibleCount + ' of ' + totalCount + ' entries');
+        });
+
+        $(document).on('keyup', '#lovOutletModal input[type="text"]', function() {
+            var val = $(this).val().toLowerCase();
+            var visibleCount = 0;
+            var totalCount = $('#lovOutletTableBody tr').length;
+            $('#lovOutletTableBody tr').each(function() {
+                var show = $(this).text().toLowerCase().indexOf(val) > -1;
+                $(this).toggle(show);
+                if (show) visibleCount++;
+            });
+            $('#lovOutletModal .lov-info').text('Showing 1 to ' + visibleCount + ' of ' + totalCount + ' entries');
+        });
 
         // Workflow buttons
         function handleFind() {
@@ -660,8 +1147,11 @@
                     document.getElementById('btnReject').style.display = 'none';
                     document.getElementById('btnApprovalHistory').style.display = 'none';
 
+                    $('#btnLOVPartner').hide();
+
                     detailRows = [];
                     renderTable();
+                    syncToStorage();
                 }
             });
         }
