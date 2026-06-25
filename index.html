@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <title>Home | KICAO KDS</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+</head>
+<body>
+    <div id="app-content">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Home Page
+                <small>KICAO KDS</small>
+            </h1>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Suggestions for Best Performance</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body" style="font-size:12pt; padding: 20px;">
+                            <p>
+                                In order to use this application comfortably, you can do the following suggestions:
+                            </p>
+                            <ul>
+                                <li>Please use the monitor with the minimal resolution <strong>1280 x 768</strong> (You can set it via Control Panel > Display > Settings).</li>
+                                <li>Please use <strong>Firefox Mozilla, Google Chrome latest version</strong> browsers. Some features will run better at <strong>Firefox Mozilla, Google Chrome latest version</strong>.</li>
+                                <li>Please make sure that javascript on your browser is still active. By default, the Javascript on browsers is active.</li>
+                            </ul>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome greeting -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="info-box bg-green">
+                        <span class="info-box-icon"><i class="fa fa-user"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Current User</span>
+                            <span class="info-box-number" id="welcome-username">Admin KICAO</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                            <span class="progress-description">PT Kalbe Nutritionals</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box bg-aqua">
+                        <span class="info-box-icon"><i class="fa fa-money"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Budget Managed</span>
+                            <span class="info-box-number">IDR 2.450.000.000</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 70%"></div>
+                            </div>
+                            <span class="progress-description">70% Target Sales Reached</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box bg-yellow">
+                        <span class="info-box-icon"><i class="fa fa-exchange"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Pending RFA Claims</span>
+                            <span class="info-box-number">12 Documents</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 40%"></div>
+                            </div>
+                            <span class="progress-description">Needs approval delegates</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="./Scripts/layout.js"></script>
+    <script>
+        document.addEventListener('layoutReady', () => {
+            const username = localStorage.getItem('kds_username') || 'Admin KICAO';
+            document.getElementById('welcome-username').textContent = username;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    <title>Log in | KICAO KDS</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+</head>
+<body>
+    <div id="app-content">
+        <form id="FormLogin" autocomplete="off" onsubmit="handleLogin(event)">
+            <h5 class="center" style="text-align: center; margin-bottom: 20px; font-weight: 600;">Masukan Username Dan Password</h5>
+            
+            <div id="login-error" class="alert alert-danger" style="display: none; padding: 10px; margin-bottom: 15px; font-size: 13px;">
+                Username atau password salah!
+            </div>
+
+            <div class="form-group has-feedback">
+                <input type="text" id="txtUserName" class="form-control" placeholder="Username" required tabindex="1">
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>
+            
+            <div class="form-group has-feedback">
+                <input type="password" id="txtPassword" class="form-control" placeholder="Password" required tabindex="2">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>        
+            
+            <div class="form-group has-feedback" style="display: flex; align-items: center; justify-content: space-between; background: #f9f9f9; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px;">
+                <div style="font-family: monospace; font-size: 20px; font-weight: bold; letter-spacing: 5px; color: #36752d; user-select: none;" id="captcha-code">
+                    K3DS9
+                </div>
+                <button type="button" class="btn btn-xs btn-default" onclick="generateCaptcha()" title="Refresh Captcha">
+                    <i class="glyphicon glyphicon-refresh"></i>
+                </button>
+            </div>
+            
+            <div class="form-group has-feedback">
+                <input type="text" id="txtCaptcha" class="form-control text-uppercase" placeholder="Captcha" required tabindex="3">
+                <span class="glyphicon glyphicon-qrcode form-control-feedback"></span>
+            </div> 
+            
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="checkbox icheck">
+                        <label>
+                            <input type="checkbox"> Remember Me
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <button id="btn-login" type="submit" class="btn btn-success btn-block btn-flat" style="background-color: #36752d; border-color: #2b6124;">Sign In</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="../../Scripts/layout.js"></script>
+    <script>
+        document.addEventListener('layoutReady', () => {
+            generateCaptcha();
+        });
+
+        function generateCaptcha() {
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let captcha = '';
+            for (let i = 0; i < 5; i++) {
+                captcha += chars[Math.floor(Math.random() * chars.length)];
+            }
+            document.getElementById('captcha-code').textContent = captcha;
+            document.getElementById('txtCaptcha').value = '';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('txtUserName').value.trim();
+            const password = document.getElementById('txtPassword').value.trim();
+            const captchaInput = document.getElementById('txtCaptcha').value.trim().toUpperCase();
+            const captchaReal = document.getElementById('captcha-code').textContent.trim().toUpperCase();
+
+            const errorDiv = document.getElementById('login-error');
+            errorDiv.style.display = 'none';
+
+            if (captchaInput !== captchaReal) {
+                errorDiv.textContent = 'Captcha yang Anda masukkan salah!';
+                errorDiv.style.display = 'block';
+                generateCaptcha();
+                return;
+            }
+
+            // Simple login check: accept any non-empty username/password
+            if (username && password) {
+                localStorage.setItem('kds_logged_in', 'true');
+                localStorage.setItem('kds_username', username);
+                window.location.href = '../../index.html';
+            } else {
+                errorDiv.textContent = 'Username dan Password wajib diisi!';
+                errorDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

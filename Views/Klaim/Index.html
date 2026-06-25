@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    <title>Form Klaim | KICAO KDS</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+</head>
+<body>
+    <div id="app-content">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Form Klaim
+                <small>Form Klaim</small>
+            </h1>
+        </section>
+
+        <section class="content">
+            <div class="row" id="divClose" style="display:none;">
+                <div class="col-md-12">
+                    <div class="block">
+                        <div class="block-content controls">
+                            <ul class="breadcrumb" style="background-color: darkred; margin-bottom: 15px; padding: 10px;">
+                                <li><a style="color:white; font-weight: bold;" id="txtReasonClose">CLOSED: Claim has been processed</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border text-right">
+                            <button id="btnFind" class="btn btn-success" onclick="handleFind()"><i class="fa fa-search"></i> Find</button>
+                            <button id="btnSave" class="btn btn-success" onclick="handleSave()"><i class="fa fa-floppy-o"></i> Save</button>
+                            <button id="btnUpdateInclude" class="btn btn-success" onclick="handleUpdateInclude()"><i class="fa fa-floppy-o"></i> Update Include</button>
+                            <button id="btnNew" class="btn btn-warning" onclick="handleNew()"><i class="fa fa-refresh"></i> New</button>
+                            <button id="btnSubmit" class="btn btn-success" onclick="handleSubmit()" style="display:none;"><i class="fa fa-send"></i> Submit</button>
+                            <button id="btnPrintout" class="btn btn-info" onclick="handlePrint()"><i class="fa fa-print"></i> Print</button>
+                            <button id="btnApprovalHistory" class="btn btn-info" style="display:none;" onclick="handleApprovalHistory()"><i class="fa fa-history"></i> Approval History</button>
+                            <button id="btnClose" class="btn btn-danger" onclick="handleClose()" style="display:none;"><i class="fa fa-close"></i> Close</button>
+                            <button id="btnReject" class="btn btn-danger" onclick="handleReject()" style="display:none;"><i class="fa fa-close"></i> Reject</button>
+                            <button id="btnCopy" class="btn btn-warning" onclick="handleCopy()" style="display:none;"><i class="fa fa-copy"></i> Copy</button>
+                            <button id="btnViewMemo" class="btn btn-info" onclick="handleViewMemo()"><i class="fa fa-file-text-o"></i> View Memo</button>
+                        </div>
+                        <!-- /.box-header -->
+
+                        <form role="form" id="frmTrKlaim" onsubmit="event.preventDefault()">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="row-form">
+                                        <div class="col-md-2">
+                                            <label id="lblID" class="control-label">ID</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <div class="input-group-btn" style="width:100px;">
+                                                    <input type="text" class="form-control" id="txtID" disabled placeholder="[AUTO]">
+                                                </div>
+                                                <input type="text" class="form-control" id="txtDocNo" disabled placeholder="Doc No">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-1">
+                                            <label id="lblDate" class="control-label">Date</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" style="width:100px;" id="dtmDate" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="row-form">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Doc No MKPP</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="txtDocNoMkpp" disabled placeholder="-">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-1">
+                                            <label id="lblStatus" class="control-label">Status</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label id="lblStatusFlow" class="control-label text-blue" style="font-size: 16px;">NEW</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="row-form">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Group Account</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-danger" id="btnLOVGroupAccount" onclick="openGroupAccountLov()"> <i class="fa fa-search"></i></button>
+                                                </div>
+                                                <input type="text" class="form-control" id="txtGroupAccount" disabled placeholder="Group Account Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-1">
+                                            <label class="control-label">Partner</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-danger" id="btnLOVPartner" onclick="openPartnerLov()"> <i class="fa fa-search"></i></button>
+                                                </div>
+                                                <input type="text" class="form-control" id="txtPartner" disabled placeholder="Partner Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="row-form">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Outlet</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-danger" id="btnLOVOutlet" onclick="openOutletLov()"> <i class="fa fa-search"></i></button>
+                                                </div>
+                                                <input type="text" class="form-control" id="txtOutlet" disabled placeholder="Outlet Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-1">
+                                            <label class="control-label">Supplier Site</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <div class="input-group-btn" style="width:100px;">
+                                                    <input type="text" class="form-control" id="txtSupplierSiteID" disabled placeholder="ID">
+                                                </div>
+                                                <input type="text" class="form-control" id="txtSupplierSiteName" disabled placeholder="Site Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="row-form">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Supplier Code</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="txtSupplierCode" disabled placeholder="Supplier Code">
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-1">
+                                            <label class="control-label">Branch</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="txtBranchName" disabled placeholder="Branch Name">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="row-form">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Supplier Name</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <div class="input-group-btn" style="width:100px;">
+                                                    <input type="text" class="form-control" id="txtSupplierID" disabled placeholder="ID">
+                                                </div>
+                                                <input type="text" class="form-control" id="txtSupplierName" disabled placeholder="Supplier Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-1">
+                                            <label class="control-label">Source</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="txtSourceDoc" disabled value="PORTAL KDS">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="row-form">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Remark</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <textarea id="txtRemark" rows="3" class="form-control text-uppercase" placeholder="Enter remarks..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 10px;">
+                                    <div class="row-form">
+                                        <div class="col-md-2">
+                                            <label class="control-label">Ready to Submit</label>
+                                        </div>
+                                        <div class="col-md-4" style="display:flex; gap: 15px;">
+                                            <label style="font-weight:normal; cursor:pointer;"><input type="radio" id="rdoReadySubmitYes" name="ReadySubmit" value="Y"> Yes</label>
+                                            <label style="font-weight:normal; cursor:pointer;"><input type="radio" id="rdoReadySubmitNo" name="ReadySubmit" value="N" checked> No</label>
+                                        </div>
+                                    </div>
+                                </div>  
+                                <div class="row">
+                                    <div class="row-form">
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="txtReasonReadySubmit" placeholder="Note ready submit....">
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Detail Table Block -->
+                    <div class="box box-primary">
+                        <div class="box-body" style="padding: 15px;">
+                            <div style="overflow-x: auto; width: 100%;">
+                                <table id="dtDetail" class="table table-condensed table-striped table-hover table-bordered" style="min-width: 1800px;">
+                                    <thead>
+                                        <tr style="background: #36752d; color: white;">
+                                            <th style="width:40px; text-align:center;">No</th>
+                                            <th style="width:120px;">Activity</th>
+                                            <th style="width:250px;">Program Desc</th>
+                                            <th style="width:120px;">Period From</th>
+                                            <th style="width:120px;">To</th>
+                                            <th style="width:120px;">Invoice No</th>
+                                            <th style="width:120px;">Invoice Date</th>
+                                            <th style="width:150px;">Faktur Pajak No</th>
+                                            <th style="width:120px;">Faktur Pajak Date</th>
+                                            <th style="width:130px; text-align:right;">Invoice Amount</th>
+                                            <th style="width:120px;">PPH Type</th>
+                                            <th style="width:80px; text-align:right;">Tarif PPH(%)</th>
+                                            <th style="width:110px; text-align:right;">PPH Amount</th>
+                                            <th style="width:130px; text-align:right;">Final Amount</th>
+                                            <th style="width:110px;">PPN Type</th>
+                                            <th style="width:110px; text-align:right;">PPN Amount</th>
+                                            <th style="width:130px; text-align:right;">Total Amount</th>
+                                            <th style="width:80px; text-align:center;">All Brand</th>
+                                            <th style="width:80px; text-align:center;">Umbrand</th>
+                                            <th style="width:150px;">Attachment</th>
+                                            <th style="width:60px; text-align:center;">Delete</th>
+                                            <th style="width:100px;">Status</th>
+                                            <th style="width:150px;">Description</th>
+                                            <th style="width:70px; text-align:center;">Include</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dtBodyKlaim">
+                                        <!-- Javascript populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <button class="btn btn-warning" id="btnAddDetail" onclick="handleAddDetail()"><i class="fa fa-plus"></i> Add Detail</button>
+                                </div>
+                                <div style="font-size: 15px; font-weight: bold; padding: 10px; background: #eefceb; border: 1px solid #cce8c9; border-radius: 4px;">
+                                    Grand Total Claim: IDR <span id="lblGrandTotal">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Group Account LOV -->
+        <div class="modal fade" id="lovGroupAccountModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Select Group Account</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr style="background: #36752d; color: white;">
+                                    <th>Account Name</th>
+                                    <th>Supplier Code</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>KALBE DISTRIBUTOR SYSTEM</td>
+                                    <td>SPL-KDS-001</td>
+                                    <td><button class="btn btn-xs btn-success" onclick="selectGroupAccount('KALBE DISTRIBUTOR SYSTEM', 'SPL-KDS-001', 'PT KALBE KDS HO', 'SITE-HO-JKT')">Select</button></td>
+                                </tr>
+                                <tr>
+                                    <td>MILNA DISTRIBUTOR ACC</td>
+                                    <td>SPL-MIL-002</td>
+                                    <td><button class="btn btn-xs btn-success" onclick="selectGroupAccount('MILNA DISTRIBUTOR ACC', 'SPL-MIL-002', 'PT MILNA INDO', 'SITE-MILNA')">Select</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Partner LOV -->
+        <div class="modal fade" id="lovPartnerModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Select Partner</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr style="background: #36752d; color: white;">
+                                    <th>Partner ID</th>
+                                    <th>Partner Name</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PRT-01</td>
+                                    <td>PT ENSVAL PUTRA MEGASURYA</td>
+                                    <td><button class="btn btn-xs btn-success" onclick="selectPartner('PT ENSVAL PUTRA MEGASURYA')">Select</button></td>
+                                </tr>
+                                <tr>
+                                    <td>PRT-02</td>
+                                    <td>PT TIGARAKSA SATRIA TBK</td>
+                                    <td><button class="btn btn-xs btn-success" onclick="selectPartner('PT TIGARAKSA SATRIA TBK')">Select</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Outlet LOV -->
+        <div class="modal fade" id="lovOutletModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Select Outlet</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr style="background: #36752d; color: white;">
+                                    <th>Outlet Code</th>
+                                    <th>Outlet Name</th>
+                                    <th>Branch</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>OUT-001</td>
+                                    <td>APOTEK HIDUP SEHAT JAKARTA</td>
+                                    <td>JAKARTA HO</td>
+                                    <td><button class="btn btn-xs btn-success" onclick="selectOutlet('APOTEK HIDUP SEHAT JAKARTA', 'JAKARTA HO')">Select</button></td>
+                                </tr>
+                                <tr>
+                                    <td>OUT-002</td>
+                                    <td>GUARDIAN GIANT MALL SURABAYA</td>
+                                    <td>SURABAYA BRANCH</td>
+                                    <td><button class="btn btn-xs btn-success" onclick="selectOutlet('GUARDIAN GIANT MALL SURABAYA', 'SURABAYA BRANCH')">Select</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../Scripts/layout.js"></script>
+    <script>
+        let detailRows = [
+            {
+                activity: 'ACT-KCO-01',
+                programDesc: 'MILNA BOGO PROMO 2026',
+                periodFrom: '01-Jan-2026',
+                periodTo: '31-Mar-2026',
+                invoiceNo: 'INV-KDS-9912',
+                invoiceDate: '10-Jan-2026',
+                fakturNo: 'FP-001.002.9912',
+                fakturDate: '10-Jan-2026',
+                invoiceAmount: 250000000,
+                pphType: 'PPH 23 (2%)',
+                pphTarif: 2,
+                ppnType: 'PPN 11%',
+                ppnTarif: 11,
+                allBrand: true,
+                umbrand: 'CH-MILNA',
+                status: 'OPEN',
+                description: 'Initial Milna promotion claim',
+                include: true
+            }
+        ];
+
+        document.addEventListener('layoutReady', () => {
+            document.getElementById('dtmDate').value = moment().format('DD-MMM-YYYY');
+            renderTable();
+        });
+
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(val);
+        }
+
+        function cleanNumber(str) {
+            return parseFloat(str.toString().replace(/[^0-9,-]/g, '').replace(',', '.')) || 0;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('dtBodyKlaim');
+            tbody.innerHTML = '';
+            let grandTotal = 0;
+
+            detailRows.forEach((item, index) => {
+                // Calculate PPH, PPN, and final totals
+                const pphAmount = item.invoiceAmount * (item.pphTarif / 100);
+                const finalAmount = item.invoiceAmount - pphAmount;
+                const ppnAmount = item.invoiceAmount * (item.ppnTarif / 100);
+                const totalAmount = finalAmount + ppnAmount;
+
+                if (item.include) {
+                    grandTotal += totalAmount;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align:center; vertical-align:middle;">${index + 1}</td>
+                    <td><input type="text" class="form-control input-sm" value="${item.activity}" onchange="updateCell(${index}, 'activity', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm" value="${item.programDesc}" onchange="updateCell(${index}, 'programDesc', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.periodFrom}" onchange="updateCell(${index}, 'periodFrom', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.periodTo}" onchange="updateCell(${index}, 'periodTo', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm" value="${item.invoiceNo}" onchange="updateCell(${index}, 'invoiceNo', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.invoiceDate}" onchange="updateCell(${index}, 'invoiceDate', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm" value="${item.fakturNo}" onchange="updateCell(${index}, 'fakturNo', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.fakturDate}" onchange="updateCell(${index}, 'fakturDate', this.value)"></td>
+                    
+                    <td><input type="text" class="form-control input-sm text-right autonumeric" value="${formatCurrency(item.invoiceAmount)}" onchange="updateCellNumber(${index}, 'invoiceAmount', this.value)"></td>
+                    
+                    <td>
+                        <select class="form-control input-sm" onchange="updatePphType(${index}, this.value)">
+                            <option value="0" ${item.pphTarif == 0 ? 'selected' : ''}>NON PPH</option>
+                            <option value="2" ${item.pphTarif == 2 ? 'selected' : ''}>PPH 23 (2%)</option>
+                            <option value="10" ${item.pphTarif == 10 ? 'selected' : ''}>PPH 21 (10%)</option>
+                        </select>
+                    </td>
+                    <td style="text-align:right; vertical-align:middle; font-weight:bold;">${item.pphTarif}%</td>
+                    <td style="text-align:right; vertical-align:middle; font-weight:bold;">${formatCurrency(pphAmount)}</td>
+                    <td style="text-align:right; vertical-align:middle; font-weight:bold; background:#f4f4f4;">${formatCurrency(finalAmount)}</td>
+                    
+                    <td>
+                        <select class="form-control input-sm" onchange="updatePpnType(${index}, this.value)">
+                            <option value="0" ${item.ppnTarif == 0 ? 'selected' : ''}>NON PPN</option>
+                            <option value="11" ${item.ppnTarif == 11 ? 'selected' : ''}>PPN 11%</option>
+                            <option value="12" ${item.ppnTarif == 12 ? 'selected' : ''}>PPN 12%</option>
+                        </select>
+                    </td>
+                    <td style="text-align:right; vertical-align:middle; font-weight:bold;">${formatCurrency(ppnAmount)}</td>
+                    <td style="text-align:right; vertical-align:middle; font-weight:bold; background:#eefceb;">${formatCurrency(totalAmount)}</td>
+                    
+                    <td style="text-align:center; vertical-align:middle;">
+                        <input type="checkbox" ${item.allBrand ? 'checked' : ''} onchange="updateCell(${index}, 'allBrand', this.checked)">
+                    </td>
+                    <td><input type="text" class="form-control input-sm" value="${item.umbrand}" onchange="updateCell(${index}, 'umbrand', this.value)"></td>
+                    
+                    <td><input type="file" class="form-control input-sm"></td>
+                    <td style="text-align:center; vertical-align:middle;">
+                        <button class="btn btn-danger btn-xs" onclick="deleteRow(${index})"><i class="fa fa-trash"></i></button>
+                    </td>
+                    <td style="vertical-align:middle;"><span class="label label-success">${item.status}</span></td>
+                    <td><input type="text" class="form-control input-sm" value="${item.description}" onchange="updateCell(${index}, 'description', this.value)"></td>
+                    
+                    <td style="text-align:center; vertical-align:middle;">
+                        <input type="checkbox" ${item.include ? 'checked' : ''} onchange="updateIncludeCell(${index}, this.checked)">
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('lblGrandTotal').textContent = formatCurrency(grandTotal);
+
+            // Re-bind datepicker to cells
+            $('.datepicker-cell').datepicker({
+                format: 'dd-M-yyyy',
+                autoclose: true,
+                todayHighlight: true
+            });
+        }
+
+        function updateCell(index, key, val) {
+            detailRows[index][key] = val;
+        }
+
+        function updateCellNumber(index, key, val) {
+            detailRows[index][key] = cleanNumber(val);
+            renderTable();
+        }
+
+        function updatePphType(index, val) {
+            detailRows[index].pphTarif = parseInt(val);
+            detailRows[index].pphType = val == '2' ? 'PPH 23 (2%)' : (val == '10' ? 'PPH 21 (10%)' : 'NON PPH');
+            renderTable();
+        }
+
+        function updatePpnType(index, val) {
+            detailRows[index].ppnTarif = parseInt(val);
+            detailRows[index].ppnType = val == '11' ? 'PPN 11%' : (val == '12' ? 'PPN 12%' : 'NON PPN');
+            renderTable();
+        }
+
+        function updateIncludeCell(index, checked) {
+            detailRows[index].include = checked;
+            renderTable();
+        }
+
+        function deleteRow(index) {
+            bootbox.confirm("Delete this Claim detail row?", (res) => {
+                if (res) {
+                    detailRows.splice(index, 1);
+                    renderTable();
+                }
+            });
+        }
+
+        function handleAddDetail() {
+            detailRows.push({
+                activity: 'ACT-KCO-01',
+                programDesc: '',
+                periodFrom: moment().format('DD-MMM-YYYY'),
+                periodTo: moment().add(30, 'days').format('DD-MMM-YYYY'),
+                invoiceNo: '',
+                invoiceDate: moment().format('DD-MMM-YYYY'),
+                fakturNo: '',
+                fakturDate: moment().format('DD-MMM-YYYY'),
+                invoiceAmount: 0,
+                pphType: 'NON PPH',
+                pphTarif: 0,
+                ppnType: 'NON PPN',
+                ppnTarif: 0,
+                allBrand: true,
+                umbrand: '',
+                status: 'OPEN',
+                description: '',
+                include: true
+            });
+            renderTable();
+        }
+
+        // LOV Triggers
+        function openGroupAccountLov() {
+            $('#lovGroupAccountModal').modal('show');
+        }
+
+        function selectGroupAccount(name, code, supplierName, site) {
+            document.getElementById('txtGroupAccount').value = name;
+            document.getElementById('txtSupplierCode').value = code;
+            document.getElementById('txtSupplierName').value = supplierName;
+            document.getElementById('txtSupplierID').value = 'SUP-' + code.split('-')[2];
+            document.getElementById('txtSupplierSiteID').value = site;
+            document.getElementById('txtSupplierSiteName').value = site + ' OFFICE';
+            $('#lovGroupAccountModal').modal('hide');
+        }
+
+        function openPartnerLov() {
+            $('#lovPartnerModal').modal('show');
+        }
+
+        function selectPartner(name) {
+            document.getElementById('txtPartner').value = name;
+            $('#lovPartnerModal').modal('hide');
+        }
+
+        function openOutletLov() {
+            $('#lovOutletModal').modal('show');
+        }
+
+        function selectOutlet(name, branch) {
+            document.getElementById('txtOutlet').value = name;
+            document.getElementById('txtBranchName').value = branch;
+            $('#lovOutletModal').modal('hide');
+        }
+
+        // Workflow buttons
+        function handleFind() {
+            bootbox.prompt("Enter Claim ID to find:", (id) => {
+                if (id) {
+                    document.getElementById('txtID').value = id.substring(0, 5);
+                    document.getElementById('txtDocNo').value = id;
+                    document.getElementById('lblStatusFlow').textContent = 'SUBMITTED';
+                    document.getElementById('lblStatusFlow').className = 'control-label text-orange';
+                    document.getElementById('btnSubmit').style.display = 'none';
+                    document.getElementById('btnCopy').style.display = 'inline-block';
+                    document.getElementById('btnClose').style.display = 'inline-block';
+                    document.getElementById('btnReject').style.display = 'inline-block';
+                    document.getElementById('btnApprovalHistory').style.display = 'inline-block';
+                    bootbox.alert(`Loaded Claim Record: ${id}`);
+                }
+            });
+        }
+
+        function handleSave() {
+            const grpAcc = document.getElementById('txtGroupAccount').value;
+            if (!grpAcc) {
+                bootbox.alert("Group Account is required!");
+                return;
+            }
+            bootbox.confirm("Save Claim form?", (res) => {
+                if (res) {
+                    if (!document.getElementById('txtID').value) {
+                        document.getElementById('txtID').value = Math.floor(Math.random() * 90000 + 10000);
+                        document.getElementById('txtDocNo').value = 'CLM-2026-' + Math.floor(Math.random() * 9000 + 1000);
+                    }
+                    document.getElementById('lblStatusFlow').textContent = 'DRAFT';
+                    document.getElementById('lblStatusFlow').className = 'control-label text-yellow';
+                    document.getElementById('btnSubmit').style.display = 'inline-block';
+                    bootbox.alert("Claim saved as DRAFT successfully!");
+                }
+            });
+        }
+
+        function handleUpdateInclude() {
+            bootbox.alert("Included claim items status updated!");
+        }
+
+        function handleNew() {
+            bootbox.confirm("Discard and create new Claim?", (res) => {
+                if (res) {
+                    document.getElementById('txtID').value = '';
+                    document.getElementById('txtDocNo').value = '';
+                    document.getElementById('txtDocNoMkpp').value = '';
+                    document.getElementById('txtGroupAccount').value = '';
+                    document.getElementById('txtPartner').value = '';
+                    document.getElementById('txtOutlet').value = '';
+                    document.getElementById('txtSupplierSiteID').value = '';
+                    document.getElementById('txtSupplierSiteName').value = '';
+                    document.getElementById('txtSupplierCode').value = '';
+                    document.getElementById('txtBranchName').value = '';
+                    document.getElementById('txtSupplierID').value = '';
+                    document.getElementById('txtSupplierName').value = '';
+                    document.getElementById('txtRemark').value = '';
+                    document.getElementById('txtReasonReadySubmit').value = '';
+                    document.getElementById('rdoReadySubmitNo').checked = true;
+                    document.getElementById('divClose').style.display = 'none';
+
+                    document.getElementById('lblStatusFlow').textContent = 'NEW';
+                    document.getElementById('lblStatusFlow').className = 'control-label text-blue';
+                    
+                    document.getElementById('btnSubmit').style.display = 'none';
+                    document.getElementById('btnCopy').style.display = 'none';
+                    document.getElementById('btnClose').style.display = 'none';
+                    document.getElementById('btnReject').style.display = 'none';
+                    document.getElementById('btnApprovalHistory').style.display = 'none';
+
+                    detailRows = [];
+                    renderTable();
+                }
+            });
+        }
+
+        function handleSubmit() {
+            bootbox.confirm("Submit Claim for approval?", (res) => {
+                if (res) {
+                    document.getElementById('lblStatusFlow').textContent = 'SUBMITTED';
+                    document.getElementById('lblStatusFlow').className = 'control-label text-orange';
+                    document.getElementById('btnSubmit').style.display = 'none';
+                    bootbox.alert("Claim successfully submitted for approval!");
+                }
+            });
+        }
+
+        function handlePrint() {
+            bootbox.alert("Generating Claim Print report...");
+        }
+
+        function handleApprovalHistory() {
+            bootbox.alert("<h4>Approval History</h4><p>1. <strong>Admin KICAO</strong> (Draft) - approved</p><p>2. <strong>Dept Head</strong> (Review) - approved</p>");
+        }
+
+        function handleClose() {
+            bootbox.confirm("Are you sure you want to CLOSE this claim?", (res) => {
+                if (res) {
+                    document.getElementById('divClose').style.display = 'block';
+                    document.getElementById('lblStatusFlow').textContent = 'CLOSED';
+                    document.getElementById('lblStatusFlow').className = 'control-label text-muted';
+                }
+            });
+        }
+
+        function handleReject() {
+            bootbox.prompt("Enter rejection reason:", (reason) => {
+                if (reason) {
+                    document.getElementById('lblStatusFlow').textContent = 'REJECTED';
+                    document.getElementById('lblStatusFlow').className = 'control-label text-red';
+                    bootbox.alert(`Claim rejected. Reason: ${reason}`);
+                }
+            });
+        }
+
+        function handleCopy() {
+            bootbox.confirm("Duplicate this claim record?", (res) => {
+                if (res) {
+                    document.getElementById('txtID').value = '';
+                    document.getElementById('txtDocNo').value = '';
+                    document.getElementById('lblStatusFlow').textContent = 'NEW';
+                    document.getElementById('lblStatusFlow').className = 'control-label text-blue';
+                    bootbox.alert("Claim duplicated! Ready to edit and save as a new record.");
+                }
+            });
+        }
+
+        function handleViewMemo() {
+            bootbox.alert("<h4>MEMO PREVIEW</h4><p>Memo for Claim: <strong>" + (document.getElementById('txtDocNo').value || "NEW") + "</strong></p><p>Supplier: " + (document.getElementById('txtSupplierName').value || "-") + "</p><p>Amount: IDR " + document.getElementById('lblGrandTotal').textContent + "</p>");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+﻿//=======================
+// VARIABLE GLOBAL
+//=======================
+var clsGlobal = new clsGlobalClass();
+var LOV;
+var bitLoading = false;
+
+
+//=======================
+// Confirmation
+//======================= 
+
+//=======================
+// ON PAGE LOAD
+//=======================
+$(document).ready(function () { 
+    p_InitForm();
+    p_validatePage();
+    //p_showPrevData(); 
+});
+
+//=======================
+// FUNCTION
+//=======================
+function p_InitForm() {
+    p_initiateData();
+}
+
+function p_validatePage() {
+
+}
+
+function p_showPrevData() {
+
+}
+
+function p_showBlank() {
+    p_initiateData();
+}
+
+function setChooseLOV(txtValue) {
+    var arr = txtValue.split('|');
+    switch (arr[0]) {
+        case "txtID": $("#txtID").val(arr[1]);
+            p_txtID_TextChanged();
+            break;
+
+    }
+    clsGlobal.closeLOV();
+}
+
+function p_DataToUI(objData) {
+    $("#txtID").val(clsGlobal.parseToInteger(objData.INT_ROLE_ACCESS_ID));
+
+    p_PopulateRoleAndSet(clsGlobal.parseToInteger(objData.INT_ROLE_ID));
+    p_PopulateModuleAndSet(clsGlobal.parseToInteger(objData.INT_MODULE_ID));
+
+    $('#chkEdit').prop('checked', clsGlobal.ParseBooleanOracleToNET(objData.BIT_EDIT));
+    $('#chkView').prop('checked', clsGlobal.ParseBooleanOracleToNET(objData.BIT_VIEW));
+    $('#chkDelete').prop('checked', clsGlobal.ParseBooleanOracleToNET(objData.BIT_DELETE));
+
+    $("#txtHiddenObject").val(JSON.stringify(objData));
+
+    if ($("#txtID").val() == "" || $("#txtID").val() == "0") {
+        $("#btnDelete").hide();
+    } else {
+        $("#btnDelete").show();
+    }
+}
+
+function p_PopulateRoleAndSet(txtValue) {
+    clsGlobal.showLoading();
+    $.ajax({
+        type: "POST",
+        url: "/RoleAccess/PopulateRole",
+        data: { __RequestVerificationToken: $('#frmRoleAccess input[name=__RequestVerificationToken]').val() },
+        datatype: "json",
+        success: function (retDat) {
+            if (retDat.bitSuccess == true) {
+                if (retDat.objData != undefined) {
+                    $('#ddlRoleID').empty();
+                    $('#ddlRoleID').append($('<option>').text("-").prop('value', "0"));
+                    for (var i = 0; i < retDat.objData.length; i++) {
+                        $('#ddlRoleID').append($('<option>').text(retDat.objData[i].TXT_ROLENAME).prop('value', retDat.objData[i].INT_ROLE_ID));
+                    }
+
+                    if (txtValue != "") {
+                        $("#ddlRoleID").val(txtValue);
+                    }
+                }
+            } else {
+                clsGlobal.getAlert(retDat.txtMessage);
+            }
+
+            clsGlobal.hideLoading();
+        },
+        error: function (retDat) {
+            clsGlobal.hideLoading();
+        }
+    });
+}
+
+function p_PopulateModuleAndSet(txtValue) {
+    clsGlobal.showLoading();
+    $.ajax({
+        type: "POST",
+        url: "/RoleAccess/PopulateModule",
+        data: { __RequestVerificationToken: $('#frmRoleAccess input[name=__RequestVerificationToken]').val() },
+        datatype: "json",
+        success: function (retDat) {
+            if (retDat.bitSuccess == true) {
+                if (retDat.objData != undefined) {
+                    $('#ddlModule').empty();
+                    $('#ddlModule').append($('<option>').text("-").prop('value', "0"));
+                    for (var i = 0; i < retDat.objData.length; i++) {
+                        $('#ddlModule').append($('<option>').text(retDat.objData[i].TXT_MODULENAME).prop('value', retDat.objData[i].INT_MODULE_ID));
+                    }
+
+                    if (txtValue != "") {
+                        $("#ddlModule").val(txtValue);
+                    }
+                }
+            } else {
+                clsGlobal.getAlert(retDat.txtMessage);
+            }
+
+            clsGlobal.hideLoading();
+        },
+        error: function (retDat) {
+            clsGlobal.hideLoading();
+        }
+    });
+}
+
+
+function p_initiateData() {
+    clsGlobal.showLoading();
+    $.ajax({
+        type: "POST",
+        url: "/System/RoleAccess/InitiateData",
+        data: { __RequestVerificationToken: $('#frmRoleAccess input[name=__RequestVerificationToken]').val() },
+        datatype: "json",
+        success: function (retDat) {
+
+            if (retDat.bitSuccess == true) {
+                if (retDat.objData != undefined) {
+                    $("#txtHiddenObject").val(JSON.stringify(retDat.objData));
+                    p_DataToUI(retDat.objData);
+                    $("#txtGUID").val(retDat.txtGUID);
+                } else {
+                    p_showBlank();
+                }
+            } else {
+                clsGlobal.getAlert(retDat.txtMessage);
+            }
+            clsGlobal.hideLoading();
+        },
+        error: function (retDat) {
+            clsGlobal.hideLoading();
+        }
+    });
+
+}
+
+function p_UIToData() {
+    var jsonObj = [];
+    var htmlJSON = $("#txtHiddenObject").val();
+    jsonData = JSON.parse(htmlJSON);
+    jsonData.INT_ROLE_ACCESS_ID = clsGlobal.parseToInteger($("#txtID").val());
+    jsonData.INT_ROLE_ID = clsGlobal.parseToInteger($("#ddlRoleID").val());
+    jsonData.INT_MODULE_ID = clsGlobal.parseToInteger($("#ddlModule").val().toString());
+    jsonData.BIT_EDIT = clsGlobal.ParseBooleanNETToOracle(clsGlobal.parseToBoolean($("#chkEdit").prop("checked")));
+    jsonData.BIT_VIEW = clsGlobal.ParseBooleanNETToOracle(clsGlobal.parseToBoolean($("#chkView").prop("checked")));
+    jsonData.BIT_DELETE = clsGlobal.ParseBooleanNETToOracle(clsGlobal.parseToBoolean($("#chkDelete").prop("checked")));
+    
+    $("#txtHiddenObject").val(JSON.stringify(jsonData));
+
+}
+
+
+function p_txtID_TextChanged() {
+    clsGlobal.showLoading();
+    $.ajax({
+        type: "POST",
+        url: "/System/RoleAccess/GetData",
+        data: { txtID: $("#txtID").val(), __RequestVerificationToken: $('#frmRoleAccess input[name=__RequestVerificationToken]').val() },
+        datatype: "json",
+        success: function (retDat) {
+
+            if (retDat.bitSuccess == true) {
+                if (retDat.objData != undefined) {
+                    p_DataToUI(retDat.objData);
+                    $("#txtGUID").val(retDat.txtGUID);
+                } else {
+                    p_showBlank();
+                }
+            } else {
+                clsGlobal.getAlert(retDat.txtMessage);
+            }
+            clsGlobal.hideLoading();
+        },
+        error: function (retDat) {
+            clsGlobal.hideLoading();
+        }
+    });
+}
+
+function p_saveData() {
+
+    clsGlobal.showLoading();
+    p_UIToData();
+    $.ajax({
+        type: "POST",
+        url: "/System/RoleAccess/SaveData",
+        data: { data: $("#txtHiddenObject").val(), txtGUID: $("#txtGUID").val(), __RequestVerificationToken: $('#frmRoleAccess input[name=__RequestVerificationToken]').val() },
+        datatype: "json",
+        success: function (retDat) {
+            
+            if (retDat.bitSuccess == true) {
+                p_DataToUI(retDat.objData);
+                clsGlobal.getInformationMessage(retDat.txtMessage);
+            } else {
+                clsGlobal.getAlert(retDat.txtMessage);
+            }
+            clsGlobal.hideLoading();
+        },
+        error: function (retDat) {
+            
+            clsGlobal.hideLoading();
+        }
+    });
+}
+
+function p_deleteData() {
+    clsGlobal.showLoading();
+    p_UIToData();
+    $.ajax({
+        type: "POST",
+        url: "/System/RoleAccess/DeleteData",
+        data: { data: $("#txtHiddenObject").val(), txtGUID: $("#txtGUID").val(), __RequestVerificationToken: $('#frmRoleAccess input[name=__RequestVerificationToken]').val() },
+        datatype: "json",
+        success: function (retDat) {
+            
+            if (retDat.bitSuccess == true) {
+                p_DataToUI(retDat.objData);
+                clsGlobal.getInformationMessage(retDat.txtMessage);
+            } else {
+                clsGlobal.getAlert(retDat.txtMessage);
+            }
+            clsGlobal.hideLoading();
+        },
+        error: function (retDat) {
+            clsGlobal.hideLoading();
+        }
+    });
+}
+
+//=======================
+// HANDLER
+//=======================
+
+$('#btnSave').bind('click', function () {
+    try {
+        clsGlobal.getConfirmation("Save this data?", function (result) {
+            if (result == true) {
+                p_saveData();
+            }
+            else {
+                return false;
+            }
+        });
+    } catch (ex) {
+        clsGlobal.showAlert(ex);
+    }
+});
+
+$('#btnNew').bind('click', function () { 
+    try {
+        p_showBlank();
+    } catch (ex) {
+        clsGlobal.showAlert(ex);
+    }
+});
+
+$('#btnLOVID').bind('click', function () {
+    try {
+        LOV = clsGlobal.generateLOV(MODULE_ROLEACCESS, "txtID");
+    } catch (ex) {
+        clsGlobal.showAlert(ex);
+    }
+});
+
+$('#btnDelete').bind('click', function () {
+    try {
+        clsGlobal.getConfirmation("Delete this data?", function (result) {
+            if (result == true) {
+                p_deleteData();
+            }
+            else {
+                return false;
+            }
+        });
+    } catch (ex) {
+        clsGlobal.showAlert(ex);
+    }
+});
+

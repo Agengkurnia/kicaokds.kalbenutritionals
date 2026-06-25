@@ -1,0 +1,653 @@
+/* Table that holds menu, nice orange, organization information, and document status */
+.AvHeaderTable
+{
+	border-width: 1px;
+    background-color: #4fa001;   
+	top: 4px;
+	z-index: 250;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 0px;
+	font-family: Tahoma;
+	font-size: 8pt;
+	font-weight: normal;
+	color: White;
+	border-radius:4px 4px 4px 4px;
+}
+
+.AvHeaderTable2
+{
+	border-width: 1px;
+    background-color: #97BA75; 
+	top: 4px;
+	z-index: 250;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 0px;
+	font-family: Tahoma;
+	font-size: 8pt;
+	font-weight: normal;
+	color: White;
+	border-radius:4px 4px 4px 4px;
+}
+
+/* Second row of header table that gives nice orange :) */
+.AvHeader2Table
+{
+	background-color: #ffda0a;
+	height: 4px;
+	border-radius:4px 4px 4px 4px;
+}
+
+/* Label to display application status information */
+.AvStatusLabel
+{
+	border-right: white 1px solid;
+	border-top: white 1px solid;
+	border-left: white 1px solid;
+	border-bottom: white 1px solid;
+	height: 18px !important;
+	border-radius:4px 4px 4px 4px;
+}
+/* Row of header table that display organization information */
+.AvOrgInfoTable
+{
+	background-color: #999B9E; /* #92FF49; /* #37d346; */
+	font-family: Tahoma;
+	font-size: 8pt;
+	font-weight: bold;
+	color: White;  /* black;	*/
+	padding:0px;
+	margin:1px;
+	border-radius:4px 4px 4px 4px;
+}
+/* Body of page */
+.AvBody
+{
+	background-color: #FFFFFF;
+	color: #000000;
+	margin-left: 0;
+	margin-top: 0;
+	z-index: 1;
+	font-family: Tahoma; 
+	margin-right:0px;
+	
+}
+/* Default style for combo box */
+.AvComboBox
+{
+	clear: none;
+	height: 21px;
+	font-family: Tahoma;
+	font-size: 8pt;
+	background-color: White;
+	width:100px;
+	border:1px solid rgb(64, 179, 104);
+	border-radius:4px 4px 4px 4px;
+}
+.AvMenuComboBox
+{
+	clear: none;
+	height: 21px;
+	font-family: Tahoma;
+	font-size: 8pt;
+	background-color: White;
+	width:100px;
+	margin-left:5px;
+	margin-right:5px;
+	margin-top: 15px;
+	border-radius:4px 4px 4px 4px;
+}
+
+/* Default style for text box */
+.AvTextBox
+{
+	font-family: Tahoma;
+	font-size: 8pt;
+	height: 18px; /*15px;*/
+	display: inline-block;
+	border:1px solid rgb(64, 179, 104);
+	border-radius:4px 4px 4px 4px;
+}
+.AvTextBox:focus
+{ 
+	border:1px solid #D19813;
+}
+/* Default style for text box that displays id */
+.AvIdTextBox
+{
+	font-family: Tahoma;
+	font-size: 8pt;
+	height: 18px; /* 19px;*/
+	width: 110px;
+	border:1px solid rgb(64, 179, 104);
+	border-radius:4px 4px 4px 4px;
+}
+.AvIdTextBox:focus
+{ 
+	border:1px solid #D19813;
+}
+.AvSubAccIdTextBox
+{
+	font-family: Tahoma;
+	font-size: 8pt;
+	height: 18px; /* 19px;*/
+	width: 200px;
+	border:1px solid rgb(64, 179, 104);
+	border-radius:4px 4px 4px 4px;
+}
+
+/* Default style for date text box */
+.AvDateTextBox
+{
+	font-size: 8pt;
+	width: 70px;
+	font-family: Tahoma;
+	height: 18px; /* 19px;*/
+	border:1px solid rgb(64, 179, 104);
+	border-radius:4px 4px 4px 4px;
+}
+
+/* Label that holds name of field such : User Id */
+.AvFieldNmLabel
+{
+	font-weight: normal;
+	font-size: 8pt;
+	font-family: Tahoma;
+	height: 18px; /* 15px;*/
+	overflow: hidden;
+	display: block;
+	text-align: right;	
+}
+
+/* Label that holds name of field such : User Id */
+.AvFieldNm 
+{
+	font-weight: normal;
+	font-size: 8pt;
+	font-family: Tahoma; 
+	overflow: hidden;
+	display: block;
+	text-align: center;	
+}
+
+.AvFieldNmLeft
+{
+	font-weight: normal;
+	font-size: 8pt;
+	font-family: Tahoma; 
+	overflow: hidden;
+	display: block;
+	text-align: left;	
+}
+
+.AvFieldNmCenter
+{
+	font-weight: normal;
+	font-size: 8pt;
+	font-family: Tahoma; 
+	overflow: hidden;
+	display: block;
+	text-align: center;	
+}
+
+.AvMenuFieldNmCheckboxLabel
+{
+	font-weight: normal;
+	font-size: 8pt;
+	font-family: Tahoma;
+	height: 18px; /* 15px; */
+	overflow: hidden;
+	display: inline-block;
+	text-align: left;
+}
+
+/* Label for radio button such : Gender */
+.AvFieldNmRadioLabel
+{
+    font-weight: normal;
+    font-size: 8pt;
+    font-family: Tahoma;
+    height: 18px; /*  15px; */
+    OVERFLOW: hidden;
+	text-align: left;
+	display: inline;
+}
+
+/* Label for checkbox label */
+.AvFieldNmCheckboxLabel
+{
+    font-weight: normal;
+    font-size: 8pt;
+    font-family: Tahoma;
+    height: 18px;
+    OVERFLOW: hidden;
+	text-align: left;
+	display: inline;
+}
+
+/* Label that functions as separator. */
+.AvSeparatorLabel
+{
+	/* Font is still necessary to be specified so it won't set its own height based on default font. */
+	font-weight: normal;
+	font-size: 5pt;
+	font-family: Tahoma;
+	height: 8px;
+	width: 70px;
+	display: inline;
+}
+
+/* Label that holds content of field such : arir */
+.AvFieldLabel
+{
+	font-family: Tahoma;
+	font-size: 8pt;
+	border-right: thin solid;
+	border-top: thin solid;
+	border-left: thin solid;
+	border-bottom: thin solid;
+	height: 18px; /* 19px;*/
+	overflow: hidden;
+	border-width: 1px;
+	DISPLAY: inline-block;
+}
+/* Label that holds content of field that displays id */
+.AvIdFieldLabel
+{
+	font-family: Tahoma;
+	font-size: 8pt;
+	border-right: thin solid;
+	border-top: thin solid;
+	border-left: thin solid;
+	border-bottom: thin solid;
+	height: 18px; /*  19px;*/
+	overflow: hidden;
+	width: 110px;
+}
+
+/* Label that is placed inside the table */
+.AvFieldItemLabel
+{
+	font-family: Tahoma;
+	font-size: 8pt;
+	overflow: hidden;
+	height: 18px; /* 19px; */
+}
+
+/* Label that is placed inside the table.
+   The label height will change automatically depending on the text length.
+*/
+.AvFieldItemLabelAutoHeight
+{
+	font-family: Tahoma;
+	font-size: 8pt;
+}
+
+/* Default style for check box */
+.AvCheckBox
+{
+	height: 19px;
+	width: 19px;
+	border-radius:4px 4px 4px 4px;
+}
+
+.AvMenuCheckBox
+{
+	height: 19px;
+	width: 19px;
+	margin-top: 15px;
+	border-radius:4px 4px 4px 4px;
+}
+
+/* Style for LOV button */
+.AvLovButton
+{
+	background-image: url(../images/btnLov.png);
+	background-repeat: no-repeat;
+	width: 24px;
+	height: 22px;
+	background-color: #9ede28;
+	border-radius:4px 4px 4px 4px;
+}
+/* Style for button that uses to fill more detail information such serial number */
+.AvDetailButton
+{
+	width: 28px;
+	height: 19px;
+	background-color: #9ede28;
+	font-size: 8pt;
+	font-weight: normal;
+	border-radius:4px 4px 4px 4px;
+}
+
+.AvActionButton
+{
+	height: 22px;
+	background-color: #fd8503;
+	font-size: 8pt;
+	font-weight: normal;
+	border-radius:4px 4px 4px 4px;
+}
+  
+/* Table that holds item of data such list of products in Delivery Order */
+.AvItemTable
+{
+	background-color: #d5d2d2;
+	font-family: Tahoma;
+	font-size: 8pt;
+	font-weight: normal;
+	color: black;
+}
+
+/* Same with AvItemTable, but this is used for the second item, the forth item, and so on */
+.AvItemTable2
+{
+	background-color: #9bf9cc;
+	font-family: Tahoma;
+	font-size: 8pt;
+	font-weight: normal;
+	color: black;
+}
+
+/* This is a higlight style for selected row (Search purpose)*/
+.AvItemTableSelectedRow
+{
+	background-color: #99ffff;
+	font-family: Tahoma;
+	font-size: 8pt;
+	font-weight: normal;
+	color: black;
+}
+
+/* Header of table that holds items of data such list of products in Delivery Order */
+.AvItemHeaderTable
+{
+	font-weight: normal;
+	font-size: 8pt;
+	color: white;
+	font-family: Tahoma;
+	height: 20px;
+	background-color: #458b02; 
+	text-align: center;
+}
+.AvItemHeaderTable2
+{
+	font-weight: normal;
+	font-size: 8pt;
+	color: white;
+	font-family: Tahoma;
+	height: 20px;
+	background-color: #97BA75; /*#458b02;*/
+	text-align: center;
+}
+
+/* Table that holds tab strip */
+.AvTabTable
+{
+	cursor: hand;
+	background-color: #458b02;
+	color: white;
+	font-family: Tahoma;
+	font-weight: normal;
+	font-size: 8pt;
+	vertical-align:text-bottom;
+}
+/* Table that holds selected tab strip */
+.AvSelectedTabTable
+{
+	cursor: hand;
+	background-color: #b9b8b8;
+	color: #993300;
+	font-family: Tahoma;
+	font-weight: normal;
+	font-size: 8pt;
+	vertical-align:text-bottom;
+}
+/* DIV that hold content of selected tab strip */
+.AvSelectedTabDiv
+{
+	background-color: #b9b8b8;
+}
+/* Style for scroll button */
+.AvScrollButton 
+{
+	font-family: Tahoma;
+	font-size: 7pt;
+	font-weight: normal;
+	width: 28px;
+	height: 18px;
+	background-color: #fd8503;
+	-moz-font-family: Tahoma;
+	-moz-font-size: 7pt;
+	-moz-font-weight: normal;
+	-moz-width: 28px;
+	-moz-height: 18px;
+	-moz-background-color: #fd8503;	
+}
+.aspNetDisabled 
+{
+    color:Gray;
+}
+
+.AvScrollButton 
+{
+	font-family: Tahoma;
+	font-size: 7pt;
+	font-weight: normal;
+	width: 28px;
+	height: 18px;
+	background-color: #fd8503;
+	-moz-font-family: Tahoma;
+	-moz-font-size: 7pt;
+	-moz-font-weight: normal;
+	-moz-width: 28px;
+	-moz-height: 18px;
+	-moz-background-color: #fd8503;	
+}
+
+/* Table that hold scroll buttons */
+.AvScrollTable
+{
+	border: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-bottom-style: solid;
+	border-top-color:  #b9b8b8;
+	border-left-color:  #b9b8b8;
+	border-bottom-color: White;
+	border-right-color: White;
+}
+/* Default style for button */
+.AvButton
+{
+	font-family: Tahoma;
+	font-size: 8pt;
+	font-weight: normal;
+	height: 22px;
+	color: white;
+	font-weight:bold;
+	background-color: #fd8503;	
+	border-radius:4px 4px 4px 4px;
+}
+.AvButton[disabled]
+{ 
+	color: grey; 
+}
+
+/* Default style for radio */
+.AvRadio
+{
+	width: 22px;
+	height: 22px;
+}
+.AvTextBoxMenuSearch
+{
+	font-family: Tahoma;
+	font-size: 8pt;
+	height: 18px; /* 15px;*/
+	margin-left: 5px;
+	margin-right: 5px;
+	width: 95%;
+}
+ 
+.divMenu
+{
+    overflow-y:scroll;
+    width:350px; 
+    margin-left: 5px; 
+    margin-right:5px;
+    border-width:1px;
+    border-style:solid;
+    border-top-color:Gray;
+    border-left-color:Gray;
+    border-right-color:White;
+    border-bottom-color:White;
+}     
+
+.AvTdLeft
+{
+    text-align:left;
+    height:18px;
+    vertical-align:middle;
+}     
+
+.AvTdRight
+{
+    text-align:right;
+    height:18px; 
+    vertical-align:middle;  
+}
+
+.AvFileUpload
+{
+    background-attachment:scroll;
+    border: solid 1 black;
+    /*margin: 5 5 5 5; */
+	font-family: Tahoma;
+	font-size: 8pt;
+	font-weight: normal;
+	height: 22px; 
+	width:200px;
+	position:relative;
+}
+
+.AvFieldNmLabelLeft
+{
+	font-weight: normal;
+	font-size: 8pt;
+	font-family: Tahoma;
+	height: 18px; /* 15px;*/
+	overflow: hidden;
+	display: block;
+	text-align: left;	
+}
+
+.AvHelpButton
+{
+	background-image: url(../images/btnHelp.png);
+	background-repeat: no-repeat;
+	width: 24px;
+	height: 22px;
+	background-color: #9ede28;
+	border-radius:4px 4px 4px 4px;
+}
+
+.AvLogOutButton
+{
+	background-image: url(../images/btnLogOut.png);
+	background-repeat: no-repeat;
+	width: 83px;
+	height: 25px;
+	background-color: #9ede28;
+	border-radius:4px 4px 4px 4px;
+}
+
+.AvChangePasswordButton
+{
+	background-image: url(../images/btnChangePassword.png);
+	background-repeat: no-repeat;
+	width: 125px;
+	height: 25px;
+	background-color: #9ede28;
+	border-radius:4px 4px 4px 4px;
+}
+
+.AvHeaderReportTable
+{
+	border-style:none;
+    background-color: #4fa001;  
+	width: 100px; 
+	height:0px;
+	font-family: Tahoma;
+	font-size: 10pt;
+	font-weight: normal;
+	color: White;
+	/*padding:0 10px 0 10px;*/
+	margin:0 10px 0 10px;
+}
+.AvItemReportTable
+{
+	background-color: #666666;
+	color:#FFFFFF;
+	font-family: Tahoma;
+	font-size: 10pt;
+	font-weight: normal; 
+	border-style:none; 
+	vertical-align:top;	 
+}
+
+/* Same with AvItemTable, but this is used for the second item, the forth item, and so on */
+.AvItemReportTable2
+{
+	background-color: #4D4D4D;
+	color:#FFFFFF;
+	font-family: Tahoma;
+	font-size: 10pt;
+	font-weight: normal; 
+	border-style:none; 
+	vertical-align:top; 
+}
+
+/* Same with AvItemTable, but this is used for the second item, the forth item, and so on */
+.AvItemReportTableTotal
+{
+	background-color: #666666;
+	font-family: Tahoma;
+	font-size: 11pt;
+	font-weight: bold;
+	color:#FFFFFF;
+	border-style:none; 	
+	vertical-align:top; 
+}
+/* Same with AvItemTable, but this is used for the second item, the forth item, and so on */
+.AvItemReportTableTotal_2
+{
+	background-color: #4D4D4D;
+	font-family: Tahoma;
+	font-size: 11pt;
+	font-weight: bold;
+	color:#FFFFFF;
+	border-style:none; 	
+	vertical-align:top; 
+}
+
+/* Same with AvItemTable, but this is used for the second item, the forth item, and so on */
+.AvItemReportTableTotal2
+{
+	background-color: #666666;
+	font-family: Tahoma;
+	font-size: 10pt;
+	font-weight: bold;
+	color:#FFFFFF;
+	border-style:none; 	
+	vertical-align:top; 
+}
+
+.AvReportTable
+{
+    width:100%; 
+}
