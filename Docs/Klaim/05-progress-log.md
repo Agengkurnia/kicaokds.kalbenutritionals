@@ -84,6 +84,13 @@ Untuk mensimulasikan pencarian outlet yang relevan dengan supplier site, data mo
 
 ---
 
+5. **Standardisasi Grid Detail & Detail LOV**:
+   - **Tampilan Input Baru**: Mengubah kolom detail tabel (`#dtDetail`) untuk memunculkan tombol pencarian merah pada kolom *Activity* dan *PPH Type*, tombol scan abu-abu (`fa-barcode`) pada kolom *Faktur Pajak No*, input PPN Amount dinamis yang aktif hanya jika PPN rate > 0, tombol *Umbrand* biru yang muncul jika `All Brand` tidak dicentang, serta tombol *Delete* kuning block level.
+   - **Interactive Pop-up Detail Modals**: Menambahkan `#lovDetailActivityModal` (Activity) dan `#lovDetailPphTypeModal` (PPH Type) ke bagian bawah body. Format tampilan, ukuran (90% width, min-height 550px), header hijau gelap, list data baris hijau muda, dan fungsionalitas pencarian langsung (live filtering keyup) disamakan persis dengan modal header.
+   - **Logika Kalkulasi & Storage**: Melakukan perhitungan matematis secara dynamic (PPH Tarif %, PPH Amount, Final Amount, PPN Amount, dan Total Amount) serta menyimpan data ini termasuk `DEC_PPN` dan array lampiran attachment (`XXSHP_KDS_T_KLAIM_DTL_ATT`) ke dalam `localStorage` via `syncToStorage` & `syncFromStorage`.
+
+---
+
 ## 4. Cara Pengujian di Prototype
 
 1. Buka halaman utama prototype: `Views/Klaim/Index.html`.
@@ -97,3 +104,9 @@ Untuk mensimulasikan pencarian outlet yang relevan dengan supplier site, data mo
    * Kolom **Partner**, **Outlet**, dan **Branch** otomatis ter-reset/kosong.
 5. Klik tombol pencarian **Outlet**:
    * Amati bahwa daftar outlet yang muncul di dalam modal disaring secara dinamis sehingga hanya menampilkan outlet yang termasuk ke dalam group account `KMMD` (misal: *UD AJEKA DISTRIBUSINDO OUTLET*, *PERMATA BUNDA MART SHOP*, dsb).
+6. Pada tabel detail:
+   * Klik tombol cari merah di kolom **Activity** baris 1. Pilih salah satu activity (misal: `ACT-KCO-02`).
+   * Klik tombol cari merah di kolom **PPH Type**. Pilih tipe PPH. Cek bahwa Tarif PPH, PPH Amount, dan Final Amount otomatis menghitung berdasarkan *Invoice Amount*.
+   * Centang/uncentang kolom **All Brand**. Amati tombol **Umbrand** biru yang muncul/hilang secara dinamis.
+   * Klik tombol **Delete** kuning untuk memicu hapus baris.
+   * Klik tombol **Save** di header untuk menyimpan *Draft* form klaim ke localStorage, lalu muat ulang halaman untuk memverifikasi seluruh state ter-restore secara otomatis.

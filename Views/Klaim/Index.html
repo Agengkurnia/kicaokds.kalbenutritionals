@@ -10,14 +10,18 @@
         /* Adjust LOV modals layout to match Fancybox iframe style */
         #lovGroupAccountModal .modal-dialog,
         #lovPartnerModal .modal-dialog,
-        #lovOutletModal .modal-dialog {
+        #lovOutletModal .modal-dialog,
+        #lovDetailActivityModal .modal-dialog,
+        #lovDetailPphTypeModal .modal-dialog {
             margin: 15px auto !important;
             width: 90% !important;
             max-width: 1100px !important;
         }
         #lovGroupAccountModal .modal-content,
         #lovPartnerModal .modal-content,
-        #lovOutletModal .modal-content {
+        #lovOutletModal .modal-content,
+        #lovDetailActivityModal .modal-content,
+        #lovDetailPphTypeModal .modal-content {
             min-height: 550px;
             border-radius: 0 !important;
             box-shadow: 0 5px 15px rgba(0,0,0,.5);
@@ -25,27 +29,35 @@
         /* Style headers of tables in LOVs to match production exactly */
         #lovGroupAccountModal table thead tr,
         #lovPartnerModal table thead tr,
-        #lovOutletModal table thead tr {
+        #lovOutletModal table thead tr,
+        #lovDetailActivityModal table thead tr,
+        #lovDetailPphTypeModal table thead tr {
             background-color: #36752d !important;
             color: #ffffff !important;
         }
         #lovGroupAccountModal table thead tr td,
         #lovPartnerModal table thead tr td,
-        #lovOutletModal table thead tr td {
+        #lovOutletModal table thead tr td,
+        #lovDetailActivityModal table thead tr td,
+        #lovDetailPphTypeModal table thead tr td {
             color: #ffffff !important;
             border-bottom: 2px solid #36752d !important;
         }
         /* Style table rows inside LOV tables to have the light green background */
         #lovGroupAccountModal table tbody tr td,
         #lovPartnerModal table tbody tr td,
-        #lovOutletModal table tbody tr td {
+        #lovOutletModal table tbody tr td,
+        #lovDetailActivityModal table tbody tr td,
+        #lovDetailPphTypeModal table tbody tr td {
             background-color: #eefceb !important;
             border-top: 1px solid #dcdcdc !important;
         }
         /* Hover effect on LOV rows */
         #lovGroupAccountModal table tbody tr:hover td,
         #lovPartnerModal table tbody tr:hover td,
-        #lovOutletModal table tbody tr:hover td {
+        #lovOutletModal table tbody tr:hover td,
+        #lovDetailActivityModal table tbody tr:hover td,
+        #lovDetailPphTypeModal table tbody tr:hover td {
             background-color: #dff0d8 !important;
         }
     </style>
@@ -262,34 +274,48 @@
                     <!-- Detail Table Block -->
                     <div class="box box-primary">
                         <div class="box-body" style="padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px;">
+                                <div>
+                                    Show 
+                                    <select class="form-control input-sm" style="display: inline-block; width: auto; height: 30px; padding: 5px 10px;">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                    </select> 
+                                    entries
+                                </div>
+                                <div>
+                                    Search: <input type="text" class="form-control input-sm" style="display: inline-block; width: 180px; height: 30px; padding: 5px 10px;" placeholder="">
+                                </div>
+                            </div>
                             <div style="overflow-x: auto; width: 100%;">
                                 <table id="dtDetail" class="table table-condensed table-striped table-hover table-bordered" style="min-width: 1800px;">
                                     <thead>
                                         <tr style="background: #36752d; color: white;">
-                                             <th style="width:40px; text-align:center;">No</th>
-                                             <th style="width:120px;">Activity <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_ACTIVITY</b><br>Master: <b>XXSHP_KDS_M_PRM_DTL</b>"></i></th>
-                                             <th style="width:250px;">Program Desc <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_PROGRAM_DESC</b><br>Master: <b>XXSHP_KDS_M_PRM_HDR</b>"></i></th>
-                                             <th style="width:120px;">Period From <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_PERIOD_FROM</b>"></i></th>
-                                             <th style="width:120px;">To <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_PERIOD_TO</b>"></i></th>
-                                             <th style="width:120px;">Invoice No <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_INVOICE_NO</b>"></i></th>
-                                             <th style="width:120px;">Invoice Date <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_INVOICE</b>"></i></th>
-                                             <th style="width:150px;">Faktur Pajak No <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_FKT_PJK_NO</b>"></i></th>
-                                             <th style="width:120px;">Faktur Pajak Date <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_FKT_PJK</b>"></i></th>
-                                             <th style="width:130px; text-align:right;">Invoice Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_INVOICE_AMT</b>"></i></th>
-                                             <th style="width:120px;">PPH Type <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_PPH_JENIS</b><br>Master: <b>XXSHP_KDS_M_PPH_HDR</b>"></i></th>
-                                             <th style="width:80px; text-align:right;">Tarif PPH(%) <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_PERSEN_PPH</b>"></i></th>
-                                             <th style="width:110px; text-align:right;">PPH Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_PPH</b>"></i></th>
-                                             <th style="width:130px; text-align:right;">Final Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Calculated field:<br><b>DEC_INVOICE_AMT - DEC_PPH</b>"></i></th>
-                                             <th style="width:110px;">PPN Type <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_PPNTAXRATE_CODE</b>"></i></th>
-                                             <th style="width:110px; text-align:right;">PPN Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_PPN</b>"></i></th>
-                                             <th style="width:130px; text-align:right;">Total Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Calculated field:<br><b>Final Amount + DEC_PPN</b>"></i></th>
-                                             <th style="width:80px; text-align:center;">All Brand <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>BIT_ALLBRAND</b>"></i></th>
-                                             <th style="width:80px; text-align:center;">Umbrand <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_UMB</b><br>Field: <b>TXT_UMBRAND</b> (via Allocation)"></i></th>
-                                             <th style="width:150px;">Attachment <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL_ATT</b>"></i></th>
-                                             <th style="width:60px; text-align:center;">Delete</th>
-                                             <th style="width:100px;">Status <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_STATUSKLAIM</b>"></i></th>
-                                             <th style="width:150px;">Description <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_STATUS_DESC</b>"></i></th>
-                                             <th style="width:70px; text-align:center;">Include <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>BIT_INCLUDE</b>"></i></th>
+                                             <td style="width:40px; text-align:center; font-weight:bold;">No</td>
+                                             <td style="width:120px; font-weight:bold;">Activity <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_ACTIVITY</b><br>Master: <b>XXSHP_KDS_M_PRM_DTL</b>"></i></td>
+                                             <td style="width:250px; font-weight:bold;">Program Desc <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_PROGRAM_DESC</b><br>Master: <b>XXSHP_KDS_M_PRM_HDR</b>"></i></td>
+                                             <td style="width:120px; font-weight:bold;">Period From <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_PERIOD_FROM</b>"></i></td>
+                                             <td style="width:120px; font-weight:bold;">To <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_PERIOD_TO</b>"></i></td>
+                                             <td style="width:120px; font-weight:bold;">Invoice No <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_INVOICE_NO</b>"></i></td>
+                                             <td style="width:120px; font-weight:bold;">Invoice Date <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_INVOICE</b>"></i></td>
+                                             <td style="width:150px; font-weight:bold;">Faktur Pajak No <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_FKT_PJK_NO</b>"></i></td>
+                                             <td style="width:120px; font-weight:bold;">Faktur Pajak Date <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_FKT_PJK</b>"></i></td>
+                                             <td style="width:130px; text-align:right; font-weight:bold;">Invoice Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_INVOICE_AMT</b>"></i></td>
+                                             <td style="width:120px; font-weight:bold;">PPH Type <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_PPH_JENIS</b><br>Master: <b>XXSHP_KDS_M_PPH_HDR</b>"></i></td>
+                                             <td style="width:80px; text-align:right; font-weight:bold;">Tarif PPH(%) <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_PERSEN_PPH</b>"></i></td>
+                                             <td style="width:110px; text-align:right; font-weight:bold;">PPH Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_PPH</b>"></i></td>
+                                             <td style="width:130px; text-align:right; font-weight:bold;">Final Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Calculated field:<br><b>DEC_INVOICE_AMT - DEC_PPH</b>"></i></td>
+                                             <td style="width:160px; font-weight:bold;">PPN Type <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_PPNTAXRATE_CODE</b>"></i></td>
+                                             <td style="width:110px; text-align:right; font-weight:bold;">PPN Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_PPN</b>"></i></td>
+                                             <td style="width:130px; text-align:right; font-weight:bold;">Total Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Calculated field:<br><b>Final Amount + DEC_PPN</b>"></i></td>
+                                             <td style="width:80px; text-align:center; font-weight:bold;">All Brand <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>BIT_ALLBRAND</b>"></i></td>
+                                             <td style="width:80px; text-align:center; font-weight:bold;">Umbrand <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_UMB</b><br>Field: <b>TXT_UMBRAND</b> (via Allocation)"></i></td>
+                                             <td style="width:250px; font-weight:bold;">Attachment <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL_ATT</b>"></i></td>
+                                             <td style="width:60px; text-align:center; font-weight:bold;">Delete</td>
+                                             <td style="width:100px; font-weight:bold;">Status <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_STATUSKLAIM</b>"></i></td>
+                                             <td style="width:150px; font-weight:bold;">Description <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_STATUS_DESC</b>"></i></td>
+                                             <td style="width:70px; text-align:center; font-weight:bold;">Include <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>BIT_INCLUDE</b>"></i></td>
                                         </tr>
                                     </thead>
                                     <tbody id="dtBodyKlaim">
@@ -297,14 +323,21 @@
                                     </tbody>
                                 </table>
                             </div>
-
-                            <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 13px;">
+                                <div class="lov-info" id="dtDetailInfo">
+                                    Showing 1 to 2 of 2 entries
+                                </div>
                                 <div>
-                                    <button class="btn btn-warning" id="btnAddDetail" onclick="handleAddDetail()"><i class="fa fa-plus"></i> Add Detail</button>
+                                    <ul class="pagination pagination-sm" style="margin: 0;">
+                                        <li class="disabled"><a href="#">Previous</a></li>
+                                        <li class="active"><a href="#">1</a></li>
+                                        <li class="disabled"><a href="#">Next</a></li>
+                                    </ul>
                                 </div>
-                                <div style="font-size: 15px; font-weight: bold; padding: 10px; background: #eefceb; border: 1px solid #cce8c9; border-radius: 4px;">
-                                    Grand Total Claim: IDR <span id="lblGrandTotal">0</span>
-                                </div>
+                            </div>
+
+                            <div style="margin-top: 15px; text-align: right;">
+                                <button class="btn btn-warning" id="btnAddDetail" onclick="handleAddDetail()"><i class="fa fa-plus"></i> Add Detail</button>
                             </div>
                         </div>
                     </div>
@@ -336,28 +369,28 @@
                             </div>
                         </div>
 
-                        <table class="table table-condensed table-hover" style="width: 100%;">
+                        <table class="table table-condensed table-hover" style="width: 100%; table-layout: fixed;">
                             <thead>
                                 <tr>
-                                    <td><div style="font-weight:bold">Pilih</div></td>
-                                    <td><div style="font-weight:bold">Group Account</div></td>
+                                    <td style="width: 70px; font-weight: bold; text-align: center;">Pilih</td>
+                                    <td style="font-weight: bold;">Group Account</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><button class="btn btn-default btn-xs" onclick="selectGroupAccount('BRAVO', 'SPL-BRAVO-001', 'PT SANGHIANG PERKASA', 'SITE-BRAVO')">Pilih</button></td>
+                                    <td><button type="button" class="btn btn-success btn-xs" onclick="selectGroupAccount('BRAVO', 'SPL-BRAVO-001', 'PT SANGHIANG PERKASA', 'SITE-BRAVO')"><i class="fa fa-check"></i> Pilih</button></td>
                                     <td>BRAVO</td>
                                 </tr>
                                 <tr>
-                                    <td><button class="btn btn-default btn-xs" onclick="selectGroupAccount('ENSEVAL', 'SPL-ENSEVAL-002', 'PT SANGHIANG PERKASA', 'SITE-ENSEVAL')">Pilih</button></td>
+                                    <td><button type="button" class="btn btn-success btn-xs" onclick="selectGroupAccount('ENSEVAL', 'SPL-ENSEVAL-002', 'PT SANGHIANG PERKASA', 'SITE-ENSEVAL')"><i class="fa fa-check"></i> Pilih</button></td>
                                     <td>ENSEVAL</td>
                                 </tr>
                                 <tr>
-                                    <td><button class="btn btn-default btn-xs" onclick="selectGroupAccount('KMMD', 'SPL-KMMD-003', 'PT SANGHIANG PERKASA', 'SITE-KMMD')">Pilih</button></td>
+                                    <td><button type="button" class="btn btn-success btn-xs" onclick="selectGroupAccount('KMMD', 'SPL-KMMD-003', 'PT SANGHIANG PERKASA', 'SITE-KMMD')"><i class="fa fa-check"></i> Pilih</button></td>
                                     <td>KMMD</td>
                                 </tr>
                                 <tr>
-                                    <td><button class="btn btn-default btn-xs" onclick="selectGroupAccount('RM VI JATENG', 'SPL-RM6-004', 'PT SANGHIANG PERKASA', 'SITE-RM6')">Pilih</button></td>
+                                    <td><button type="button" class="btn btn-success btn-xs" onclick="selectGroupAccount('RM VI JATENG', 'SPL-RM6-004', 'PT SANGHIANG PERKASA', 'SITE-RM6')"><i class="fa fa-check"></i> Pilih</button></td>
                                     <td>RM VI JATENG</td>
                                 </tr>
                             </tbody>
@@ -404,14 +437,14 @@
                             </div>
                         </div>
 
-                        <table class="table table-condensed table-hover" style="width: 100%;">
+                        <table class="table table-condensed table-hover" style="width: 100%; table-layout: fixed;">
                             <thead>
                                 <tr>
-                                    <td><div style="font-weight:bold">Pilih</div></td>
-                                    <td><div style="font-weight:bold">SITE</div></td>
-                                    <td><div style="font-weight:bold">BRANCH NAME</div></td>
-                                    <td><div style="font-weight:bold">SUPPLIER NAME</div></td>
-                                    <td><div style="font-weight:bold">GROUP ACCOUNT</div></td>
+                                    <td style="width: 70px; font-weight: bold; text-align: center;">Pilih</td>
+                                    <td style="width: 300px; font-weight: bold;">SITE</td>
+                                    <td style="width: 150px; font-weight: bold;">BRANCH NAME</td>
+                                    <td style="font-weight: bold;">SUPPLIER NAME</td>
+                                    <td style="width: 150px; font-weight: bold;">GROUP ACCOUNT</td>
                                 </tr>
                             </thead>
                             <tbody id="lovPartnerTableBody">
@@ -460,18 +493,131 @@
                             </div>
                         </div>
 
-                        <table class="table table-condensed table-hover" style="width: 100%;">
+                        <table class="table table-condensed table-hover" style="width: 100%; table-layout: fixed;">
                             <thead>
                                 <tr>
-                                    <td><div style="font-weight:bold">Pilih</div></td>
-                                    <td><div style="font-weight:bold">SITE</div></td>
-                                    <td><div style="font-weight:bold">SUPPLIER ID</div></td>
-                                    <td><div style="font-weight:bold">SUPPLIER NAME</div></td>
-                                    <td><div style="font-weight:bold">BRANCH</div></td>
+                                    <td style="width: 70px; font-weight: bold; text-align: center;">Pilih</td>
+                                    <td style="width: 300px; font-weight: bold;">SITE</td>
+                                    <td style="width: 120px; font-weight: bold;">SUPPLIER ID</td>
+                                    <td style="font-weight: bold;">SUPPLIER NAME</td>
+                                    <td style="width: 120px; font-weight: bold;">BRANCH</td>
                                 </tr>
                             </thead>
                             <tbody id="lovOutletTableBody">
                                 <!-- Dynamically populated based on Group Account -->
+                            </tbody>
+                        </table>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 13px;">
+                            <div class="lov-info">
+                                Showing 0 to 0 of 0 entries
+                            </div>
+                            <div>
+                                <ul class="pagination pagination-sm" style="margin: 0;">
+                                    <li class="disabled"><a href="#">Previous</a></li>
+                                    <li class="active"><a href="#">1</a></li>
+                                    <li class="disabled"><a href="#">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Activity LOV -->
+        <div class="modal" id="lovDetailActivityModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" style="width:90%; max-width:1100px;" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#00a65a; color:white; border-bottom: none;">
+                        <button type="button" class="close" data-dismiss="modal" style="color:white; opacity:1;">&times;</button>
+                        <h4 class="modal-title" style="color:white; font-weight:bold;">List Of Value</h4>
+                    </div>
+                    <div class="modal-body" style="padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px;">
+                            <div>
+                                Show 
+                                <select class="form-control input-sm" style="display: inline-block; width: auto; height: 30px; padding: 5px 10px;">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div>
+                                Search: <input type="text" class="form-control input-sm" style="display: inline-block; width: 180px; height: 30px; padding: 5px 10px;" placeholder="">
+                            </div>
+                        </div>
+
+                        <table class="table table-condensed table-hover" style="width: 100%; table-layout: fixed;">
+                            <thead>
+                                <tr>
+                                    <td style="width: 70px; font-weight: bold; text-align: center;">Pilih</td>
+                                    <td style="font-weight: bold;">Activity</td>
+                                    <td style="width: 100px; font-weight: bold;">COA</td>
+                                    <td style="width: 150px; font-weight: bold;">PPH Jenis</td>
+                                    <td style="width: 100px; font-weight: bold; text-align: right;">Persen PPH</td>
+                                    <td style="font-weight: bold;">Program Desc</td>
+                                </tr>
+                            </thead>
+                            <tbody id="lovDetailActivityTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 13px;">
+                            <div class="lov-info">
+                                Showing 0 to 0 of 0 entries
+                            </div>
+                            <div>
+                                <ul class="pagination pagination-sm" style="margin: 0;">
+                                    <li class="disabled"><a href="#">Previous</a></li>
+                                    <li class="active"><a href="#">1</a></li>
+                                    <li class="disabled"><a href="#">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail PPH Type LOV -->
+        <div class="modal" id="lovDetailPphTypeModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" style="width:90%; max-width:1100px;" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#00a65a; color:white; border-bottom: none;">
+                        <button type="button" class="close" data-dismiss="modal" style="color:white; opacity:1;">&times;</button>
+                        <h4 class="modal-title" style="color:white; font-weight:bold;">List Of Value</h4>
+                    </div>
+                    <div class="modal-body" style="padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px;">
+                            <div>
+                                Show 
+                                <select class="form-control input-sm" style="display: inline-block; width: auto; height: 30px; padding: 5px 10px;">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div>
+                                Search: <input type="text" class="form-control input-sm" style="display: inline-block; width: 180px; height: 30px; padding: 5px 10px;" placeholder="">
+                            </div>
+                        </div>
+
+                        <table class="table table-condensed table-hover" style="width: 100%; table-layout: fixed;">
+                            <thead>
+                                <tr>
+                                    <td style="width: 70px; font-weight: bold; text-align: center;">Pilih</td>
+                                    <td style="width: 150px; font-weight: bold;">ID</td>
+                                    <td style="font-weight: bold;">Jenis PPH</td>
+                                    <td style="width: 120px; font-weight: bold; text-align: right;">Persen PPH</td>
+                                    <td style="width: 250px; font-weight: bold;">Group ID</td>
+                                </tr>
+                            </thead>
+                            <tbody id="lovDetailPphTypeTableBody">
+                                <!-- Populated dynamically based on row's activity -->
                             </tbody>
                         </table>
 
@@ -502,6 +648,70 @@
                     </div>
                     <div class="modal-body" style="padding:0;">
                         <iframe id="klaimPopupFrame" style="width:100%; height:520px; border:none;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Find LOV -->
+        <div class="modal" id="lovFindModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" style="width:95%; max-width:1400px;" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#00a65a; color:white; border-bottom: none;">
+                        <button type="button" class="close" data-dismiss="modal" style="color:white; opacity:1;">&times;</button>
+                        <h4 class="modal-title" style="color:white; font-weight:bold;">List Of Value</h4>
+                    </div>
+                    <div class="modal-body" style="padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px;">
+                            <div>
+                                Show 
+                                <select class="form-control input-sm" style="display: inline-block; width: auto; height: 30px; padding: 5px 10px;">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                </select> 
+                                entries
+                            </div>
+                            <div>
+                                Search: <input type="text" class="form-control input-sm" style="display: inline-block; width: 180px; height: 30px; padding: 5px 10px;" placeholder="">
+                            </div>
+                        </div>
+
+                        <div style="overflow-x: auto;">
+                            <table class="table table-condensed table-hover table-striped" style="width: 100%; white-space: nowrap;">
+                                <thead style="background-color: #3f7b3a; color: white;">
+                                    <tr>
+                                        <th style="width: 70px; text-align: center;">Pilih</th>
+                                        <th>ID</th>
+                                        <th>Dok No</th>
+                                        <th>Site</th>
+                                        <th>Description</th>
+                                        <th>Period</th>
+                                        <th>Invoice No</th>
+                                        <th style="text-align: right;">Invoice Amount</th>
+                                        <th>Status</th>
+                                        <th>Attachment</th>
+                                        <th>Ready To Submit</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lovFindTableBody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 13px;">
+                            <div class="lov-info" id="lovFindInfo">
+                                Showing 0 to 0 of 0 entries
+                            </div>
+                            <div>
+                                <ul class="pagination pagination-sm" style="margin: 0;">
+                                    <li class="disabled"><a href="#">Previous</a></li>
+                                    <li class="active"><a href="#">1</a></li>
+                                    <li class="disabled"><a href="#">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -543,38 +753,56 @@
             {"site": "APOTEK RM JATENG TEGAL", "supplier_id": "5502", "supplier_name": "RM VI JATENG CO", "branch": "TEGAL", "group_account": "RM VI JATENG", "supplier_site_id": "6102", "supplier_site_name": "SITE-RM6-TGL"}
         ];
 
-        let detailRows = [
-            {
-                activity: 'ACT-KCO-01',
-                programDesc: 'MILNA BOGO PROMO 2026',
-                periodFrom: '01-Jan-2026',
-                periodTo: '31-Mar-2026',
-                invoiceNo: 'INV-KDS-9912',
-                invoiceDate: '10-Jan-2026',
-                fakturNo: 'FP-001.002.9912',
-                fakturDate: '10-Jan-2026',
-                invoiceAmount: 250000000,
-                pphType: 'PPH 23 (2%)',
-                pphTarif: 2,
-                ppnType: 'PPN 11%',
-                ppnTarif: 11,
-                allBrand: true,
-                umbrand: 'CH-MILNA',
-                umbrandData: [{ TXT_UMBRAND: 'MILNA', TXT_BRAND: 'MILNA UHT', DEC_AMOUNT: 250000000, XXSHP_KDS_T_KLAIM_BRAN: [] }],
-                status: 'OPEN',
-                description: 'Initial Milna promotion claim',
-                include: true
-            }
+        // Enriched Detail LOV Mock Datasets
+        const findData = [
+            { id: '5192', dokNo: '26.03/KLAIM-BOS/001', site: 'PT. SUMBER REZEKI BERSAMA - TEBING TINGGI', description: 'MEMO PENETRATION NPD CGP 120 GR PERIODE FEB-DES 2026 - OUTLET NON SPM(MAR 2026)', period: '11-MAR-26 - 11-MAR-26', invoiceNo: '350203-SI-26-030118', invoiceAmount: 12650, status: 'DRAFT', attachment: 'No', readyToSubmit: 'No' },
+            { id: '5191', dokNo: '26.03/KLAIM-MIM/004', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT BEKASI', description: 'BONUS SUBDIST', period: '22-JAN-26 - 24-JAN-26', invoiceNo: 'KLAIMKDS2.TFM', invoiceAmount: 80000, status: 'CLOSED', attachment: 'Yes', readyToSubmit: 'Yes' },
+            { id: '5190', dokNo: '26.03/KLAIM-MIM/003', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT BEKASI', description: 'BONUS SUBDIST ABC', period: '13-MAR-26 - 31-MAR-26', invoiceNo: 'INV.13.03.36.TFM1', invoiceAmount: 20000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes' },
+            { id: '5189', dokNo: '26.03/KLAIM-MIM/002', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT ACEH', description: 'PROGRAM GOAL (GO JUALAN CHILGO LIQUID)', period: '11-MAR-26 - 11-MAR-26', invoiceNo: 'KLAIMKDS1', invoiceAmount: 100000, status: 'CLOSED', attachment: 'Yes', readyToSubmit: 'Yes' },
+            { id: '5188', dokNo: '26.03/KLAIM-MIM/001', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT', description: 'KLAIM KDS', period: '11-MAR-26 - 26-MAR-26', invoiceNo: 'KLAIM KDS', invoiceAmount: 100000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes' },
+            { id: '5187', dokNo: '25.12/KLAIM-HAI/001', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT ACEH', description: 'TEST KLAIM UNTUK MKPP SESUDAH CUTOFF', period: '22-DEC-25 - 24-DEC-25', invoiceNo: 'TEST KLAIM UNTUK MKPP SESUDAH CUTOFF', invoiceAmount: 2500002, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes' },
+            { id: '5186', dokNo: '25.12/KLAIM-MIM/004', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT', description: 'BONUS SUBDIST', period: '08-DEC-25 - 31-DEC-25', invoiceNo: 'INV-ONO-SAR/00003.000', invoiceAmount: 6000000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes' }
         ];
 
-        let basePath = '../../';
+        const detailActivitiesData = [
+            {"activity": "BONUS SUBDIST", "coa": "350103", "pph_jenis": "PPh23_15%", "rate": 15, "progDesc": "MILNA BOGO PROMO 2026"},
+            {"activity": "PROGRAM GOAL (GO JUALAN CHILGO LIQUID)", "coa": "380101", "pph_jenis": "PPh21_5%", "rate": 5, "progDesc": "PROGRAM GOAL CHILGO LIQUID FEB 2026"},
+            {"activity": "PROGRAM SALESMAN ACADEMIA", "coa": "350107", "pph_jenis": "PPh21_2.5%", "rate": 2.5, "progDesc": "SALESMAN ACADEMIA Q1 2026"},
+            {"activity": "PROGRAM THR SALESMAN MUSTANG", "coa": "350101", "pph_jenis": "PPH_4(2)_2.65", "rate": 2.65, "progDesc": "THR MUSTANG 2026"}
+        ];
 
-         document.addEventListener('layoutReady', () => {
+        const detailPphTypesData = [
+            {"id": "PPh23_15", "name": "PPh23_15%", "rate": 15, "group_id": "BONUS SUBDIST"},
+            {"id": "PPh21_5", "name": "PPh21_5%", "rate": 5, "group_id": "PROGRAM GOAL (GO JUALAN CHILGO LIQUID)"},
+            {"id": "PPh21_2.5", "name": "PPh21_2.5%", "rate": 2.5, "group_id": "PROGRAM SALESMAN ACADEMIA"},
+            {"id": "PPH_4_2_2.65", "name": "PPH_4(2)_2.65", "rate": 2.65, "group_id": "PROGRAM THR SALESMAN MUSTANG"},
+            // General PPH Types
+            {"id": "PPh23_15_GEN", "name": "PPh23_15%", "rate": 15, "group_id": ""},
+            {"id": "PPh21_5_GEN", "name": "PPh21_5%", "rate": 5, "group_id": ""},
+            {"id": "PPh21_2.5_GEN", "name": "PPh21_2.5%", "rate": 2.5, "group_id": ""},
+            {"id": "PPH_4_2_2.65_GEN", "name": "PPH_4(2)_2.65", "rate": 2.65, "group_id": ""}
+        ];
+
+        const zxRatesBList = [
+            {"TAX_RATE_CODE": "NON PPN", "PERCENTAGE_RATE": 0},
+            {"TAX_RATE_CODE": "PPN 11%", "PERCENTAGE_RATE": 11},
+            {"TAX_RATE_CODE": "PPN 12%", "PERCENTAGE_RATE": 12}
+        ];
+
+        let detailRows = [];
+
+        let basePath = '../../';
+        let activeDetailRowIndex = null;
+
+        document.addEventListener('layoutReady', () => {
              // Move modals to body to prevent backdrop stacking issues
              $('.modal').appendTo('body');
 
              basePath = (typeof klaimDetectBasePath === 'function') ? klaimDetectBasePath() : '../../';
              document.getElementById('dtmDate').value = moment().format('DD-MMM-YYYY');
+             
+             // Reset session storage on initial page load so it's always empty by default
+             sessionStorage.removeItem('klaimPrototypeData');
              
              // First read from storage
              syncFromStorage();
@@ -589,7 +817,77 @@
              
              renderTable();
              $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
-         });
+
+             // Live filtering event handlers for search inputs
+             $(document).on('keyup', '#lovGroupAccountModal input[type="text"]', function() {
+                 var val = $(this).val().toLowerCase();
+                 var visibleCount = 0;
+                 $('#lovGroupAccountModal tbody tr').each(function() {
+                     var show = $(this).text().toLowerCase().indexOf(val) > -1;
+                     $(this).toggle(show);
+                     if (show) visibleCount++;
+                 });
+                 $('#lovGroupAccountModal .lov-info').text('Showing 1 to ' + visibleCount + ' of ' + 4 + ' entries');
+             });
+
+             $(document).on('keyup', '#lovPartnerModal input[type="text"]', function() {
+                 var val = $(this).val().toLowerCase();
+                 var visibleCount = 0;
+                 var totalCount = $('#lovPartnerTableBody tr').length;
+                 $('#lovPartnerTableBody tr').each(function() {
+                     var show = $(this).text().toLowerCase().indexOf(val) > -1;
+                     $(this).toggle(show);
+                     if (show) visibleCount++;
+                 });
+                 $('#lovPartnerModal .lov-info').text('Showing 1 to ' + visibleCount + ' of ' + totalCount + ' entries');
+             });
+
+             $(document).on('keyup', '#lovOutletModal input[type="text"]', function() {
+                 var val = $(this).val().toLowerCase();
+                 var visibleCount = 0;
+                 var totalCount = $('#lovOutletTableBody tr').length;
+                 $('#lovOutletModal .lov-index tbody tr').each(function() {
+                     var show = $(this).text().toLowerCase().indexOf(val) > -1;
+                     $(this).toggle(show);
+                     if (show) visibleCount++;
+                 });
+                 $('#lovOutletModal .lov-info').text('Showing 1 to ' + visibleCount + ' of ' + totalCount + ' entries');
+             });
+
+             $(document).on('keyup', '#lovDetailActivityModal input[type="text"]', function() {
+                 var val = $(this).val().toLowerCase();
+                 var visibleCount = 0;
+                 $('#lovDetailActivityTableBody tr').each(function() {
+                     var show = $(this).text().toLowerCase().indexOf(val) > -1;
+                     $(this).toggle(show);
+                     if (show) visibleCount++;
+                 });
+                 $('#lovDetailActivityModal .lov-info').text('Showing 1 to ' + visibleCount + ' of ' + detailActivitiesData.length + ' entries');
+             });
+
+             $(document).on('keyup', '#lovDetailPphTypeModal input[type="text"]', function() {
+                 var val = $(this).val().toLowerCase();
+                 var visibleCount = 0;
+                 var totalCount = $('#lovDetailPphTypeTableBody tr').length;
+                 $('#lovDetailPphTypeTableBody tr').each(function() {
+                     var show = $(this).text().toLowerCase().indexOf(val) > -1;
+                     $(this).toggle(show);
+                     if (show) visibleCount++;
+                 });
+                 $('#lovDetailPphTypeModal .lov-info').text('Showing 1 to ' + visibleCount + ' of ' + totalCount + ' entries');
+             });
+
+             $(document).on('keyup', '#lovFindModal input[type="text"]', function() {
+                 var val = $(this).val().toLowerCase();
+                 var visibleCount = 0;
+                 $('#lovFindTableBody tr').each(function() {
+                     var show = $(this).text().toLowerCase().indexOf(val) > -1;
+                     $(this).toggle(show);
+                     if (show) visibleCount++;
+                 });
+                 $('#lovFindInfo').text('Showing 1 to ' + visibleCount + ' of ' + findData.length + ' entries');
+             });
+        });
 
         window.addEventListener('message', (e) => {
             if (e.data && e.data.type === 'klaimUpdated') {
@@ -636,11 +934,13 @@
                 DEC_PPH: r.invoiceAmount * (r.pphTarif / 100),
                 TXT_PPNTAXRATE_CODE: r.ppnType,
                 DEC_PPN_PERCENTAGE: r.ppnTarif,
+                DEC_PPN: r.ppnAmount,
                 BIT_ALLBRAND: r.allBrand ? 'Y' : 'N',
                 BIT_INCLUDE: r.include ? 'Y' : 'N',
                 TXT_STATUSKLAIM: r.status,
                 TXT_STATUS_DESC: r.description,
-                XXSHP_KDS_T_KLAIM_UMB: r.umbrandData || []
+                XXSHP_KDS_T_KLAIM_UMB: r.umbrandData || [],
+                XXSHP_KDS_T_KLAIM_DTL_ATT: r.attachmentName ? [{ TXT_FILE_NAME: r.attachmentName, BIT_ACTIVE: 'Y' }] : []
             }));
             klaimSetData(data);
         }
@@ -720,17 +1020,27 @@
                 pphTarif: d.DEC_PERSEN_PPH || 0,
                 ppnType: d.TXT_PPNTAXRATE_CODE || 'NON PPN',
                 ppnTarif: d.DEC_PPN_PERCENTAGE || 0,
+                ppnAmount: d.DEC_PPN || 0,
                 allBrand: d.BIT_ALLBRAND === 'Y',
                 umbrand: (d.XXSHP_KDS_T_KLAIM_UMB && d.XXSHP_KDS_T_KLAIM_UMB[0]) ? d.XXSHP_KDS_T_KLAIM_UMB[0].TXT_UMBRAND : '',
                 umbrandData: d.XXSHP_KDS_T_KLAIM_UMB || [],
                 status: d.TXT_STATUSKLAIM || 'OPEN',
                 description: d.TXT_STATUS_DESC || '',
-                include: d.BIT_INCLUDE !== 'N'
+                include: d.BIT_INCLUDE !== 'N',
+                attachmentName: (d.XXSHP_KDS_T_KLAIM_DTL_ATT && d.XXSHP_KDS_T_KLAIM_DTL_ATT.length) ? d.XXSHP_KDS_T_KLAIM_DTL_ATT[0].TXT_FILE_NAME : ''
             }));
         }
 
         function formatCurrency(val) {
             return new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(val);
+        }
+
+        function formatRate(val) {
+            if (val === parseInt(val, 10)) {
+                return val.toString();
+            } else {
+                return val.toFixed(2);
+            }
         }
 
         function cleanNumber(str) {
@@ -742,83 +1052,156 @@
             tbody.innerHTML = '';
             let grandTotal = 0;
 
-            detailRows.forEach((item, index) => {
+            if (detailRows.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = '<td colspan="24" class="text-center" style="padding: 15px;">No data available in table</td>';
+                tbody.appendChild(tr);
+            } else {
+                detailRows.forEach((item, index) => {
+                    // Ensure ppnAmount is set
+                    if (item.ppnAmount === undefined) {
+                    item.ppnAmount = Math.floor(item.invoiceAmount * (item.ppnTarif / 100));
+                }
                 // Calculate PPH, PPN, and final totals
-                const pphAmount = item.invoiceAmount * (item.pphTarif / 100);
+                const pphAmount = Math.floor(item.invoiceAmount * (item.pphTarif / 100));
                 const finalAmount = item.invoiceAmount - pphAmount;
-                const ppnAmount = item.invoiceAmount * (item.ppnTarif / 100);
+                const ppnAmount = item.ppnAmount;
                 const totalAmount = finalAmount + ppnAmount;
 
                 if (item.include) {
                     grandTotal += totalAmount;
                 }
 
+                // Populate PPN dropdown option items dynamically
+                let ppnOptionsHtml = '';
+                zxRatesBList.forEach(rate => {
+                    const value = `${rate.TAX_RATE_CODE};${rate.PERCENTAGE_RATE}`;
+                    const isSelected = (item.ppnType === rate.TAX_RATE_CODE) ? 'selected' : '';
+                    ppnOptionsHtml += `<option value="${value}" ${isSelected}>${rate.TAX_RATE_CODE}</option>`;
+                });
+
+                // Generate Umbrand button if All Brand is false
+                const umbrandHtml = item.allBrand ? '' : `
+                    <input type="button" class="btn btn-info btn-sm btn-block btnDetailUmbrand" onclick="openUmbrand(${index})" value="Umbrand">
+                `;
+
+                // Render Attachment section
+                let attachmentHtml = '';
+                if (item.attachmentName) {
+                    attachmentHtml = `
+                        <div style="display:flex; gap: 4px; align-items: center;">
+                            <input type="file" id="fileDetail${index}" class="form-control input-sm" style="width: 80px; display: none;" onchange="uploadAttachment(${index}, this)">
+                            <span class="text-muted text-ellipsis" style="max-width: 100px; font-size: 11px;" title="${item.attachmentName}">${item.attachmentName}</span>
+                            <button class="btn btn-success btn-xs btnViewAttachment" type="button" onclick="viewAttachment(${index})" title="View PDF"><i class="fa fa-eye"></i> View</button>
+                            <button class="btn btn-danger btn-xs btnRemoveAttachment" type="button" onclick="removeAttachment(${index})" title="Remove"><i class="fa fa-remove"></i> Remove</button>
+                        </div>
+                    `;
+                } else {
+                    attachmentHtml = `
+                        <div style="display:flex; align-items: center;">
+                            <input type="file" id="fileDetail${index}" class="form-control input-sm" style="width:100%;" onchange="uploadAttachment(${index}, this)">
+                        </div>
+                    `;
+                }
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td style="text-align:center; vertical-align:middle;">${index + 1}</td>
-                    <td><input type="text" class="form-control input-sm" value="${item.activity}" onchange="updateCell(${index}, 'activity', this.value)"></td>
-                    <td><input type="text" class="form-control input-sm" value="${item.programDesc}" onchange="updateCell(${index}, 'programDesc', this.value)"></td>
-                    <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.periodFrom}" onchange="updateCell(${index}, 'periodFrom', this.value)"></td>
-                    <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.periodTo}" onchange="updateCell(${index}, 'periodTo', this.value)"></td>
-                    <td><input type="text" class="form-control input-sm" value="${item.invoiceNo}" onchange="updateCell(${index}, 'invoiceNo', this.value)"></td>
-                    <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.invoiceDate}" onchange="updateCell(${index}, 'invoiceDate', this.value)"></td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control txtDetailActivity" style="width:150px;" value="${item.activity}" disabled>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger btnLOVDetailActivity" onclick="openDetailActivityLov(${index})">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td><input type="text" class="form-control input-sm txtDetailProgramDesc" value="${item.programDesc}" onchange="updateCell(${index}, 'programDesc', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm datepicker-cell txtDetaildtm_period_from" style="width:100px;" value="${item.periodFrom}" onchange="updateCell(${index}, 'periodFrom', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm datepicker-cell txtDetaildtm_period_to" style="width:100px;" value="${item.periodTo}" onchange="updateCell(${index}, 'periodTo', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm txtDetailInvoiceNo" value="${item.invoiceNo}" onchange="updateCell(${index}, 'invoiceNo', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm datepicker-cell txtDetailInvoiceDate" style="width:100px;" value="${item.invoiceDate}" onchange="updateCell(${index}, 'invoiceDate', this.value)"></td>
                     <td>
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control" value="${item.fakturNo}" onchange="updateCell(${index}, 'fakturNo', this.value)">
+                            <input type="text" class="form-control txtFakturPajakNo" value="${item.fakturNo}" onkeyup="updateFakturPajakNo(${index}, this.value, this)" onchange="updateCell(${index}, 'fakturNo', this.value)">
                             <span class="input-group-btn">
-                                <button class="btn btn-info btn-sm" type="button" onclick="openScanFaktur(${index})" title="Scan Faktur Pajak"><i class="fa fa-qrcode"></i></button>
+                                <button class="btn btn-default btn-sm btnScanFakturPajak" type="button" onclick="openScanFaktur(${index})" title="Scan Faktur Pajak"><i class="fa fa-barcode"></i></button>
                             </span>
                         </div>
                     </td>
-                    <td><input type="text" class="form-control input-sm datepicker-cell" value="${item.fakturDate}" onchange="updateCell(${index}, 'fakturDate', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm datepicker-cell txtFakturPajakDate" style="width:100px;" value="${item.fakturDate}" onchange="updateCell(${index}, 'fakturDate', this.value)"></td>
                     
-                    <td><input type="text" class="form-control input-sm text-right autonumeric" value="${formatCurrency(item.invoiceAmount)}" onchange="updateCellNumber(${index}, 'invoiceAmount', this.value)"></td>
+                    <td><input type="text" class="form-control input-sm text-right autonumeric txtDetailInvoiceAmount" value="${formatCurrency(item.invoiceAmount)}" onchange="updateCellNumber(${index}, 'invoiceAmount', this.value)"></td>
                     
                     <td>
-                        <select class="form-control input-sm" onchange="updatePphType(${index}, this.value)">
-                            <option value="0" ${item.pphTarif == 0 ? 'selected' : ''}>NON PPH</option>
-                            <option value="2" ${item.pphTarif == 2 ? 'selected' : ''}>PPH 23 (2%)</option>
-                            <option value="10" ${item.pphTarif == 10 ? 'selected' : ''}>PPH 21 (10%)</option>
+                        <div class="input-group">
+                            <input type="text" class="form-control txtDetailPPHType" style="width:150px;" value="${item.pphType}" disabled>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger btnLOVDetailPPHType" onclick="openDetailPphTypeLov(${index})">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                                <button type="button" class="btn btn-warning btnClearPPH" onclick="clearPphType(${index})">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td><input type="text" class="form-control input-sm text-right autonumeric txtDetailPersenPPH" style="width:100px;" value="${item.pphTarif}" readonly></td>
+                    <td><input type="text" class="form-control input-sm text-right autonumeric txtDetailAmountPPH" style="width:110px;" value="${formatCurrency(pphAmount)}" readonly></td>
+                    <td><input type="text" class="form-control input-sm text-right autonumeric txtDetaiFinalAmount" style="width:130px;" value="${formatCurrency(finalAmount)}" readonly></td>
+                    
+                    <td>
+                        <select class="form-control input-sm ddlPPN" style="min-width: 130px;" onchange="updatePpnType(${index}, this.value)">
+                            ${ppnOptionsHtml}
                         </select>
                     </td>
-                    <td style="text-align:right; vertical-align:middle; font-weight:bold;">${item.pphTarif}%</td>
-                    <td style="text-align:right; vertical-align:middle; font-weight:bold;">${formatCurrency(pphAmount)}</td>
-                    <td style="text-align:right; vertical-align:middle; font-weight:bold; background:#f4f4f4;">${formatCurrency(finalAmount)}</td>
+                    <td><input type="text" class="form-control input-sm text-right autonumeric txtDetailPPN" style="width:100px;" value="${formatCurrency(ppnAmount)}" onchange="updatePpnAmount(${index}, this.value)" ${item.ppnTarif > 0 ? '' : 'disabled'}></td>
+                    <td><input type="text" class="form-control input-sm text-right autonumeric txtDetailTotal" style="width:130px;" value="${formatCurrency(totalAmount)}" readonly></td>
                     
-                    <td>
-                        <select class="form-control input-sm" onchange="updatePpnType(${index}, this.value)">
-                            <option value="0" ${item.ppnTarif == 0 ? 'selected' : ''}>NON PPN</option>
-                            <option value="11" ${item.ppnTarif == 11 ? 'selected' : ''}>PPN 11%</option>
-                            <option value="12" ${item.ppnTarif == 12 ? 'selected' : ''}>PPN 12%</option>
+                    <td style="text-align:center; vertical-align:middle;">
+                        <input type="checkbox" class="chkDetailAllBrand" ${item.allBrand ? 'checked' : ''} onchange="updateCell(${index}, 'allBrand', this.checked); renderTable(); syncToStorage();">
+                    </td>
+                    <td style="vertical-align:middle;">
+                        ${umbrandHtml}
+                    </td>
+                    
+                    <td style="min-width: 250px;">${attachmentHtml}</td>
+                    <td style="text-align:center; vertical-align:middle;">
+                        <input type="button" class="btn btn-warning btn-xs btn-block btnDetailDelete" onclick="deleteRow(${index})" value="Delete">
+                    </td>
+                    <td style="vertical-align:middle;">
+                        <select class="form-control input-sm ddlDetailStatus" onchange="updateCell(${index}, 'status', this.value); syncToStorage();">
+                            <option value="" ${item.status === '' ? 'selected' : ''}>-</option>
+                            <option value="APPROVED" ${item.status === 'APPROVED' ? 'selected' : ''}>APPROVED</option>
+                            <option value="REJECTED" ${item.status === 'REJECTED' ? 'selected' : ''}>REJECTED</option>
+                            <option value="PENDING" ${item.status === 'PENDING' ? 'selected' : ''}>PENDING</option>
+                            <option value="OPEN" ${item.status === 'OPEN' ? 'selected' : ''}>OPEN</option>
                         </select>
                     </td>
-                    <td style="text-align:right; vertical-align:middle; font-weight:bold;">${formatCurrency(ppnAmount)}</td>
-                    <td style="text-align:right; vertical-align:middle; font-weight:bold; background:#eefceb;">${formatCurrency(totalAmount)}</td>
+                    <td><input type="text" class="form-control input-sm txtDetailStatusDesc" value="${item.description}" onchange="updateCell(${index}, 'description', this.value); syncToStorage();"></td>
                     
                     <td style="text-align:center; vertical-align:middle;">
-                        <input type="checkbox" ${item.allBrand ? 'checked' : ''} onchange="updateCell(${index}, 'allBrand', this.checked)">
-                    </td>
-                    <td>
-                        <button class="btn btn-default btn-sm btn-block" onclick="openUmbrand(${index})" title="Alokasi Umbrand">
-                            <i class="fa fa-sitemap"></i> ${item.umbrand || 'Umbrand'}
-                        </button>
-                    </td>
-                    
-                    <td><input type="file" class="form-control input-sm"></td>
-                    <td style="text-align:center; vertical-align:middle;">
-                        <button class="btn btn-danger btn-xs" onclick="deleteRow(${index})"><i class="fa fa-trash"></i></button>
-                    </td>
-                    <td style="vertical-align:middle;"><span class="label label-success">${item.status}</span></td>
-                    <td><input type="text" class="form-control input-sm" value="${item.description}" onchange="updateCell(${index}, 'description', this.value)"></td>
-                    
-                    <td style="text-align:center; vertical-align:middle;">
-                        <input type="checkbox" ${item.include ? 'checked' : ''} onchange="updateIncludeCell(${index}, this.checked)">
+                        <input type="checkbox" class="chkDetailInclude" ${item.include ? 'checked' : ''} onchange="updateIncludeCell(${index}, this.checked)">
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
+            }
 
-            document.getElementById('lblGrandTotal').textContent = formatCurrency(grandTotal);
+            const dtDetailInfo = document.getElementById('dtDetailInfo');
+            if (dtDetailInfo) {
+                if (detailRows.length === 0) {
+                    dtDetailInfo.textContent = 'Showing 0 to 0 of 0 entries';
+                } else {
+                    dtDetailInfo.textContent = `Showing 1 to ${detailRows.length} of ${detailRows.length} entries`;
+                }
+            }
+
+            const lblGrand = document.getElementById('lblGrandTotal');
+            if (lblGrand) {
+                lblGrand.textContent = formatCurrency(grandTotal);
+            }
 
              // Re-bind datepicker to cells
              $('.datepicker-cell').datepicker({
@@ -836,25 +1219,180 @@
         }
 
         function updateCellNumber(index, key, val) {
-            detailRows[index][key] = cleanNumber(val);
+            const numVal = cleanNumber(val);
+            detailRows[index][key] = numVal;
+            if (key === 'invoiceAmount') {
+                const ppnTarif = detailRows[index].ppnTarif || 0;
+                detailRows[index].ppnAmount = Math.floor(numVal * (ppnTarif / 100));
+            }
             renderTable();
-        }
-
-        function updatePphType(index, val) {
-            detailRows[index].pphTarif = parseInt(val);
-            detailRows[index].pphType = val == '2' ? 'PPH 23 (2%)' : (val == '10' ? 'PPH 21 (10%)' : 'NON PPH');
-            renderTable();
+            syncToStorage();
         }
 
         function updatePpnType(index, val) {
-            detailRows[index].ppnTarif = parseInt(val);
-            detailRows[index].ppnType = val == '11' ? 'PPN 11%' : (val == '12' ? 'PPN 12%' : 'NON PPN');
+            const split = val.split(';');
+            if (split.length === 2) {
+                detailRows[index].ppnType = split[0];
+                detailRows[index].ppnTarif = parseFloat(split[1]) || 0;
+                detailRows[index].ppnAmount = Math.floor(detailRows[index].invoiceAmount * (detailRows[index].ppnTarif / 100));
+            } else {
+                detailRows[index].ppnType = 'NON PPN';
+                detailRows[index].ppnTarif = 0;
+                detailRows[index].ppnAmount = 0;
+            }
             renderTable();
+            syncToStorage();
+        }
+
+        function updatePpnAmount(index, val) {
+            detailRows[index].ppnAmount = cleanNumber(val);
+            renderTable();
+            syncToStorage();
+        }
+
+        function updateFakturPajakNo(index, val, element) {
+            const formatted = formatFakturpajakNew2025(val);
+            detailRows[index].fakturNo = formatted;
+            if (element) {
+                element.value = formatted;
+            }
+            syncToStorage();
+        }
+
+        function formatFakturpajakNew2025(txtValue) {
+            var input = txtValue;
+            input = input.replace(/[A-Za-z\._\-]+/g, '');
+            var chunk = [];
+            for (var i = 0, j = 0; j < input.length && i < 17; i += 1) {
+                chunk.push(input.substr(j, 1));
+                j += 1;
+            }
+            return chunk.join('').toString();
+        }
+
+        // New Interactive LOV Handlers
+        function openDetailActivityLov(index) {
+            activeDetailRowIndex = index;
+            const tbody = document.getElementById('lovDetailActivityTableBody');
+            tbody.innerHTML = '';
+            
+            // Reset search box value
+            $('#lovDetailActivityModal input[type="text"]').val('');
+            
+            detailActivitiesData.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center;"><button type="button" class="btn btn-success btn-xs" onclick="setDetailActivity('${item.activity}', '${item.pph_jenis}', ${item.rate}, '${item.progDesc}')"><i class="fa fa-check"></i> Pilih</button></td>
+                    <td>${item.activity}</td>
+                    <td>${item.coa}</td>
+                    <td>${item.pph_jenis}</td>
+                    <td style="text-align: right;">${item.rate}</td>
+                    <td>${item.progDesc}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            $('#lovDetailActivityModal').modal('show');
+        }
+
+        function setDetailActivity(activity, pphJenis, pphTarif, progDesc) {
+            if (activeDetailRowIndex !== null) {
+                detailRows[activeDetailRowIndex].activity = activity;
+                detailRows[activeDetailRowIndex].pphType = pphJenis;
+                detailRows[activeDetailRowIndex].pphTarif = pphTarif;
+                detailRows[activeDetailRowIndex].programDesc = progDesc;
+                
+                renderTable();
+                syncToStorage();
+            }
+            $('#lovDetailActivityModal').modal('hide');
+        }
+
+        function openDetailPphTypeLov(index) {
+            activeDetailRowIndex = index;
+            const row = detailRows[index];
+            const tbody = document.getElementById('lovDetailPphTypeTableBody');
+            tbody.innerHTML = '';
+            
+            // Reset search box value
+            $('#lovDetailPphTypeModal input[type="text"]').val('');
+            
+            // Filter by active row's Activity code (either group_id matches or group_id is empty/general)
+            const filtered = detailPphTypesData.filter(p => !p.group_id || p.group_id === row.activity);
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No PPH types available for this Activity</td></tr>';
+                $('#lovDetailPphTypeModal .lov-info').text('Showing 0 to 0 of 0 entries');
+            } else {
+                filtered.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="text-align: center;">
+                            <button type="button" class="btn btn-success btn-xs" onclick="selectDetailPphType('${p.id}', '${p.name}', ${p.rate})"><i class="fa fa-check"></i> Pilih</button>
+                        </td>
+                        <td>${p.id}</td>
+                        <td>${p.name}</td>
+                        <td style="text-align: right;">${formatRate(p.rate)}%</td>
+                        <td style="word-break: break-all; white-space: normal;">${p.group_id || '-'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                $('#lovDetailPphTypeModal .lov-info').text(`Showing 1 to ${filtered.length} of ${filtered.length} entries`);
+            }
+            
+            $('#lovDetailPphTypeModal').modal('show');
+        }
+
+        function selectDetailPphType(id, name, rate) {
+            if (activeDetailRowIndex !== null) {
+                const row = detailRows[activeDetailRowIndex];
+                row.pphType = name;
+                row.pphTarif = rate;
+                
+                renderTable();
+                syncToStorage();
+            }
+            $('#lovDetailPphTypeModal').modal('hide');
+        }
+
+        function clearPphType(index) {
+            const row = detailRows[index];
+            row.pphType = 'NON PPH';
+            row.pphTarif = 0;
+            
+            renderTable();
+            syncToStorage();
+        }
+
+        // PDF Attachment helpers
+        function uploadAttachment(index, input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.type !== "application/pdf") {
+                    bootbox.alert("File attachment harus berupa PDF!");
+                    input.value = '';
+                    return;
+                }
+                detailRows[index].attachmentName = file.name;
+                renderTable();
+                syncToStorage();
+            }
+        }
+
+        function viewAttachment(index) {
+            const name = detailRows[index].attachmentName;
+            bootbox.alert(`Viewing PDF Attachment: <strong>${name}</strong> (Prototype Mock Viewer)`);
+        }
+
+        function removeAttachment(index) {
+            detailRows[index].attachmentName = '';
+            renderTable();
+            syncToStorage();
         }
 
         function updateIncludeCell(index, checked) {
             detailRows[index].include = checked;
             renderTable();
+            syncToStorage();
         }
 
         function deleteRow(index) {
@@ -862,6 +1400,7 @@
                 if (res) {
                     detailRows.splice(index, 1);
                     renderTable();
+                    syncToStorage();
                 }
             });
         }
@@ -891,12 +1430,14 @@
                 pphTarif: 0,
                 ppnType: 'NON PPN',
                 ppnTarif: 0,
+                ppnAmount: 0,
                 allBrand: true,
                 umbrand: '',
                 umbrandData: [],
                 status: 'OPEN',
                 description: '',
-                include: true
+                include: true,
+                attachmentName: ''
             });
             syncToStorage();
             renderTable();
@@ -961,12 +1502,12 @@
                 filtered.forEach((p) => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>
-                            <button class="btn btn-default btn-xs" onclick="selectPartner('${p.site.replace(/'/g, "\\'")}', '${p.branch.replace(/'/g, "\\'")}', '${p.supplier_name.replace(/'/g, "\\'")}', '${p.code.replace(/'/g, "\\'")}', '${p.supplier_id.replace(/'/g, "\\'")}', '${p.site_id.replace(/'/g, "\\'")}', '${p.supplier_site_name ? p.supplier_site_name.replace(/'/g, "\\'") : ''}')">Pilih</button>
+                        <td style="text-align: center;">
+                            <button type="button" class="btn btn-success btn-xs" onclick="selectPartner('${p.site.replace(/'/g, "\\'")}', '${p.branch.replace(/'/g, "\\'")}', '${p.supplier_name.replace(/'/g, "\\'")}', '${p.code.replace(/'/g, "\\'")}', '${p.supplier_id.replace(/'/g, "\\'")}', '${p.site_id.replace(/'/g, "\\'")}', '${p.supplier_site_name ? p.supplier_site_name.replace(/'/g, "\\'") : ''}')"><i class="fa fa-check"></i> Pilih</button>
                         </td>
-                        <td>${p.site}</td>
+                        <td style="word-break: break-all; white-space: normal;">${p.site}</td>
                         <td>${p.branch}</td>
-                        <td>${p.supplier_name}</td>
+                        <td style="word-break: break-all; white-space: normal;">${p.supplier_name}</td>
                         <td>${p.group_account}</td>
                     `;
                     tbody.appendChild(tr);
@@ -1012,12 +1553,12 @@
                 filtered.forEach(o => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>
-                            <button class="btn btn-default btn-xs" onclick="selectOutlet('${o.site.replace(/'/g, "\\'")}', '${o.supplier_id.replace(/'/g, "\\'")}', '${o.supplier_name.replace(/'/g, "\\'")}', '${o.branch.replace(/'/g, "\\'")}', '${o.supplier_site_id.replace(/'/g, "\\'")}', '${o.supplier_site_name.replace(/'/g, "\\'")}')">Pilih</button>
+                        <td style="text-align: center;">
+                            <button type="button" class="btn btn-success btn-xs" onclick="selectOutlet('${o.site.replace(/'/g, "\\'")}', '${o.supplier_id.replace(/'/g, "\\'")}', '${o.supplier_name.replace(/'/g, "\\'")}', '${o.branch.replace(/'/g, "\\'")}', '${o.supplier_site_id.replace(/'/g, "\\'")}', '${o.supplier_site_name.replace(/'/g, "\\'")}')"><i class="fa fa-check"></i> Pilih</button>
                         </td>
-                        <td>${o.site}</td>
+                        <td style="word-break: break-all; white-space: normal;">${o.site}</td>
                         <td>${o.supplier_id}</td>
-                        <td>${o.supplier_name}</td>
+                        <td style="word-break: break-all; white-space: normal;">${o.supplier_name}</td>
                         <td>${o.branch}</td>
                     `;
                     tbody.appendChild(tr);
@@ -1040,58 +1581,80 @@
             syncToStorage();
         }
 
-        // Live filtering event handlers for search inputs
-        $(document).on('keyup', '#lovGroupAccountModal input[type="text"]', function() {
-            var val = $(this).val().toLowerCase();
-            var visibleCount = 0;
-            $('#lovGroupAccountModal tbody tr').each(function() {
-                var show = $(this).text().toLowerCase().indexOf(val) > -1;
-                $(this).toggle(show);
-                if (show) visibleCount++;
-            });
-            $('#lovGroupAccountModal .lov-info').text('Showing 1 to ' + visibleCount + ' of 4 entries');
-        });
-
-        $(document).on('keyup', '#lovPartnerModal input[type="text"]', function() {
-            var val = $(this).val().toLowerCase();
-            var visibleCount = 0;
-            var totalCount = $('#lovPartnerTableBody tr').length;
-            $('#lovPartnerTableBody tr').each(function() {
-                var show = $(this).text().toLowerCase().indexOf(val) > -1;
-                $(this).toggle(show);
-                if (show) visibleCount++;
-            });
-            $('#lovPartnerModal .lov-info').text('Showing 1 to ' + visibleCount + ' of ' + totalCount + ' entries');
-        });
-
-        $(document).on('keyup', '#lovOutletModal input[type="text"]', function() {
-            var val = $(this).val().toLowerCase();
-            var visibleCount = 0;
-            var totalCount = $('#lovOutletTableBody tr').length;
-            $('#lovOutletTableBody tr').each(function() {
-                var show = $(this).text().toLowerCase().indexOf(val) > -1;
-                $(this).toggle(show);
-                if (show) visibleCount++;
-            });
-            $('#lovOutletModal .lov-info').text('Showing 1 to ' + visibleCount + ' of ' + totalCount + ' entries');
-        });
-
         // Workflow buttons
         function handleFind() {
-            bootbox.prompt("Enter Claim ID to find:", (id) => {
-                if (id) {
-                    document.getElementById('txtID').value = id.substring(0, 5);
-                    document.getElementById('txtDocNo').value = id;
-                    document.getElementById('lblStatusFlow').textContent = 'SUBMITTED';
-                    document.getElementById('lblStatusFlow').className = 'control-label text-orange';
-                    document.getElementById('btnSubmit').style.display = 'none';
-                    document.getElementById('btnCopy').style.display = 'inline-block';
-                    document.getElementById('btnClose').style.display = 'inline-block';
-                    document.getElementById('btnReject').style.display = 'inline-block';
-                    document.getElementById('btnApprovalHistory').style.display = 'inline-block';
-                    bootbox.alert(`Loaded Claim Record: ${id}`);
-                }
+            const tbody = document.getElementById('lovFindTableBody');
+            tbody.innerHTML = '';
+            
+            // Reset search
+            $('#lovFindModal input[type="text"]').val('');
+
+            findData.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center;">
+                        <button type="button" class="btn btn-success btn-xs" onclick="selectFind('${item.id}', '${item.dokNo}', '${item.status}')"><i class="fa fa-check"></i> Pilih</button>
+                    </td>
+                    <td>${item.id}</td>
+                    <td>${item.dokNo}</td>
+                    <td>${item.site}</td>
+                    <td>${item.description}</td>
+                    <td>${item.period}</td>
+                    <td>${item.invoiceNo}</td>
+                    <td style="text-align: right;">${item.invoiceAmount}</td>
+                    <td>${item.status}</td>
+                    <td>${item.attachment}</td>
+                    <td>${item.readyToSubmit}</td>
+                `;
+                tbody.appendChild(tr);
             });
+            
+            document.getElementById('lovFindInfo').textContent = `Showing 1 to ${findData.length} of ${findData.length} entries`;
+            $('#lovFindModal').modal('show');
+        }
+
+        function selectFind(id, dokNo, status) {
+            document.getElementById('txtID').value = id;
+            document.getElementById('txtDocNo').value = dokNo;
+            document.getElementById('lblStatusFlow').textContent = status;
+            
+            // Populate mock detail record based on find selection
+            detailRows = [
+                {
+                    activity: 'BONUS SUBDIST',
+                    programDesc: 'MILNA BOGO PROMO 2026',
+                    periodFrom: '01-Jan-2026',
+                    periodTo: '31-Mar-2026',
+                    invoiceNo: 'INV-KDS-' + id,
+                    invoiceDate: '10-Jan-2026',
+                    fakturNo: 'FP-001.002.' + id,
+                    fakturDate: '10-Jan-2026',
+                    invoiceAmount: 25000000,
+                    pphType: 'PPh23_15%',
+                    pphTarif: 15,
+                    ppnType: 'PPN 11%',
+                    ppnTarif: 11,
+                    ppnAmount: 2750000,
+                    allBrand: true,
+                    umbrand: 'CH-MILNA',
+                    umbrandData: [{ TXT_UMBRAND: 'MILNA', TXT_BRAND: 'MILNA UHT', DEC_AMOUNT: 25000000, XXSHP_KDS_T_KLAIM_BRAN: [] }],
+                    status: status,
+                    description: 'Mock detail loaded for claim ' + id,
+                    include: true,
+                    attachmentName: ''
+                }
+            ];
+            
+            // Enable save and submit buttons to simulate loading an existing claim
+            document.getElementById('btnSave').style.display = 'inline-block';
+            document.getElementById('btnSubmit').style.display = 'inline-block';
+            document.getElementById('btnClose').style.display = 'inline-block';
+            document.getElementById('btnReject').style.display = 'inline-block';
+            document.getElementById('btnApprovalHistory').style.display = 'inline-block';
+            
+            renderTable();
+            syncToStorage();
+            $('#lovFindModal').modal('hide');
         }
 
         function handleSave() {
@@ -1208,8 +1771,18 @@
         }
 
         function handleViewMemo() {
-            bootbox.alert("<h4>MEMO PREVIEW</h4><p>Memo for Claim: <strong>" + (document.getElementById('txtDocNo').value || "NEW") + "</strong></p><p>Supplier: " + (document.getElementById('txtSupplierName').value || "-") + "</p><p>Amount: IDR " + document.getElementById('lblGrandTotal').textContent + "</p>");
+            let grandTotal = 0;
+            detailRows.forEach(item => {
+                if (item.include) {
+                    const pphAmount = Math.floor(item.invoiceAmount * (item.pphTarif / 100));
+                    const finalAmount = item.invoiceAmount - pphAmount;
+                    const ppnAmount = item.ppnAmount || 0;
+                    grandTotal += (finalAmount + ppnAmount);
+                }
+            });
+            bootbox.alert("<h4>MEMO PREVIEW</h4><p>Memo for Claim: <strong>" + (document.getElementById('txtDocNo').value || "NEW") + "</strong></p><p>Supplier: " + (document.getElementById('txtSupplierName').value || "-") + "</p><p>Amount: IDR " + formatCurrency(grandTotal) + "</p>");
         }
     </script>
 </body>
 </html>
+

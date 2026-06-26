@@ -329,7 +329,7 @@ class Layout {
                                     </span>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li id="menu-master-budget"><a href="${this.basePath}Views/Budget/Index.html"><i class="fa fa-circle-o"></i> Master Budget</a></li>
+                                    <!-- Menus will be added here -->
                                 </ul>
                             </li>
                             
@@ -341,7 +341,6 @@ class Layout {
                                     </span>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li id="menu-tr-rfa"><a href="${this.basePath}Views/RFA/Index.html"><i class="fa fa-circle-o"></i> Request For Advance</a></li>
                                     <li id="menu-tr-klaim"><a href="${this.basePath}Views/Klaim/Index.html"><i class="fa fa-circle-o"></i> Form Klaim</a></li>
                                 </ul>
                             </li>
