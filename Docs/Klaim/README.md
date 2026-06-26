@@ -10,6 +10,9 @@ Dokumentasi ini merangkum modul **Form Klaim** dari project asli `KICAO KDS` (`K
 | [02-data-model.md](./02-data-model.md) | Struktur entitas database & relasi hierarki |
 | [03-api-endpoints.md](./03-api-endpoints.md) | Controller actions & API yang dipanggil frontend |
 | [04-prototype-mapping.md](./04-prototype-mapping.md) | Pemetaan ke file HTML prototype |
+| **[05-progress-log.md](./05-progress-log.md)** | **Log kemajuan prototype — LOV, business rules, data riil, uji coba** |
+
+> Untuk status pengerjaan terkini prototype Form Klaim, selalu rujuk **[05-progress-log.md](./05-progress-log.md)** sebagai dokumen hidup (living document).
 
 ## Lokasi Source Asli
 

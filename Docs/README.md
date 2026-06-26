@@ -6,7 +6,7 @@ Dokumentasi teknis untuk prototype HTML `kicaokds.kalbenutritionals`, diturunkan
 
 | Modul | Dokumentasi | Halaman Prototype |
 |-------|-------------|-------------------|
-| **Klaim** | [Klaim/README.md](./Klaim/README.md) | `Views/Klaim/` |
+| **Klaim** | [Klaim/README.md](./Klaim/README.md) · [Progress Log](./Klaim/05-progress-log.md) | `Views/Klaim/` |
 | Budget | _(belum didokumentasikan)_ | `Views/Budget/Index.html` |
 | RFA | _(belum didokumentasikan)_ | `Views/RFA/Index.html` |
 

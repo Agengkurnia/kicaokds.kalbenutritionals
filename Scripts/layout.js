@@ -116,6 +116,29 @@ class Layout {
             .table-condensed th, .table-condensed td {
                 font-size: 11px;
             }
+            /* Bootbox — pastikan dialog di atas backdrop-nya sendiri */
+            .bootbox.modal {
+                z-index: 1060 !important;
+            }
+            .bootbox + .modal-backdrop {
+                z-index: 1050 !important;
+            }
+            .bootbox .modal-dialog {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .bootbox.modal.in,
+            .bootbox.modal.show {
+                display: block !important;
+                opacity: 1 !important;
+            }
+            /* LOV / app modals — backdrop harus DI BAWAH dialog (jangan set z-index global pada .modal-backdrop) */
+            body > .modal:not(.bootbox) {
+                z-index: 1070 !important;
+            }
+            body > .modal:not(.bootbox) + .modal-backdrop {
+                z-index: 1065 !important;
+            }
         `;
         document.head.appendChild(style);
     }
@@ -168,13 +191,19 @@ class Layout {
 
                 if (prevJQuery && window.jQuery && window.jQuery !== prevJQuery) {
                     console.warn('jQuery was overwritten by script:', fullSrc, '. Restoring and merging plugins.');
+                    // Jangan timpa plugin Bootstrap 3 — complete.min.js bundling jQuery lama akan merusak bootbox/modal
+                    const protectedPlugins = new Set([
+                        'modal', 'dropdown', 'tab', 'collapse', 'tooltip', 'popover',
+                        'button', 'carousel', 'affix', 'scrollspy', 'transition', 'alert'
+                    ]);
                     try {
                         for (const key in window.jQuery.fn) {
                             if (window.jQuery.fn.hasOwnProperty(key) && 
                                 key !== 'constructor' && 
                                 key !== 'init' && 
                                 key !== 'jquery' && 
-                                key !== 'selector') {
+                                key !== 'selector' &&
+                                !protectedPlugins.has(key)) {
                                 prevJQuery.fn[key] = window.jQuery.fn[key];
                             }
                         }
@@ -329,7 +358,7 @@ class Layout {
                                     </span>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <!-- Menus will be added here -->
+                                    <li id="menu-master-ass-owner"><a href="${this.basePath}Views/Master/AssOwnerKMMD/Index.html"><i class="fa fa-circle-o"></i> Form ASS/Owner KMMD</a></li>
                                 </ul>
                             </li>
                             
@@ -381,6 +410,8 @@ class Layout {
         
         if (path.includes('Budget/Index.html')) {
             $('#menu-master-budget').addClass('active').closest('.treeview').addClass('active menu-open');
+        } else if (path.includes('AssOwnerKMMD')) {
+            $('#menu-master-ass-owner').addClass('active').closest('.treeview').addClass('active menu-open');
         } else if (path.includes('RFA/Index.html')) {
             $('#menu-tr-rfa').addClass('active').closest('.treeview').addClass('active menu-open');
         } else if (path.includes('Klaim/')) {
@@ -407,6 +438,45 @@ class Layout {
             $('#txtInformationSystem').text(msg);
             $('#divInformationSystem').show();
         };
+
+        // Bootbox: nonaktifkan animasi fade (hindari dialog transparan/stuck)
+        if (window.bootbox && typeof bootbox.setDefaults === 'function') {
+            bootbox.setDefaults({
+                animate: false,
+                backdrop: true
+            });
+        }
+
+        // Bersihkan backdrop nyangkut setelah modal ditutup
+        const hasOpenModal = () => $('.modal').filter(function () {
+            return $(this).hasClass('in') || $(this).css('display') === 'block';
+        }).length > 0;
+
+        const cleanupModalBackdrops = () => {
+            if (!hasOpenModal()) {
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open').css('padding-right', '');
+            }
+        };
+        window.cleanupModalBackdrops = cleanupModalBackdrops;
+
+        window.showKlaimModal = function (selector) {
+            cleanupModalBackdrops();
+            const $m = $(selector);
+            if ($m.length && $m.parent()[0] !== document.body) {
+                $m.appendTo('body');
+            }
+            $m.modal({ backdrop: true, keyboard: true, show: true });
+        };
+
+        window.hideKlaimModal = function (selector) {
+            const $m = $(selector);
+            $m.one('hidden.bs.modal', cleanupModalBackdrops);
+            $m.modal('hide');
+            setTimeout(cleanupModalBackdrops, 400);
+        };
+
+        $(document).on('hidden.bs.modal', '.modal', cleanupModalBackdrops);
     }
 }
 

@@ -12,7 +12,9 @@
         #lovPartnerModal .modal-dialog,
         #lovOutletModal .modal-dialog,
         #lovDetailActivityModal .modal-dialog,
-        #lovDetailPphTypeModal .modal-dialog {
+        #lovDetailPphTypeModal .modal-dialog,
+        #lovFindModal .modal-dialog,
+        #klaimPopupModal .modal-dialog {
             margin: 15px auto !important;
             width: 90% !important;
             max-width: 1100px !important;
@@ -21,7 +23,9 @@
         #lovPartnerModal .modal-content,
         #lovOutletModal .modal-content,
         #lovDetailActivityModal .modal-content,
-        #lovDetailPphTypeModal .modal-content {
+        #lovDetailPphTypeModal .modal-content,
+        #lovFindModal .modal-content,
+        #klaimPopupModal .modal-content {
             min-height: 550px;
             border-radius: 0 !important;
             box-shadow: 0 5px 15px rgba(0,0,0,.5);
@@ -57,8 +61,53 @@
         #lovPartnerModal table tbody tr:hover td,
         #lovOutletModal table tbody tr:hover td,
         #lovDetailActivityModal table tbody tr:hover td,
-        #lovDetailPphTypeModal table tbody tr:hover td {
+        #lovDetailPphTypeModal table tbody tr:hover td,
+        #lovFindModal table tbody tr:hover td {
             background-color: #dff0d8 !important;
+        }
+        #lovFindModal table thead tr {
+            background-color: #36752d !important;
+            color: #ffffff !important;
+        }
+        #lovFindModal table tbody tr td {
+            background-color: #eefceb !important;
+            border-top: 1px solid #dcdcdc !important;
+        }
+        #dtDetail tr.tr-klaim-validation-error td {
+            border-top: 2px solid #dd4b39 !important;
+            border-bottom: 2px solid #dd4b39 !important;
+        }
+        #btnEMaterai:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+        .proto-new-badge {
+            display: inline-block;
+            background: #f39c12;
+            color: #fff;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 1px 6px;
+            border-radius: 3px;
+            margin-left: 4px;
+            vertical-align: middle;
+            letter-spacing: 0.4px;
+            line-height: 1.4;
+        }
+        .proto-new-legend {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        #dtDetail thead td.proto-new-header {
+            box-shadow: inset 0 -3px 0 #f39c12 !important;
+        }
+        #dtDetail tbody td.proto-new-cell {
+            background-color: #fff8e6 !important;
+            box-shadow: inset 0 0 0 1px rgba(243, 156, 18, 0.45);
+        }
+        .btn-proto-new {
+            position: relative;
         }
     </style>
 </head>
@@ -92,15 +141,17 @@
                         <div class="box-header with-border text-right">
                             <button id="btnFind" class="btn btn-success" onclick="handleFind()"><i class="fa fa-search"></i> Find</button>
                             <button id="btnSave" class="btn btn-success" onclick="handleSave()"><i class="fa fa-floppy-o"></i> Save</button>
-                            <button id="btnUpdateInclude" class="btn btn-success" onclick="handleUpdateInclude()"><i class="fa fa-floppy-o"></i> Update Include</button>
                             <button id="btnNew" class="btn btn-warning" onclick="handleNew()"><i class="fa fa-refresh"></i> New</button>
                             <button id="btnSubmit" class="btn btn-success" onclick="handleSubmit()" style="display:none;"><i class="fa fa-send"></i> Submit</button>
+                            <button id="btnEMaterai" class="btn btn-primary btn-proto-new" onclick="handleEMaterai()" disabled title="Generate E-Materai (klaim &gt;= Rp 5.000.000)"><i class="fa fa-certificate"></i> E-Materai <span class="proto-new-badge">NEW</span></button>
                             <button id="btnPrintout" class="btn btn-info" onclick="handlePrint()"><i class="fa fa-print"></i> Print</button>
+                            <button id="btnViewMemo" class="btn btn-info" onclick="handleViewMemo()"><i class="fa fa-file-text-o"></i> View Memo</button>
+                            
+                            <!-- Additional hidden workflow buttons -->
+                            <button id="btnCopy" class="btn btn-warning" onclick="handleCopy()" style="display:none;"><i class="fa fa-copy"></i> Copy</button>
                             <button id="btnApprovalHistory" class="btn btn-info" style="display:none;" onclick="handleApprovalHistory()"><i class="fa fa-history"></i> Approval History</button>
                             <button id="btnClose" class="btn btn-danger" onclick="handleClose()" style="display:none;"><i class="fa fa-close"></i> Close</button>
                             <button id="btnReject" class="btn btn-danger" onclick="handleReject()" style="display:none;"><i class="fa fa-close"></i> Reject</button>
-                            <button id="btnCopy" class="btn btn-warning" onclick="handleCopy()" style="display:none;"><i class="fa fa-copy"></i> Copy</button>
-                            <button id="btnViewMemo" class="btn btn-info" onclick="handleViewMemo()"><i class="fa fa-file-text-o"></i> View Memo</button>
                         </div>
                         <!-- /.box-header -->
 
@@ -274,6 +325,7 @@
                     <!-- Detail Table Block -->
                     <div class="box box-primary">
                         <div class="box-body" style="padding: 15px;">
+                            <div class="proto-new-legend"><span class="proto-new-badge">NEW</span> Kolom / fitur baru — Enhancement BRD Jun 2026</div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px;">
                                 <div>
                                     Show 
@@ -289,7 +341,7 @@
                                 </div>
                             </div>
                             <div style="overflow-x: auto; width: 100%;">
-                                <table id="dtDetail" class="table table-condensed table-striped table-hover table-bordered" style="min-width: 1800px;">
+                                <table id="dtDetail" class="table table-condensed table-striped table-hover table-bordered" style="min-width: 2200px;">
                                     <thead>
                                         <tr style="background: #36752d; color: white;">
                                              <td style="width:40px; text-align:center; font-weight:bold;">No</td>
@@ -316,6 +368,10 @@
                                              <td style="width:100px; font-weight:bold;">Status <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_STATUSKLAIM</b>"></i></td>
                                              <td style="width:150px; font-weight:bold;">Description <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_STATUS_DESC</b>"></i></td>
                                              <td style="width:70px; text-align:center; font-weight:bold;">Include <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>BIT_INCLUDE</b>"></i></td>
+                                             <td style="width:120px; font-weight:bold;" class="proto-new-header">Status Payment <span class="proto-new-badge">NEW</span> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Field: <b>TXT_PAYMENT_STATUS</b><br>Editable oleh role CF"></i></td>
+                                             <td style="width:110px; font-weight:bold;" class="proto-new-header">Paid Date <span class="proto-new-badge">NEW</span> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Field: <b>DTM_PAID_DATE</b>"></i></td>
+                                             <td style="width:120px; font-weight:bold;" class="proto-new-header">Bank <span class="proto-new-badge">NEW</span> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Field: <b>TXT_BANK_NAME</b>"></i></td>
+                                             <td style="width:130px; text-align:right; font-weight:bold;" class="proto-new-header">DPP+PPN <span class="proto-new-badge">NEW</span> <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Kalkulasi: <b>DEC_INVOICE_AMT + DEC_PPN</b>"></i></td>
                                         </tr>
                                     </thead>
                                     <tbody id="dtBodyKlaim">
@@ -755,14 +811,18 @@
 
         // Enriched Detail LOV Mock Datasets
         const findData = [
-            { id: '5192', dokNo: '26.03/KLAIM-BOS/001', site: 'PT. SUMBER REZEKI BERSAMA - TEBING TINGGI', description: 'MEMO PENETRATION NPD CGP 120 GR PERIODE FEB-DES 2026 - OUTLET NON SPM(MAR 2026)', period: '11-MAR-26 - 11-MAR-26', invoiceNo: '350203-SI-26-030118', invoiceAmount: 12650, status: 'DRAFT', attachment: 'No', readyToSubmit: 'No' },
-            { id: '5191', dokNo: '26.03/KLAIM-MIM/004', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT BEKASI', description: 'BONUS SUBDIST', period: '22-JAN-26 - 24-JAN-26', invoiceNo: 'KLAIMKDS2.TFM', invoiceAmount: 80000, status: 'CLOSED', attachment: 'Yes', readyToSubmit: 'Yes' },
-            { id: '5190', dokNo: '26.03/KLAIM-MIM/003', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT BEKASI', description: 'BONUS SUBDIST ABC', period: '13-MAR-26 - 31-MAR-26', invoiceNo: 'INV.13.03.36.TFM1', invoiceAmount: 20000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes' },
-            { id: '5189', dokNo: '26.03/KLAIM-MIM/002', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT ACEH', description: 'PROGRAM GOAL (GO JUALAN CHILGO LIQUID)', period: '11-MAR-26 - 11-MAR-26', invoiceNo: 'KLAIMKDS1', invoiceAmount: 100000, status: 'CLOSED', attachment: 'Yes', readyToSubmit: 'Yes' },
-            { id: '5188', dokNo: '26.03/KLAIM-MIM/001', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT', description: 'KLAIM KDS', period: '11-MAR-26 - 26-MAR-26', invoiceNo: 'KLAIM KDS', invoiceAmount: 100000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes' },
-            { id: '5187', dokNo: '25.12/KLAIM-HAI/001', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT ACEH', description: 'TEST KLAIM UNTUK MKPP SESUDAH CUTOFF', period: '22-DEC-25 - 24-DEC-25', invoiceNo: 'TEST KLAIM UNTUK MKPP SESUDAH CUTOFF', invoiceAmount: 2500002, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes' },
-            { id: '5186', dokNo: '25.12/KLAIM-MIM/004', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT', description: 'BONUS SUBDIST', period: '08-DEC-25 - 31-DEC-25', invoiceNo: 'INV-ONO-SAR/00003.000', invoiceAmount: 6000000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes' }
+            { id: '5192', dokNo: '26.03/KLAIM-BOS/001', site: 'PT. SUMBER REZEKI BERSAMA - TEBING TINGGI', description: 'MEMO PENETRATION NPD CGP 120 GR PERIODE FEB-DES 2026', period: '01-Jan-2026 - 31-Mar-2026', invoiceNo: '350203-SI-26-030118', invoiceAmount: 6500000, status: 'DRAFT', attachment: 'Yes', readyToSubmit: 'No', source: 'BOSNET', bosnetQuarter: 'Q1', bosnetYear: 2026 },
+            { id: '5191', dokNo: '26.03/KLAIM-MIM/004', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT BEKASI', description: 'BONUS SUBDIST', period: '22-JAN-26 - 24-JAN-26', invoiceNo: 'KLAIMKDS2.TFM', invoiceAmount: 80000, status: 'CLOSED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS', paymentStatus: 'PAID', paidDate: '15-MAR-2026', bank: 'BCA' },
+            { id: '5190', dokNo: '26.03/KLAIM-MIM/003', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT BEKASI', description: 'BONUS SUBDIST ABC', period: '13-MAR-26 - 31-MAR-26', invoiceNo: 'INV.13.03.36.TFM1', invoiceAmount: 20000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS', paymentStatus: 'PENDING', paidDate: '', bank: '' },
+            { id: '5189', dokNo: '26.03/KLAIM-MIM/002', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT ACEH', description: 'PROGRAM GOAL (GO JUALAN CHILGO LIQUID)', period: '11-MAR-26 - 11-MAR-26', invoiceNo: 'KLAIMKDS1', invoiceAmount: 100000, status: 'CLOSED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS', paymentStatus: 'PAID', paidDate: '10-MAR-2026', bank: 'MANDIRI' },
+            { id: '5188', dokNo: '26.03/KLAIM-MIM/001', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT', description: 'KLAIM KDS', period: '11-MAR-26 - 26-MAR-26', invoiceNo: 'KLAIM KDS', invoiceAmount: 100000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS' },
+            { id: '5187', dokNo: '25.12/KLAIM-HAI/001', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT ACEH', description: 'TEST KLAIM UNTUK MKPP SESUDAH CUTOFF', period: '22-DEC-25 - 24-DEC-25', invoiceNo: 'TEST KLAIM UNTUK MKPP SESUDAH CUTOFF', invoiceAmount: 2500002, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS' },
+            { id: '5186', dokNo: '25.12/KLAIM-MIM/004', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT', description: 'BONUS SUBDIST', period: '08-DEC-25 - 31-DEC-25', invoiceNo: 'INV-ONO-SAR/00003.000', invoiceAmount: 6000000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS', paymentStatus: 'PAID', paidDate: '20-DEC-2025', bank: 'BNI' }
         ];
+
+        const paymentBankOptions = ['', 'BCA', 'MANDIRI', 'BNI', 'BRI', 'CIMB'];
+        const EMATERAI_THRESHOLD = 5000000;
+        let validationErrorRows = [];
 
         const detailActivitiesData = [
             {"activity": "BONUS SUBDIST", "coa": "350103", "pph_jenis": "PPh23_15%", "rate": 15, "progDesc": "MILNA BOGO PROMO 2026"},
@@ -793,6 +853,312 @@
 
         let basePath = '../../';
         let activeDetailRowIndex = null;
+        let claimLoadedFromFind = false;
+
+        // Mirror BIT_APPLY / BIT_APPROVED / BIT_REJECTED dari production
+        let claimFormState = {
+            BIT_APPLY: 'N',
+            BIT_APPROVED: 'N',
+            BIT_REJECTED: 'N',
+            BIT_CLOSED: 'N',
+            TXT_STATUSFLOW: 'NEW'
+        };
+
+        function hideModal(selector) {
+            if (window.hideKlaimModal) {
+                window.hideKlaimModal(selector);
+            } else {
+                $(selector).modal('hide');
+                if (window.cleanupModalBackdrops) window.cleanupModalBackdrops();
+            }
+        }
+
+        function getBosnetQuarterPeriod(quarter, year) {
+            const q = String(quarter || 'Q1').toUpperCase();
+            const y = year || moment().year();
+            const map = {
+                Q1: ['01-Jan-' + y, '31-Mar-' + y],
+                Q2: ['01-Apr-' + y, '30-Jun-' + y],
+                Q3: ['01-Jul-' + y, '30-Sep-' + y],
+                Q4: ['01-Oct-' + y, '31-Dec-' + y]
+            };
+            const pair = map[q] || map.Q1;
+            return {
+                from: moment(pair[0], 'DD-MMM-YYYY').format('DD-MMM-YYYY'),
+                to: moment(pair[1], 'DD-MMM-YYYY').format('DD-MMM-YYYY')
+            };
+        }
+
+        function rowHasPpn(row) {
+            return (row.ppnTarif && row.ppnTarif > 0) || (row.ppnType && row.ppnType !== 'NON PPN');
+        }
+
+        function canEditPaymentFields() {
+            return claimFormState.BIT_APPROVED === 'Y' && claimFormState.BIT_CLOSED !== 'Y';
+        }
+
+        function getIncludedGrandTotal() {
+            let total = 0;
+            detailRows.forEach(item => {
+                if (!item.include) return;
+                const pphAmount = Math.floor(item.invoiceAmount * (item.pphTarif / 100));
+                const finalAmount = item.invoiceAmount - pphAmount;
+                total += finalAmount + (item.ppnAmount || 0);
+            });
+            return total;
+        }
+
+        function updateEMateraiButton() {
+            const btn = document.getElementById('btnEMaterai');
+            if (!btn) return;
+            const status = (claimFormState.TXT_STATUSFLOW || 'NEW').toUpperCase();
+            const eligibleStatus = ['DRAFT', 'APPROVE 1 - DRAFT', 'APPROVE 2 - DRAFT', 'SUBMITTED', 'APPROVED'].includes(status)
+                || status.indexOf('DRAFT') >= 0;
+            const total = getIncludedGrandTotal();
+            btn.disabled = !(eligibleStatus && total >= EMATERAI_THRESHOLD);
+            btn.title = total >= EMATERAI_THRESHOLD
+                ? 'Generate PDF Kwitansi Standar + Surat Pengantar Klaim'
+                : 'E-Materai aktif jika total include >= Rp 5.000.000 (saat ini: Rp ' + formatCurrency(total) + ')';
+        }
+
+        function setLovButtonsVisible(show) {
+            const val = show ? '' : 'none';
+            $('#btnLOVGroupAccount').closest('.input-group-btn').css('display', val);
+            $('#btnLOVOutlet').closest('.input-group-btn').css('display', val);
+            $('#btnLOVPartner').closest('.input-group-btn').css('display', val);
+        }
+
+        function setDetailFieldsDisabled(disabled) {
+            $('#dtBodyKlaim').find('input, select').not('.ddlPaymentStatus, .txtPaidDate, .ddlBank').prop('disabled', disabled);
+            if (canEditPaymentFields()) {
+                $('#dtBodyKlaim .ddlPaymentStatus, #dtBodyKlaim .txtPaidDate, #dtBodyKlaim .ddlBank').prop('disabled', false);
+            } else {
+                $('#dtBodyKlaim .ddlPaymentStatus, #dtBodyKlaim .txtPaidDate, #dtBodyKlaim .ddlBank').prop('disabled', true);
+            }
+            $('#dtBodyKlaim .btnLOVDetailActivity, #dtBodyKlaim .btnLOVDetailPPHType, #dtBodyKlaim .btnScanFakturPajak, #dtBodyKlaim .btnDetailDelete').toggle(!disabled);
+            if (disabled) {
+                $('#btnAddDetail').hide();
+            }
+        }
+
+        function updateStatusLabel(status) {
+            const lbl = document.getElementById('lblStatusFlow');
+            lbl.textContent = status || 'NEW';
+            lbl.className = 'control-label text-blue';
+            if (status === 'DRAFT') lbl.className = 'control-label text-yellow';
+            if (status === 'SUBMITTED') lbl.className = 'control-label text-orange';
+            if (status === 'APPROVE 1 - DRAFT') lbl.className = 'control-label text-aqua';
+            if (status === 'APPROVE 2 - DRAFT') lbl.className = 'control-label text-teal';
+            if (status === 'APPROVED') lbl.className = 'control-label text-blue';
+            if (status === 'CLOSED') lbl.className = 'control-label text-muted';
+            if (status === 'REJECTED') lbl.className = 'control-label text-red';
+        }
+
+        /**
+         * Mirror p_EnableControl — atur visibilitas tombol & field berdasarkan status dokumen
+         */
+        function enableKlaimControls() {
+            const bitApply = claimFormState.BIT_APPLY === 'Y';
+            const bitApproved = claimFormState.BIT_APPROVED === 'Y';
+            const bitRejected = claimFormState.BIT_REJECTED === 'Y';
+            const bitClosed = claimFormState.BIT_CLOSED === 'Y';
+            const status = claimFormState.TXT_STATUSFLOW || 'NEW';
+
+            // Tombol navigasi utama — selalu bisa diklik
+            ['btnFind', 'btnSave', 'btnNew'].forEach(id => {
+                document.getElementById(id).style.display = 'inline-block';
+                document.getElementById(id).disabled = false;
+            });
+
+            document.getElementById('btnSubmit').style.display = 'none';
+            document.getElementById('btnCopy').style.display = 'none';
+            document.getElementById('btnClose').style.display = 'none';
+            document.getElementById('btnReject').style.display = 'none';
+            document.getElementById('btnApprovalHistory').style.display = 'none';
+            document.getElementById('btnViewMemo').style.display = 'inline-block';
+            document.getElementById('btnAddDetail').style.display = 'inline-block';
+            document.getElementById('txtRemark').disabled = false;
+            setDetailFieldsDisabled(false);
+
+            if (bitApproved && !bitRejected) {
+                document.getElementById('btnSave').style.display = 'none';
+                document.getElementById('btnSubmit').style.display = 'none';
+                document.getElementById('btnApprovalHistory').style.display = 'inline-block';
+                if (!bitClosed) document.getElementById('btnClose').style.display = 'inline-block';
+                document.getElementById('btnAddDetail').style.display = 'none';
+                setLovButtonsVisible(false);
+                setDetailFieldsDisabled(true);
+                document.getElementById('txtRemark').disabled = true;
+            } else if (bitApply && !bitApproved && !bitRejected) {
+                document.getElementById('btnSave').style.display = 'inline-block';
+                document.getElementById('btnSubmit').style.display = 'none';
+                document.getElementById('btnApprovalHistory').style.display = 'inline-block';
+                setLovButtonsVisible(false);
+            } else if (bitRejected) {
+                document.getElementById('btnSave').style.display = 'none';
+                document.getElementById('btnSubmit').style.display = 'none';
+                document.getElementById('btnApprovalHistory').style.display = 'inline-block';
+                setLovButtonsVisible(false);
+                setDetailFieldsDisabled(true);
+                document.getElementById('txtRemark').disabled = true;
+            } else {
+                document.getElementById('btnSubmit').style.display = 'inline-block';
+                setLovButtonsVisible(!claimLoadedFromFind);
+            }
+
+            updateStatusLabel(status);
+            document.getElementById('divClose').style.display = bitClosed ? 'block' : 'none';
+            updateEMateraiButton();
+        }
+
+        /** Mirror p_initiateData / p_showBlank — form kosong (New) */
+        function initiateBlankForm() {
+            claimLoadedFromFind = false;
+            claimFormState = {
+                BIT_APPLY: 'N',
+                BIT_APPROVED: 'N',
+                BIT_REJECTED: 'N',
+                BIT_CLOSED: 'N',
+                TXT_STATUSFLOW: 'NEW'
+            };
+
+            document.getElementById('txtID').value = '';
+            document.getElementById('txtDocNo').value = '';
+            document.getElementById('txtDocNoMkpp').value = '';
+            document.getElementById('txtGroupAccount').value = '';
+            document.getElementById('txtPartner').value = '';
+            document.getElementById('txtOutlet').value = '';
+            document.getElementById('txtSupplierSiteID').value = '';
+            document.getElementById('txtSupplierSiteName').value = '';
+            document.getElementById('txtSupplierCode').value = '';
+            document.getElementById('txtBranchName').value = '';
+            document.getElementById('txtSupplierID').value = '';
+            document.getElementById('txtSupplierName').value = '';
+            document.getElementById('txtRemark').value = '';
+            document.getElementById('txtReasonReadySubmit').value = '';
+            document.getElementById('txtSourceDoc').value = 'PORTAL KDS';
+            document.getElementById('rdoReadySubmitNo').checked = true;
+            updateReadySubmitUI();
+            document.getElementById('divClose').style.display = 'none';
+
+            detailRows = [];
+            enableKlaimControls();
+            renderTable();
+            syncToStorage();
+        }
+
+        /** Mirror p_txtID_TextChanged → p_DataToUI setelah pilih dari Find LOV */
+        function loadClaimFromFind(item) {
+            claimLoadedFromFind = true;
+            const status = (item.status || 'DRAFT').toUpperCase();
+
+            claimFormState.TXT_STATUSFLOW = status;
+            claimFormState.BIT_APPLY = 'N';
+            claimFormState.BIT_APPROVED = 'N';
+            claimFormState.BIT_REJECTED = 'N';
+            claimFormState.BIT_CLOSED = 'N';
+
+            if (status === 'APPROVED' || status === 'CLOSED') {
+                claimFormState.BIT_APPLY = 'Y';
+                claimFormState.BIT_APPROVED = 'Y';
+            }
+            if (status === 'CLOSED') {
+                claimFormState.BIT_CLOSED = 'Y';
+            }
+            if (status === 'SUBMITTED') {
+                claimFormState.BIT_APPLY = 'Y';
+            }
+
+            document.getElementById('txtID').value = item.id;
+            document.getElementById('txtDocNo').value = item.dokNo;
+
+            const outlet = outletsData.find(o =>
+                item.site && (o.site === item.site || item.site.includes(o.site) || o.site.includes(item.site))
+            );
+            const partner = partnersData.find(p =>
+                item.site && (p.site === item.site || item.site.includes(p.site) || p.site.includes(item.site))
+            );
+
+            const groupAccount = outlet ? outlet.group_account : (partner ? partner.group_account : 'ENSEVAL');
+            document.getElementById('txtGroupAccount').value = groupAccount;
+            document.getElementById('txtOutlet').value = item.site || '';
+
+            if (outlet) {
+                document.getElementById('txtSupplierCode').value = outlet.supplier_id;
+                document.getElementById('txtSupplierID').value = outlet.supplier_id;
+                document.getElementById('txtSupplierName').value = outlet.supplier_name;
+                document.getElementById('txtSupplierSiteID').value = outlet.supplier_site_id;
+                document.getElementById('txtSupplierSiteName').value = outlet.supplier_site_name;
+                document.getElementById('txtBranchName').value = outlet.branch;
+            }
+
+            if (groupAccount.toUpperCase() === 'ENSEVAL' && partner) {
+                document.getElementById('txtPartner').value = partner.supplier_name;
+            } else {
+                document.getElementById('txtPartner').value = '';
+            }
+
+            document.getElementById('txtRemark').value = item.description || '';
+            const sourceDoc = (item.source || 'PORTAL KDS').toUpperCase();
+            document.getElementById('txtSourceDoc').value = sourceDoc;
+
+            if (item.readyToSubmit === 'Yes') {
+                document.getElementById('rdoReadySubmitYes').checked = true;
+            } else {
+                document.getElementById('rdoReadySubmitNo').checked = true;
+            }
+            updateReadySubmitUI();
+
+            let periodFrom, periodTo;
+            if (sourceDoc === 'BOSNET' && item.bosnetQuarter) {
+                const qPeriod = getBosnetQuarterPeriod(item.bosnetQuarter, item.bosnetYear);
+                periodFrom = qPeriod.from;
+                periodTo = qPeriod.to;
+            } else {
+                const periodParts = (item.period || '').split(' - ').map(s => s.trim());
+                periodFrom = periodParts[0] || moment().format('DD-MMM-YYYY');
+                periodTo = periodParts[1] || periodFrom;
+            }
+
+            const actMatch = detailActivitiesData.find(a =>
+                item.description === a.activity || (item.description && item.description.includes(a.activity))
+            );
+
+            const invoiceAmt = typeof item.invoiceAmount === 'number'
+                ? item.invoiceAmount
+                : klaimCleanNumber(item.invoiceAmount);
+
+            detailRows = [{
+                activity: actMatch ? actMatch.activity : (item.description || ''),
+                programDesc: actMatch ? actMatch.progDesc : (item.description || ''),
+                periodFrom: periodFrom,
+                periodTo: periodTo,
+                invoiceNo: item.invoiceNo || '',
+                invoiceDate: moment().format('DD-MMM-YYYY'),
+                fakturNo: '',
+                fakturDate: moment().format('DD-MMM-YYYY'),
+                invoiceAmount: invoiceAmt,
+                pphType: actMatch ? actMatch.pph_jenis : 'NON PPH',
+                pphTarif: actMatch ? actMatch.rate : 0,
+                ppnType: 'PPN 11%',
+                ppnTarif: 11,
+                ppnAmount: Math.floor(invoiceAmt * 0.11),
+                allBrand: true,
+                umbrand: '',
+                umbrandData: [],
+                status: status,
+                description: '',
+                include: true,
+                attachmentName: item.attachment === 'Yes' ? 'attachment-' + item.id + '.pdf' : '',
+                paymentStatus: item.paymentStatus || '',
+                paidDate: item.paidDate || '',
+                bank: item.bank || ''
+            }];
+
+            enableKlaimControls();
+            renderTable();
+            syncToStorage();
+        }
 
         document.addEventListener('layoutReady', () => {
              // Move modals to body to prevent backdrop stacking issues
@@ -804,19 +1170,10 @@
              // Reset session storage on initial page load so it's always empty by default
              sessionStorage.removeItem('klaimPrototypeData');
              
-             // First read from storage
-             syncFromStorage();
-             
-             // Explicitly handle initial visibility of Partner button based on loaded Group Account
-             const initialGrp = document.getElementById('txtGroupAccount').value;
-             if (initialGrp && initialGrp.trim().toUpperCase() === 'ENSEVAL') {
-                 $('#btnLOVPartner').show();
-             } else {
-                 $('#btnLOVPartner').hide();
-             }
-             
-             renderTable();
+             initiateBlankForm();
+             document.getElementById('dtmDate').value = moment().format('DD-MMM-YYYY');
              $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+             $('input[name="ReadySubmit"]').on('change', updateReadySubmitUI);
 
              // Live filtering event handlers for search inputs
              $(document).on('keyup', '#lovGroupAccountModal input[type="text"]', function() {
@@ -899,7 +1256,7 @@
         window.openKlaimPopup = function(url, title) {
             document.getElementById('klaimPopupTitle').textContent = title || 'Klaim';
             document.getElementById('klaimPopupFrame').src = url;
-            $('#klaimPopupModal').modal('show');
+            (window.showKlaimModal || function(s) { $(s).modal('show'); })('#klaimPopupModal');
         };
 
         function syncToStorage() {
@@ -908,7 +1265,11 @@
             data.TXT_PARTNER = document.getElementById('txtPartner').value;
             data.TXT_BRANCH = document.getElementById('txtBranchName').value;
             data.TXT_DOC_NO = document.getElementById('txtDocNo').value;
-            data.TXT_STATUSFLOW = document.getElementById('lblStatusFlow').textContent;
+            data.TXT_STATUSFLOW = claimFormState.TXT_STATUSFLOW;
+            data.BIT_APPLY = claimFormState.BIT_APPLY;
+            data.BIT_APPROVED = claimFormState.BIT_APPROVED;
+            data.BIT_REJECTED = claimFormState.BIT_REJECTED;
+            data.BIT_CLOSED = claimFormState.BIT_CLOSED;
             
             data.TXT_SUPPLIER_CODE = document.getElementById('txtSupplierCode').value;
             data.TXT_SUPPLIER_NAME = document.getElementById('txtSupplierName').value;
@@ -916,6 +1277,7 @@
             data.TXT_SUPPLIER_SITE_ID = document.getElementById('txtSupplierSiteID').value;
             data.TXT_SUPPLIER_SITE_NAME = document.getElementById('txtSupplierSiteName').value;
             data.TXT_REMARK = document.getElementById('txtRemark').value;
+            data.TXT_SOURCE_DOC = document.getElementById('txtSourceDoc').value;
             data.TXT_REASON_READY_SUBMIT = document.getElementById('txtReasonReadySubmit').value;
             data.BIT_READY_SUBMIT = document.getElementById('rdoReadySubmitYes').checked ? 'Y' : 'N';
 
@@ -939,6 +1301,10 @@
                 BIT_INCLUDE: r.include ? 'Y' : 'N',
                 TXT_STATUSKLAIM: r.status,
                 TXT_STATUS_DESC: r.description,
+                TXT_PAYMENT_STATUS: r.paymentStatus || '',
+                DTM_PAID_DATE: r.paidDate || '',
+                TXT_BANK_NAME: r.bank || '',
+                DEC_DPP_PPN: (r.invoiceAmount || 0) + (r.ppnAmount || 0),
                 XXSHP_KDS_T_KLAIM_UMB: r.umbrandData || [],
                 XXSHP_KDS_T_KLAIM_DTL_ATT: r.attachmentName ? [{ TXT_FILE_NAME: r.attachmentName, BIT_ACTIVE: 'Y' }] : []
             }));
@@ -952,9 +1318,9 @@
             if (data.TXT_GROUP_ACCOUNT !== undefined) {
                 document.getElementById('txtGroupAccount').value = data.TXT_GROUP_ACCOUNT || '';
                 if (data.TXT_GROUP_ACCOUNT.trim().toUpperCase() === 'ENSEVAL') {
-                    $('#btnLOVPartner').show();
+                    $('#btnLOVPartner').parent().show();
                 } else {
-                    $('#btnLOVPartner').hide();
+                    $('#btnLOVPartner').parent().hide();
                 }
             }
             if (data.TXT_PARTNER !== undefined) document.getElementById('txtPartner').value = data.TXT_PARTNER || '';
@@ -968,6 +1334,7 @@
             if (data.TXT_SUPPLIER_SITE_ID !== undefined) document.getElementById('txtSupplierSiteID').value = data.TXT_SUPPLIER_SITE_ID || '';
             if (data.TXT_SUPPLIER_SITE_NAME !== undefined) document.getElementById('txtSupplierSiteName').value = data.TXT_SUPPLIER_SITE_NAME || '';
             if (data.TXT_REMARK !== undefined) document.getElementById('txtRemark').value = data.TXT_REMARK || '';
+            if (data.TXT_SOURCE_DOC !== undefined) document.getElementById('txtSourceDoc').value = data.TXT_SOURCE_DOC || 'PORTAL KDS';
             if (data.TXT_REASON_READY_SUBMIT !== undefined) document.getElementById('txtReasonReadySubmit').value = data.TXT_REASON_READY_SUBMIT || '';
             if (data.BIT_READY_SUBMIT !== undefined) {
                 if (data.BIT_READY_SUBMIT === 'Y') {
@@ -981,23 +1348,30 @@
                 document.getElementById('lblStatusFlow').textContent = data.TXT_STATUSFLOW || 'NEW';
                 const status = data.TXT_STATUSFLOW;
                 const lbl = document.getElementById('lblStatusFlow');
-                if (status === 'DRAFT') {
+                
+                // Force only the requested buttons to be visible upon refresh, except maybe Submit which is shown unless it's CLOSED?
+                // Wait, if it's NEW or DRAFT or anything else, let's just make sure unwanted buttons are hidden.
+                document.getElementById('btnCopy').style.display = 'none';
+                document.getElementById('btnClose').style.display = 'none';
+                document.getElementById('btnReject').style.display = 'none';
+                document.getElementById('btnApprovalHistory').style.display = 'none';
+                document.getElementById('divClose').style.display = 'none';
+
+                if (status === 'DRAFT' || status === 'APPROVED' || status === 'SUBMITTED') {
                     lbl.className = 'control-label text-yellow';
+                    if(status === 'APPROVED') lbl.className = 'control-label text-blue';
+                    if(status === 'SUBMITTED') lbl.className = 'control-label text-orange';
                     document.getElementById('btnSubmit').style.display = 'inline-block';
-                } else if (status === 'SUBMITTED') {
-                    lbl.className = 'control-label text-orange';
-                    document.getElementById('btnSubmit').style.display = 'none';
-                    document.getElementById('btnCopy').style.display = 'inline-block';
-                    document.getElementById('btnClose').style.display = 'inline-block';
-                    document.getElementById('btnReject').style.display = 'inline-block';
-                    document.getElementById('btnApprovalHistory').style.display = 'inline-block';
                 } else if (status === 'CLOSED') {
                     lbl.className = 'control-label text-muted';
                     document.getElementById('divClose').style.display = 'block';
+                    document.getElementById('btnSubmit').style.display = 'none';
                 } else if (status === 'REJECTED') {
                     lbl.className = 'control-label text-red';
+                    document.getElementById('btnSubmit').style.display = 'none';
                 } else {
                     lbl.className = 'control-label text-blue';
+                    document.getElementById('btnSubmit').style.display = 'none';
                 }
             }
 
@@ -1027,7 +1401,10 @@
                 status: d.TXT_STATUSKLAIM || 'OPEN',
                 description: d.TXT_STATUS_DESC || '',
                 include: d.BIT_INCLUDE !== 'N',
-                attachmentName: (d.XXSHP_KDS_T_KLAIM_DTL_ATT && d.XXSHP_KDS_T_KLAIM_DTL_ATT.length) ? d.XXSHP_KDS_T_KLAIM_DTL_ATT[0].TXT_FILE_NAME : ''
+                attachmentName: (d.XXSHP_KDS_T_KLAIM_DTL_ATT && d.XXSHP_KDS_T_KLAIM_DTL_ATT.length) ? d.XXSHP_KDS_T_KLAIM_DTL_ATT[0].TXT_FILE_NAME : '',
+                paymentStatus: d.TXT_PAYMENT_STATUS || '',
+                paidDate: d.DTM_PAID_DATE || '',
+                bank: d.TXT_BANK_NAME || ''
             }));
         }
 
@@ -1054,7 +1431,7 @@
 
             if (detailRows.length === 0) {
                 const tr = document.createElement('tr');
-                tr.innerHTML = '<td colspan="24" class="text-center" style="padding: 15px;">No data available in table</td>';
+                tr.innerHTML = '<td colspan="28" class="text-center" style="padding: 15px;">No data available in table</td>';
                 tbody.appendChild(tr);
             } else {
                 detailRows.forEach((item, index) => {
@@ -1067,10 +1444,18 @@
                 const finalAmount = item.invoiceAmount - pphAmount;
                 const ppnAmount = item.ppnAmount;
                 const totalAmount = finalAmount + ppnAmount;
+                const dppPpn = item.invoiceAmount + ppnAmount;
+                const paymentEditable = canEditPaymentFields();
 
                 if (item.include) {
                     grandTotal += totalAmount;
                 }
+
+                let bankOptionsHtml = '';
+                paymentBankOptions.forEach(b => {
+                    const sel = (item.bank === b) ? 'selected' : '';
+                    bankOptionsHtml += `<option value="${b}" ${sel}>${b || '-'}</option>`;
+                });
 
                 // Populate PPN dropdown option items dynamically
                 let ppnOptionsHtml = '';
@@ -1105,6 +1490,9 @@
                 }
 
                 const tr = document.createElement('tr');
+                if (validationErrorRows.includes(index)) {
+                    tr.className = 'tr-klaim-validation-error';
+                }
                 tr.innerHTML = `
                     <td style="text-align:center; vertical-align:middle;">${index + 1}</td>
                     <td>
@@ -1184,6 +1572,21 @@
                     <td style="text-align:center; vertical-align:middle;">
                         <input type="checkbox" class="chkDetailInclude" ${item.include ? 'checked' : ''} onchange="updateIncludeCell(${index}, this.checked)">
                     </td>
+                    <td style="vertical-align:middle;" class="proto-new-cell">
+                        <select class="form-control input-sm ddlPaymentStatus" onchange="updateCell(${index}, 'paymentStatus', this.value); syncToStorage();" ${paymentEditable ? '' : 'disabled'}>
+                            <option value="" ${!item.paymentStatus ? 'selected' : ''}>-</option>
+                            <option value="PENDING" ${item.paymentStatus === 'PENDING' ? 'selected' : ''}>PENDING</option>
+                            <option value="PAID" ${item.paymentStatus === 'PAID' ? 'selected' : ''}>PAID</option>
+                            <option value="CANCELLED" ${item.paymentStatus === 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                        </select>
+                    </td>
+                    <td class="proto-new-cell"><input type="text" class="form-control input-sm datepicker-cell txtPaidDate" style="width:100px;" value="${item.paidDate || ''}" onchange="updateCell(${index}, 'paidDate', this.value); syncToStorage();" ${paymentEditable ? '' : 'disabled'}></td>
+                    <td class="proto-new-cell">
+                        <select class="form-control input-sm ddlBank" style="min-width:110px;" onchange="updateCell(${index}, 'bank', this.value); syncToStorage();" ${paymentEditable ? '' : 'disabled'}>
+                            ${bankOptionsHtml}
+                        </select>
+                    </td>
+                    <td class="proto-new-cell"><input type="text" class="form-control input-sm text-right autonumeric txtDppPpn" style="width:120px;" value="${formatCurrency(dppPpn)}" readonly></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1212,6 +1615,7 @@
 
              // Re-bind tooltips
              $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+             updateEMateraiButton();
          }
 
         function updateCell(index, key, val) {
@@ -1291,7 +1695,7 @@
                 `;
                 tbody.appendChild(tr);
             });
-            $('#lovDetailActivityModal').modal('show');
+            (window.showKlaimModal || function(s) { $(s).modal('show'); })('#lovDetailActivityModal');
         }
 
         function setDetailActivity(activity, pphJenis, pphTarif, progDesc) {
@@ -1304,7 +1708,7 @@
                 renderTable();
                 syncToStorage();
             }
-            $('#lovDetailActivityModal').modal('hide');
+            hideModal('#lovDetailActivityModal');
         }
 
         function openDetailPphTypeLov(index) {
@@ -1339,7 +1743,7 @@
                 $('#lovDetailPphTypeModal .lov-info').text(`Showing 1 to ${filtered.length} of ${filtered.length} entries`);
             }
             
-            $('#lovDetailPphTypeModal').modal('show');
+            (window.showKlaimModal || function(s) { $(s).modal('show'); })('#lovDetailPphTypeModal');
         }
 
         function selectDetailPphType(id, name, rate) {
@@ -1351,7 +1755,7 @@
                 renderTable();
                 syncToStorage();
             }
-            $('#lovDetailPphTypeModal').modal('hide');
+            hideModal('#lovDetailPphTypeModal');
         }
 
         function clearPphType(index) {
@@ -1416,8 +1820,12 @@
         }
 
         function handleAddDetail() {
+            if ($("#txtGroupAccount").val() == "") {
+                bootbox.alert("Kolom Group Account harus di isi!");
+                return;
+            }
             detailRows.push({
-                activity: 'ACT-KCO-01',
+                activity: '',
                 programDesc: '',
                 periodFrom: moment().format('DD-MMM-YYYY'),
                 periodTo: moment().add(30, 'days').format('DD-MMM-YYYY'),
@@ -1437,7 +1845,10 @@
                 status: 'OPEN',
                 description: '',
                 include: true,
-                attachmentName: ''
+                attachmentName: '',
+                paymentStatus: '',
+                paidDate: '',
+                bank: ''
             });
             syncToStorage();
             renderTable();
@@ -1445,7 +1856,7 @@
 
         // LOV Triggers
         function openGroupAccountLov() {
-            $('#lovGroupAccountModal').modal('show');
+            (window.showKlaimModal || function(s) { $(s).modal('show'); })('#lovGroupAccountModal');
         }
 
         function selectGroupAccount(name, code, supplierName, site) {
@@ -1470,12 +1881,12 @@
 
             // Regulation: Partner search button is only shown if Group Account === "ENSEVAL"
             if (name.trim().toUpperCase() === "ENSEVAL") {
-                $('#btnLOVPartner').show();
+                $('#btnLOVPartner').parent().show();
             } else {
-                $('#btnLOVPartner').hide();
+                $('#btnLOVPartner').parent().hide();
             }
 
-            $('#lovGroupAccountModal').modal('hide');
+            hideModal('#lovGroupAccountModal');
             syncToStorage();
         }
 
@@ -1514,7 +1925,7 @@
                 });
                 $('#lovPartnerModal .lov-info').text(`Showing 1 to ${filtered.length} of ${filtered.length} entries`);
             }
-            $('#lovPartnerModal').modal('show');
+            (window.showKlaimModal || function(s) { $(s).modal('show'); })('#lovPartnerModal');
         }
 
         function selectPartner(site, branch, supplierName, code, supplierId, siteId, siteName) {
@@ -1526,7 +1937,7 @@
             document.getElementById('txtSupplierSiteID').value = siteId;
             document.getElementById('txtSupplierSiteName').value = siteName || (siteId + ' OFFICE');
             
-            $('#lovPartnerModal').modal('hide');
+            hideModal('#lovPartnerModal');
             syncToStorage();
         }
 
@@ -1565,7 +1976,7 @@
                 });
                 $('#lovOutletModal .lov-info').text(`Showing 1 to ${filtered.length} of ${filtered.length} entries`);
             }
-            $('#lovOutletModal').modal('show');
+            (window.showKlaimModal || function(s) { $(s).modal('show'); })('#lovOutletModal');
         }
 
         function selectOutlet(site, supplierId, supplierName, branch, supplierSiteId, supplierSiteName) {
@@ -1577,7 +1988,7 @@
             document.getElementById('txtSupplierSiteID').value = supplierSiteId;
             document.getElementById('txtSupplierSiteName').value = supplierSiteName;
             
-            $('#lovOutletModal').modal('hide');
+            hideModal('#lovOutletModal');
             syncToStorage();
         }
 
@@ -1589,11 +2000,11 @@
             // Reset search
             $('#lovFindModal input[type="text"]').val('');
 
-            findData.forEach(item => {
+            findData.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td style="text-align: center;">
-                        <button type="button" class="btn btn-success btn-xs" onclick="selectFind('${item.id}', '${item.dokNo}', '${item.status}')"><i class="fa fa-check"></i> Pilih</button>
+                        <button type="button" class="btn btn-success btn-xs" onclick="selectFindByIndex(${index})"><i class="fa fa-check"></i> Pilih</button>
                     </td>
                     <td>${item.id}</td>
                     <td>${item.dokNo}</td>
@@ -1610,156 +2021,392 @@
             });
             
             document.getElementById('lovFindInfo').textContent = `Showing 1 to ${findData.length} of ${findData.length} entries`;
-            $('#lovFindModal').modal('show');
+            (window.showKlaimModal || function(s) { $(s).modal('show'); })('#lovFindModal');
         }
 
-        function selectFind(id, dokNo, status) {
-            document.getElementById('txtID').value = id;
-            document.getElementById('txtDocNo').value = dokNo;
-            document.getElementById('lblStatusFlow').textContent = status;
-            
-            // Populate mock detail record based on find selection
-            detailRows = [
-                {
-                    activity: 'BONUS SUBDIST',
-                    programDesc: 'MILNA BOGO PROMO 2026',
-                    periodFrom: '01-Jan-2026',
-                    periodTo: '31-Mar-2026',
-                    invoiceNo: 'INV-KDS-' + id,
-                    invoiceDate: '10-Jan-2026',
-                    fakturNo: 'FP-001.002.' + id,
-                    fakturDate: '10-Jan-2026',
-                    invoiceAmount: 25000000,
-                    pphType: 'PPh23_15%',
-                    pphTarif: 15,
-                    ppnType: 'PPN 11%',
-                    ppnTarif: 11,
-                    ppnAmount: 2750000,
-                    allBrand: true,
-                    umbrand: 'CH-MILNA',
-                    umbrandData: [{ TXT_UMBRAND: 'MILNA', TXT_BRAND: 'MILNA UHT', DEC_AMOUNT: 25000000, XXSHP_KDS_T_KLAIM_BRAN: [] }],
-                    status: status,
-                    description: 'Mock detail loaded for claim ' + id,
-                    include: true,
-                    attachmentName: ''
-                }
-            ];
-            
-            // Enable save and submit buttons to simulate loading an existing claim
-            document.getElementById('btnSave').style.display = 'inline-block';
-            document.getElementById('btnSubmit').style.display = 'inline-block';
-            document.getElementById('btnClose').style.display = 'inline-block';
-            document.getElementById('btnReject').style.display = 'inline-block';
-            document.getElementById('btnApprovalHistory').style.display = 'inline-block';
-            
-            renderTable();
+        function selectFindByIndex(index) {
+            loadClaimFromFind(findData[index]);
+            hideModal('#lovFindModal');
+        }
+
+        function parseKlaimDate(str) {
+            if (!str) return null;
+            const m = moment(str, ['DD-MMM-YYYY', 'DD-MMM-YY'], true);
+            return m.isValid() ? m.toDate() : null;
+        }
+
+        /**
+         * Validasi form klaim — mirror clsXXSHP_KCO_T_KLAIM_HDRBL.ValidateInput
+         * @param {boolean} isSubmit true = validasi tambahan saat submit
+         */
+        function validateKlaimInput(isSubmit) {
             syncToStorage();
-            $('#lovFindModal').modal('hide');
+            validationErrorRows = [];
+
+            const groupAccount = document.getElementById('txtGroupAccount').value.trim();
+            const supplierCode = document.getElementById('txtSupplierCode').value.trim();
+            const remark = document.getElementById('txtRemark').value.trim();
+            const readySubmitNo = document.getElementById('rdoReadySubmitNo').checked;
+            const reasonReadySubmit = document.getElementById('txtReasonReadySubmit').value.trim();
+            const partner = document.getElementById('txtPartner').value.trim();
+
+            if (!groupAccount) {
+                bootbox.alert('Kolom Group Account harus di isi!');
+                return false;
+            }
+            if (!supplierCode) {
+                bootbox.alert('Kolom Supplier harus di isi!');
+                return false;
+            }
+            if (groupAccount.toUpperCase() === 'ENSEVAL' && !partner) {
+                bootbox.alert('Kolom Partner harus di isi untuk Group Account ENSEVAL!');
+                return false;
+            }
+            if (!remark) {
+                bootbox.alert('Kolom Remark harus di isi!');
+                return false;
+            }
+            if (readySubmitNo && !reasonReadySubmit) {
+                bootbox.alert('Notes ready submit harus di isi!');
+                return false;
+            }
+            if (detailRows.length === 0) {
+                bootbox.alert('Data Detail harus di isi!');
+                return false;
+            }
+
+            const invoiceNos = [];
+            for (let i = 0; i < detailRows.length; i++) {
+                const row = detailRows[i];
+                const line = i + 1;
+
+                if (!row.activity || !row.activity.trim()) {
+                    bootbox.alert('Kolom Activity harus di isi! (Baris ' + line + ')');
+                    return false;
+                }
+                if (!row.programDesc || !row.programDesc.trim()) {
+                    bootbox.alert('Kolom Program Desc harus di isi! (Baris ' + line + ')');
+                    return false;
+                }
+                if (!row.invoiceAmount || row.invoiceAmount <= 0) {
+                    bootbox.alert('Kolom Invoice Amount tidak boleh NOL! (Baris ' + line + ')');
+                    return false;
+                }
+                if (!row.invoiceNo || !row.invoiceNo.trim()) {
+                    bootbox.alert('Kolom Invoice No harus di isi! (Baris ' + line + ')');
+                    return false;
+                }
+
+                const hasPpn = rowHasPpn(row);
+                const hasFakturNo = row.fakturNo && row.fakturNo.trim();
+                const hasFakturDate = row.fakturDate && row.fakturDate.trim();
+
+                if (hasPpn && !hasFakturNo) {
+                    validationErrorRows = [i];
+                    renderTable();
+                    bootbox.alert('Baris ' + line + ': Faktur Pajak No wajib diisi jika PPN tidak 0%');
+                    return false;
+                }
+                if (hasPpn && !hasFakturDate) {
+                    validationErrorRows = [i];
+                    renderTable();
+                    bootbox.alert('Baris ' + line + ': Faktur Pajak Date wajib diisi jika PPN tidak 0%');
+                    return false;
+                }
+                if ((hasFakturNo || hasFakturDate) && !hasPpn) {
+                    validationErrorRows = [i];
+                    renderTable();
+                    bootbox.alert('Baris ' + line + ': PPN harus diisi (tarif > 0%) jika Faktur Pajak No/Date diisi');
+                    return false;
+                }
+
+                const invNo = row.invoiceNo.trim().toUpperCase();
+                if (invoiceNos.includes(invNo)) {
+                    bootbox.alert('No Invoice ' + row.invoiceNo + ' tidak boleh duplikat!');
+                    return false;
+                }
+                invoiceNos.push(invNo);
+
+                const periodFrom = parseKlaimDate(row.periodFrom);
+                const periodTo = parseKlaimDate(row.periodTo);
+                if (periodFrom && periodTo && periodTo < periodFrom) {
+                    bootbox.alert('Tanggal Period To pada activity ' + row.activity + ' tidak boleh kurang dari Period From !');
+                    return false;
+                }
+
+                if (!row.attachmentName) {
+                    bootbox.alert('Data klaim detail pada Activity ' + row.activity + ' belum memiliki Attachment!');
+                    return false;
+                }
+
+                if (!row.allBrand) {
+                    const umbList = row.umbrandData || [];
+                    if (umbList.length === 0) {
+                        bootbox.alert('Alokasi Umbrand pada invoice ' + row.invoiceNo + ' belum diisi!');
+                        return false;
+                    }
+                    let totalUmb = 0;
+                    for (const umb of umbList) {
+                        const umbAmount = klaimCleanNumber(umb.DEC_AMOUNT);
+                        totalUmb += umbAmount;
+                        if (umb.BIT_ALL_SUBRAND === 'N' || umb.BIT_ALL_SUBRAND === false) {
+                            const brands = umb.XXSHP_KDS_T_KLAIM_BRAN || [];
+                            let totalBrand = 0;
+                            for (const brand of brands) {
+                                const brandAmount = klaimCleanNumber(brand.DEC_AMOUNT);
+                                totalBrand += brandAmount;
+                                if (brand.BIT_ALL_SKU === 'N' || brand.BIT_ALL_SKU === false) {
+                                    const skus = brand.XXSHP_KDS_T_KLAIM_SKU || [];
+                                    let totalSku = 0;
+                                    for (const sku of skus) {
+                                        totalSku += klaimCleanNumber(sku.DEC_AMOUNT);
+                                    }
+                                    if (totalSku !== brandAmount) {
+                                        bootbox.alert('Nilai total Alokasi SKU di detail invoice nomor ' + row.invoiceNo + ',' + (umb.TXT_BRAND || '') + ',' + (brand.TXT_SUBBRAND || '') + ' tidak sesuai!');
+                                        return false;
+                                    }
+                                }
+                            }
+                            if (totalBrand !== umbAmount) {
+                                bootbox.alert('Nilai total Alokasi Brand di detail invoice nomor ' + row.invoiceNo + ',' + (umb.TXT_BRAND || '') + ' tidak sesuai!');
+                                return false;
+                            }
+                        }
+                    }
+                    if (totalUmb !== row.invoiceAmount) {
+                        bootbox.alert('Nilai total Alokasi Umbrand di detail invoice nomor ' + row.invoiceNo + ' tidak sesuai!');
+                        return false;
+                    }
+                }
+            }
+
+            if (isSubmit && readySubmitNo) {
+                bootbox.alert('Data klaim belum siap untuk di submit !');
+                return false;
+            }
+
+            return true;
+        }
+
+        function updateReadySubmitUI() {
+            const isYes = document.getElementById('rdoReadySubmitYes').checked;
+            const reasonEl = document.getElementById('txtReasonReadySubmit');
+            if (isYes) {
+                reasonEl.disabled = true;
+                reasonEl.value = '';
+                reasonEl.style.display = 'none';
+            } else {
+                reasonEl.disabled = false;
+                reasonEl.style.display = '';
+            }
         }
 
         function handleSave() {
-            const grpAcc = document.getElementById('txtGroupAccount').value;
-            if (!grpAcc) {
-                bootbox.alert("Group Account is required!");
-                return;
-            }
-            bootbox.confirm("Save Claim form?", (res) => {
+            if (!validateKlaimInput(false)) return;
+            bootbox.confirm("Save this data?", (res) => {
                 if (res) {
                     if (!document.getElementById('txtID').value) {
                         document.getElementById('txtID').value = Math.floor(Math.random() * 90000 + 10000);
                         document.getElementById('txtDocNo').value = 'CLM-2026-' + Math.floor(Math.random() * 9000 + 1000);
                     }
-                    document.getElementById('lblStatusFlow').textContent = 'DRAFT';
-                    document.getElementById('lblStatusFlow').className = 'control-label text-yellow';
-                    document.getElementById('btnSubmit').style.display = 'inline-block';
+                    claimFormState.TXT_STATUSFLOW = 'DRAFT';
+                    claimFormState.BIT_APPLY = 'N';
+                    claimLoadedFromFind = false;
+                    enableKlaimControls();
+                    updateEMateraiButton();
+                    syncToStorage();
                     bootbox.alert("Claim saved as DRAFT successfully!");
                 }
             });
         }
 
-        function handleUpdateInclude() {
-            bootbox.alert("Included claim items status updated!");
-        }
-
         function handleNew() {
-            bootbox.confirm("Discard and create new Claim?", (res) => {
-                if (res) {
-                    document.getElementById('txtID').value = '';
-                    document.getElementById('txtDocNo').value = '';
-                    document.getElementById('txtDocNoMkpp').value = '';
-                    document.getElementById('txtGroupAccount').value = '';
-                    document.getElementById('txtPartner').value = '';
-                    document.getElementById('txtOutlet').value = '';
-                    document.getElementById('txtSupplierSiteID').value = '';
-                    document.getElementById('txtSupplierSiteName').value = '';
-                    document.getElementById('txtSupplierCode').value = '';
-                    document.getElementById('txtBranchName').value = '';
-                    document.getElementById('txtSupplierID').value = '';
-                    document.getElementById('txtSupplierName').value = '';
-                    document.getElementById('txtRemark').value = '';
-                    document.getElementById('txtReasonReadySubmit').value = '';
-                    document.getElementById('rdoReadySubmitNo').checked = true;
-                    document.getElementById('divClose').style.display = 'none';
-
-                    document.getElementById('lblStatusFlow').textContent = 'NEW';
-                    document.getElementById('lblStatusFlow').className = 'control-label text-blue';
-                    
-                    document.getElementById('btnSubmit').style.display = 'none';
-                    document.getElementById('btnCopy').style.display = 'none';
-                    document.getElementById('btnClose').style.display = 'none';
-                    document.getElementById('btnReject').style.display = 'none';
-                    document.getElementById('btnApprovalHistory').style.display = 'none';
-
-                    $('#btnLOVPartner').hide();
-
-                    detailRows = [];
-                    renderTable();
-                    syncToStorage();
-                }
+            bootbox.confirm("Create new claim form?", (res) => {
+                if (res) initiateBlankForm();
             });
         }
 
         function handleSubmit() {
-            bootbox.confirm("Submit Claim for approval?", (res) => {
+            if (!validateKlaimInput(true)) return;
+            bootbox.confirm("Submit klaim untuk proses approval (Owner KMMD → ASS auto → RSM → CF)?", (res) => {
                 if (res) {
-                    document.getElementById('lblStatusFlow').textContent = 'SUBMITTED';
-                    document.getElementById('lblStatusFlow').className = 'control-label text-orange';
-                    document.getElementById('btnSubmit').style.display = 'none';
-                    bootbox.alert("Claim successfully submitted for approval!");
+                    claimFormState.TXT_STATUSFLOW = 'APPROVE 1 - DRAFT';
+                    claimFormState.BIT_APPLY = 'Y';
+                    claimFormState.BIT_APPROVED = 'N';
+                    claimLoadedFromFind = true;
+                    enableKlaimControls();
+                    updateStatusLabel('APPROVE 1 - DRAFT');
+
+                    bootbox.alert(
+                        '<h4>Approval Upgrade — Simulasi</h4>' +
+                        '<p><strong>1. Owner KMMD</strong> — notifikasi email terkirim (Approve 1 - Draft)</p>' +
+                        '<p><strong>2. ASS</strong> — <em>auto approve</em> (Approve 2 - Draft)</p>' +
+                        '<p><strong>3. RSM</strong> — menunggu Ready to Submit</p>' +
+                        '<p><strong>4. CF</strong> — submit final untuk payment</p>' +
+                        '<p class="text-muted">Mapping ASS/Owner mengacu ke Form Master ASS/Owner KMMD.</p>',
+                        function () {
+                            claimFormState.TXT_STATUSFLOW = 'APPROVE 2 - DRAFT';
+                            updateStatusLabel('APPROVE 2 - DRAFT');
+                            syncToStorage();
+                            updateEMateraiButton();
+                        }
+                    );
+                }
+            });
+        }
+
+        function loadJsPdfLibrary() {
+            return new Promise((resolve, reject) => {
+                if (window.jspdf && window.jspdf.jsPDF) {
+                    resolve(window.jspdf.jsPDF);
+                    return;
+                }
+                const s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                s.onload = () => resolve(window.jspdf.jsPDF);
+                s.onerror = () => reject(new Error('Gagal memuat library PDF'));
+                document.head.appendChild(s);
+            });
+        }
+
+        async function handleEMaterai() {
+            const total = getIncludedGrandTotal();
+            if (total < EMATERAI_THRESHOLD) {
+                bootbox.alert('E-Materai hanya untuk klaim dengan total include >= Rp 5.000.000');
+                return;
+            }
+
+            const docNo = document.getElementById('txtDocNo').value || 'DRAFT';
+            const supplier = document.getElementById('txtSupplierName').value || '-';
+            const groupAccount = document.getElementById('txtGroupAccount').value || '-';
+            const includedRows = detailRows.filter(r => r.include);
+
+            bootbox.confirm('Generate PDF E-Materai (Kwitansi Standar + Surat Pengantar Klaim)?', async (ok) => {
+                if (!ok) return;
+                try {
+                    const JsPDF = await loadJsPdfLibrary();
+                    const pdf = new JsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+                    pdf.setFontSize(14);
+                    pdf.text('KWITANSI STANDAR', 105, 20, { align: 'center' });
+                    pdf.setFontSize(10);
+                    pdf.text('Template: 170914 Kwitansi Standard SHP Sep 17.xlsx', 105, 28, { align: 'center' });
+                    pdf.text('Doc No: ' + docNo, 20, 45);
+                    pdf.text('Supplier: ' + supplier, 20, 52);
+                    pdf.text('Group Account: ' + groupAccount, 20, 59);
+                    pdf.text('Tanggal: ' + moment().format('DD-MMM-YYYY'), 20, 66);
+                    pdf.text('Total Klaim (Include): Rp ' + formatCurrency(total), 20, 80);
+
+                    pdf.addPage();
+                    pdf.setFontSize(14);
+                    pdf.text('SURAT PENGANTAR KLAIM', 105, 20, { align: 'center' });
+                    pdf.setFontSize(10);
+                    let y = 40;
+                    pdf.text('No', 20, y);
+                    pdf.text('Activity', 30, y);
+                    pdf.text('Invoice No', 90, y);
+                    pdf.text('DPP+PPN', 150, y);
+                    y += 6;
+                    includedRows.forEach((row, idx) => {
+                        const dppPpn = row.invoiceAmount + (row.ppnAmount || 0);
+                        pdf.text(String(idx + 1), 20, y);
+                        pdf.text((row.activity || '-').substring(0, 35), 30, y);
+                        pdf.text((row.invoiceNo || '-').substring(0, 25), 90, y);
+                        pdf.text(formatCurrency(dppPpn), 150, y);
+                        y += 6;
+                    });
+
+                    const fileName = 'EMaterai_' + docNo.replace(/[\\/]/g, '-') + '_' + moment().format('YYYYMMDD') + '.pdf';
+                    pdf.save(fileName);
+                    bootbox.alert('PDF E-Materai berhasil di-generate: <strong>' + fileName + '</strong><br><small>2 dokumen digabung: Kwitansi Standar + Surat Pengantar Klaim</small>');
+                } catch (e) {
+                    bootbox.alert('Gagal generate PDF: ' + e.message + '<br><small>Pastikan koneksi internet tersedia untuk memuat library jsPDF.</small>');
                 }
             });
         }
 
         function handlePrint() {
-            bootbox.alert("Generating Claim Print report...");
+            bootbox.confirm("Print this document?", (res) => {
+                if (res) {
+                    bootbox.alert("Generating Claim Print report...");
+                }
+            });
         }
 
         function handleApprovalHistory() {
-            bootbox.alert("<h4>Approval History</h4><p>1. <strong>Admin KICAO</strong> (Draft) - approved</p><p>2. <strong>Dept Head</strong> (Review) - approved</p>");
+            const docNo = document.getElementById('txtDocNo').value || '(belum disimpan)';
+            bootbox.alert(
+                '<h4>Approval History — ' + docNo + '</h4>' +
+                '<table class="table table-condensed table-bordered" style="font-size:12px;">' +
+                '<tr><th>Urutan</th><th>Role</th><th>Aksi</th><th>Status</th></tr>' +
+                '<tr><td>1</td><td>Admin KMMD</td><td>Save</td><td>Draft</td></tr>' +
+                '<tr><td>2</td><td><strong>Owner KMMD</strong> (baru)</td><td>Email / Approve</td><td>Approve 1 - Draft</td></tr>' +
+                '<tr><td>3</td><td><strong>ASS</strong> (baru)</td><td><em>Auto Approve</em></td><td>Approve 2 - Draft</td></tr>' +
+                '<tr><td>4</td><td>RSM</td><td>Ready To Submit</td><td>Draft (siap submit)</td></tr>' +
+                '<tr><td>5</td><td>CF</td><td>Submit</td><td>Approved</td></tr>' +
+                '</table>' +
+                '<p class="text-muted">Mapping Owner KMMD &amp; ASS per supplier subdist: Master &gt; Form ASS/Owner KMMD</p>'
+            );
         }
 
         function handleClose() {
-            bootbox.confirm("Are you sure you want to CLOSE this claim?", (res) => {
-                if (res) {
-                    document.getElementById('divClose').style.display = 'block';
-                    document.getElementById('lblStatusFlow').textContent = 'CLOSED';
-                    document.getElementById('lblStatusFlow').className = 'control-label text-muted';
+            bootbox.dialog({
+                title: "Reason Close",
+                message: '<input type="text" id="reasonInput" class="bootbox-input bootbox-input-textarea form-control" rows="4" placeholder="Enter your reason here...">',
+                buttons: {
+                    confirm: {
+                        label: 'Submit',
+                        className: 'btn-success',
+                        callback: function () {
+                            var reason = document.getElementById('reasonInput').value.trim();
+                            if (reason.length >= 5) {
+                                document.getElementById('divClose').style.display = 'block';
+                                document.getElementById('lblStatusFlow').textContent = 'CLOSED';
+                                document.getElementById('lblStatusFlow').className = 'control-label text-muted';
+                            } else {
+                                alert("Please enter a reason of at least 5 characters !");
+                                return false;   
+                            }
+                        }
+                    },
+                    cancel: {
+                        label: 'Cancel',
+                        className: 'btn-danger'
+                    }
                 }
             });
         }
 
         function handleReject() {
-            bootbox.prompt("Enter rejection reason:", (reason) => {
-                if (reason) {
-                    document.getElementById('lblStatusFlow').textContent = 'REJECTED';
-                    document.getElementById('lblStatusFlow').className = 'control-label text-red';
-                    bootbox.alert(`Claim rejected. Reason: ${reason}`);
+            bootbox.dialog({
+                title: "Reason Reject",
+                message: '<input type="text" id="reasonInput" class="bootbox-input bootbox-input-textarea form-control" rows="4" placeholder="Enter your reason here...">',
+                buttons: {
+                    confirm: {
+                        label: 'Submit',
+                        className: 'btn-success',
+                        callback: function () {
+                            var reason = document.getElementById('reasonInput').value.trim();
+                            if (reason.length >= 5) {
+                                document.getElementById('lblStatusFlow').textContent = 'REJECTED';
+                                document.getElementById('lblStatusFlow').className = 'control-label text-red';
+                                bootbox.alert(`Claim rejected. Reason: ${reason}`);
+                            } else {
+                                alert("Please enter a reason of at least 5 characters !");
+                                return false;
+                            }
+                        }
+                    },
+                    cancel: {
+                        label: 'Cancel',
+                        className: 'btn-danger'
+                    }
                 }
             });
         }
 
         function handleCopy() {
-            bootbox.confirm("Duplicate this claim record?", (res) => {
+            bootbox.confirm("Copy this document?", (res) => {
                 if (res) {
                     document.getElementById('txtID').value = '';
                     document.getElementById('txtDocNo').value = '';
@@ -1771,16 +2418,20 @@
         }
 
         function handleViewMemo() {
-            let grandTotal = 0;
-            detailRows.forEach(item => {
-                if (item.include) {
-                    const pphAmount = Math.floor(item.invoiceAmount * (item.pphTarif / 100));
-                    const finalAmount = item.invoiceAmount - pphAmount;
-                    const ppnAmount = item.ppnAmount || 0;
-                    grandTotal += (finalAmount + ppnAmount);
+            bootbox.confirm("View Attachment MKPP?", (res) => {
+                if (res) {
+                    let grandTotal = 0;
+                    detailRows.forEach(item => {
+                        if (item.include) {
+                            const pphAmount = Math.floor(item.invoiceAmount * (item.pphTarif / 100));
+                            const finalAmount = item.invoiceAmount - pphAmount;
+                            const ppnAmount = item.ppnAmount || 0;
+                            grandTotal += (finalAmount + ppnAmount);
+                        }
+                    });
+                    bootbox.alert("<h4>MEMO PREVIEW</h4><p>Memo for Claim: <strong>" + (document.getElementById('txtDocNo').value || "NEW") + "</strong></p><p>Supplier: " + (document.getElementById('txtSupplierName').value || "-") + "</p><p>Amount: IDR " + formatCurrency(grandTotal) + "</p>");
                 }
             });
-            bootbox.alert("<h4>MEMO PREVIEW</h4><p>Memo for Claim: <strong>" + (document.getElementById('txtDocNo').value || "NEW") + "</strong></p><p>Supplier: " + (document.getElementById('txtSupplierName').value || "-") + "</p><p>Amount: IDR " + formatCurrency(grandTotal) + "</p>");
         }
     </script>
 </body>

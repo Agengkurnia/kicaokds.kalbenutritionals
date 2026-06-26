@@ -151,6 +151,30 @@
 
         function handleOK() {
             const dtl = klaimEnsureDetail(claimData, detailIndex);
+            const totalHeader = klaimCleanNumber(dtl.DEC_INVOICE_AMT);
+            let totalUmb = 0;
+            for (const r of umbRows) {
+                totalUmb += klaimCleanNumber(r.DEC_AMOUNT);
+                if (!r.BIT_ALL_SUBRAND) {
+                    const brands = r.XXSHP_KDS_T_KLAIM_BRAN || [];
+                    let totalBrand = 0;
+                    for (const b of brands) {
+                        totalBrand += klaimCleanNumber(b.DEC_AMOUNT);
+                    }
+                    if (brands.length > 0 && totalBrand !== klaimCleanNumber(r.DEC_AMOUNT)) {
+                        bootbox.alert('Total SubBrand harus sesuai dengan Amount Umbrand (' + r.TXT_UMBRAND + ')');
+                        return;
+                    }
+                }
+            }
+            if (umbRows.length === 0) {
+                bootbox.alert('Data Umbrand harus di isi!');
+                return;
+            }
+            if (totalUmb !== totalHeader) {
+                bootbox.alert('Total item harus sama dengan total di header!');
+                return;
+            }
             dtl.XXSHP_KDS_T_KLAIM_UMB = umbRows.map(r => ({
                 TXT_UMBRAND: r.TXT_UMBRAND,
                 TXT_BRAND: r.TXT_BRAND,

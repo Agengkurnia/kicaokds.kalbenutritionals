@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="../../../favicon.ico" type="image/x-icon">
+    <title>Form Master ASS/Owner KMMD | KICAO KDS</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <style>
+        #dtDetail thead tr td { background: #36752d; color: #fff; font-weight: bold; }
+        #dtDetail tbody tr td { background: #eefceb; vertical-align: middle; }
+        .lov-modal .modal-dialog { width: 90%; max-width: 900px; margin: 15px auto !important; }
+        .lov-modal .modal-header { background: #00a65a; color: #fff; border-bottom: none; }
+        .lov-modal .modal-header .close { color: #fff; opacity: 1; }
+        .proto-new-badge {
+            display: inline-block;
+            background: #f39c12;
+            color: #fff;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 1px 6px;
+            border-radius: 3px;
+            margin-left: 4px;
+            vertical-align: middle;
+            letter-spacing: 0.4px;
+        }
+        .proto-new-legend { font-size: 12px; color: #666; margin-bottom: 12px; }
+        #dtDetail thead td.proto-new-header { box-shadow: inset 0 -3px 0 #f39c12 !important; }
+        #dtDetail tbody td.proto-new-cell { background-color: #fff8e6 !important; box-shadow: inset 0 0 0 1px rgba(243, 156, 18, 0.45); }
+        .proto-new-label .control-label { border-left: 3px solid #f39c12; padding-left: 8px; }
+        input.proto-new-cell, .input-group.proto-new-field .form-control {
+            background-color: #fff8e6 !important;
+            box-shadow: inset 0 0 0 1px rgba(243, 156, 18, 0.35);
+        }
+    </style>
+</head>
+<body>
+    <div id="app-content">
+        <section class="content-header">
+            <h1>Form Master ASS/Owner KMMD <span class="proto-new-badge">NEW</span> <small>Mapping Supplier Subdist — ASS &amp; Owner KMMD</small></h1>
+        </section>
+
+        <section class="content">
+            <div class="proto-new-legend"><span class="proto-new-badge">NEW</span> Seluruh form ini adalah fitur baru — Enhancement BRD Jun 2026</div>
+            <div class="box box-primary">
+                <div class="box-header with-border text-right">
+                    <button type="button" class="btn btn-success" id="btnFind" onclick="handleFind()"><i class="fa fa-search"></i> Find</button>
+                    <button type="button" class="btn btn-success" id="btnSave" onclick="handleSave()"><i class="fa fa-floppy-o"></i> Save</button>
+                    <button type="button" class="btn btn-warning" id="btnNew" onclick="handleNew()"><i class="fa fa-refresh"></i> New</button>
+                </div>
+                <div class="box-body">
+                    <div class="row row-form">
+                        <div class="col-md-2"><label class="control-label">ID</label></div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger" onclick="handleFind()"><i class="fa fa-search"></i></button>
+                                </div>
+                                <input type="text" class="form-control" id="txtID" disabled placeholder="[AUTO]">
+                            </div>
+                        </div>
+                        <div class="col-md-2"><label class="control-label">Date</label></div>
+                        <div class="col-md-4"><input type="text" class="form-control" id="dtmDate" style="width:140px;" disabled></div>
+                    </div>
+                    <div class="row row-form" style="margin-top:10px;">
+                        <div class="col-md-2"><label class="control-label">Group Account</label></div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger" onclick="openLov('groupAccount')"><i class="fa fa-search"></i></button>
+                                </div>
+                                <input type="text" class="form-control" id="txtGroupAccount" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-2"><label class="control-label">Status</label></div>
+                        <div class="col-md-4"><label id="lblStatus" class="control-label text-blue">NEW</label></div>
+                    </div>
+                    <div class="row row-form" style="margin-top:10px;">
+                        <div class="col-md-2"><label class="control-label">Supplier</label></div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger" onclick="openLov('supplier')"><i class="fa fa-search"></i></button>
+                                </div>
+                                <div class="input-group-btn" style="width:100px;">
+                                    <input type="text" class="form-control" id="txtSupplierID" disabled placeholder="ID">
+                                </div>
+                                <input type="text" class="form-control" id="txtSupplierName" disabled placeholder="Supplier Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-form" style="margin-top:10px;">
+                        <div class="col-md-2 proto-new-label"><label class="control-label">Owner KMMD <span class="proto-new-badge">NEW</span></label></div>
+                        <div class="col-md-4">
+                            <div class="input-group proto-new-field">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger" onclick="openLov('ownerKmmd')"><i class="fa fa-search"></i></button>
+                                </div>
+                                <div class="input-group-btn" style="width:100px;">
+                                    <input type="text" class="form-control proto-new-cell" id="txtOwnerKmmdID" disabled placeholder="ID">
+                                </div>
+                                <input type="text" class="form-control proto-new-cell" id="txtOwnerKmmdName" disabled placeholder="Nama Owner KMMD">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <label class="text-info">Detail Mapping per Site / Branch</label>
+                </div>
+                <div class="box-body" style="overflow-x:auto;">
+                    <table id="dtDetail" class="table table-condensed table-striped table-bordered" style="min-width:1200px;">
+                        <thead>
+                            <tr>
+                                <td style="width:40px;">No</td>
+                                <td style="width:200px;">Site</td>
+                                <td style="width:90px;">Branch ID</td>
+                                <td style="width:150px;">Branch Name</td>
+                                <td style="width:200px;" class="proto-new-header">ASS <span class="proto-new-badge">NEW</span></td>
+                                <td style="width:90px;">Region ID</td>
+                                <td style="width:150px;">Region Name</td>
+                                <td style="width:120px;">Tipe Distributor</td>
+                                <td style="width:80px;">Delete</td>
+                            </tr>
+                        </thead>
+                        <tbody id="dtBodyDetail"></tbody>
+                    </table>
+                </div>
+                <div class="box-footer text-right">
+                    <button type="button" class="btn btn-warning" onclick="handleAddDetail()"><i class="fa fa-plus"></i> Add Detail</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal lov-modal" id="lovModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">List Of Value</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control input-sm" id="lovSearch" placeholder="Search..." style="margin-bottom:10px;">
+                    <table class="table table-condensed table-hover">
+                        <thead><tr id="lovHeadRow"></tr></thead>
+                        <tbody id="lovBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../Scripts/customs/prototype/klaim-prototype.js"></script>
+    <script src="../../../Scripts/layout.js"></script>
+    <script>
+        const STORAGE_KEY = 'assOwnerKmmdPrototypeData';
+
+        const findData = [
+            { id: '1001', groupAccount: 'KMMD', supplierId: '3102', supplierName: 'AGUS JUSAK KURNIAWAN (UD AJEKA ADITAMA DISTRIBUSINDO)', ownerId: '2001', ownerName: 'BUDI SANTOSO', status: 'ACTIVE' },
+            { id: '1002', groupAccount: 'KMMD', supplierId: '3105', supplierName: 'BINTANG LIMA IMADA, PT', ownerId: '2002', ownerName: 'SITI AMINAH', status: 'ACTIVE' },
+            { id: '1003', groupAccount: 'ENSEVAL', supplierId: '1709', supplierName: 'ENSEVAL PUTERA MEGATRADING, TBK PT', ownerId: '2003', ownerName: 'HAFID', status: 'ACTIVE' }
+        ];
+
+        const groupAccounts = ['KMMD', 'ENSEVAL', 'BRAVO', 'RM VI JATENG'];
+        const suppliers = [
+            { id: '3102', name: 'AGUS JUSAK KURNIAWAN (UD AJEKA ADITAMA DISTRIBUSINDO)', group: 'KMMD' },
+            { id: '3103', name: 'AL IQBAL (PERMATA BUNDA MART)', group: 'KMMD' },
+            { id: '3105', name: 'BINTANG LIMA IMADA, PT', group: 'KMMD' },
+            { id: '1709', name: 'ENSEVAL PUTERA MEGATRADING, TBK PT', group: 'ENSEVAL' }
+        ];
+        const users = [
+            { id: '2001', name: 'BUDI SANTOSO', role: 'Owner KMMD' },
+            { id: '2002', name: 'SITI AMINAH', role: 'Owner KMMD' },
+            { id: '2003', name: 'HAFID', role: 'Owner KMMD' },
+            { id: '3001', name: 'ANDI WIJAYA', role: 'ASS' },
+            { id: '3002', name: 'DEWI LESTARI', role: 'ASS' },
+            { id: '3003', name: 'RIZKY PRATAMA', role: 'ASS' }
+        ];
+        const sites = [
+            { site: 'NAN-KDS-AJEKA', branchId: '101', branchName: 'JAKARTA 1', regionId: 'R01', regionName: 'JABODETABEK', type: 'Subdist' },
+            { site: 'NAN-KDS-BINTANG', branchId: '102', branchName: 'BATAM', regionId: 'R02', regionName: 'SUMATERA', type: 'Subdist' },
+            { site: 'NAN-KDS-EPM1A', branchId: '103', branchName: 'ACEH', regionId: 'R03', regionName: 'SUMATERA UTARA', type: 'Direct' }
+        ];
+
+        let detailRows = [];
+        let activeLovType = '';
+        let activeDetailIndex = null;
+
+        function showModal(sel) {
+            (window.showKlaimModal || function(s) { $(s).modal('show'); })(sel);
+        }
+        function hideModal(sel) {
+            (window.hideKlaimModal || function(s) { $(s).modal('hide'); if (window.cleanupModalBackdrops) window.cleanupModalBackdrops(); })(sel);
+        }
+
+        function initiateBlank() {
+            document.getElementById('txtID').value = '';
+            document.getElementById('txtGroupAccount').value = '';
+            document.getElementById('txtSupplierID').value = '';
+            document.getElementById('txtSupplierName').value = '';
+            document.getElementById('txtOwnerKmmdID').value = '';
+            document.getElementById('txtOwnerKmmdName').value = '';
+            document.getElementById('lblStatus').textContent = 'NEW';
+            detailRows = [];
+            renderTable();
+            syncStorage();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('dtBodyDetail');
+            tbody.innerHTML = '';
+            if (!detailRows.length) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center">No data available in table</td></tr>';
+                return;
+            }
+            detailRows.forEach((row, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" value="${row.site}" disabled>
+                            <span class="input-group-btn"><button type="button" class="btn btn-danger btn-xs" onclick="openDetailLov(${i}, 'site')"><i class="fa fa-search"></i></button></span>
+                        </div>
+                    </td>
+                    <td><input type="text" class="form-control input-sm" value="${row.branchId}" readonly></td>
+                    <td><input type="text" class="form-control input-sm" value="${row.branchName}" readonly></td>
+                    <td class="proto-new-cell">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" value="${row.assName}" disabled>
+                            <span class="input-group-btn"><button type="button" class="btn btn-danger btn-xs" onclick="openDetailLov(${i}, 'ass')"><i class="fa fa-search"></i></button></span>
+                        </div>
+                    </td>
+                    <td><input type="text" class="form-control input-sm" value="${row.regionId}" readonly></td>
+                    <td><input type="text" class="form-control input-sm" value="${row.regionName}" readonly></td>
+                    <td>
+                        <select class="form-control input-sm" onchange="detailRows[${i}].distType=this.value; syncStorage();">
+                            <option value="Subdist" ${row.distType === 'Subdist' ? 'selected' : ''}>Subdist</option>
+                            <option value="Direct" ${row.distType === 'Direct' ? 'selected' : ''}>Direct</option>
+                            <option value="MT" ${row.distType === 'MT' ? 'selected' : ''}>MT</option>
+                        </select>
+                    </td>
+                    <td><button type="button" class="btn btn-warning btn-xs btn-block" onclick="deleteRow(${i})">Delete</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function handleAddDetail() {
+            if (!document.getElementById('txtGroupAccount').value) {
+                bootbox.alert('Group Account harus diisi terlebih dahulu!');
+                return;
+            }
+            detailRows.push({ site: '', branchId: '', branchName: '', assId: '', assName: '', regionId: '', regionName: '', distType: 'Subdist' });
+            renderTable();
+            syncStorage();
+        }
+
+        function deleteRow(i) {
+            bootbox.confirm('Hapus baris detail?', (ok) => {
+                if (ok) { detailRows.splice(i, 1); renderTable(); syncStorage(); }
+            });
+        }
+
+        function openLov(type) {
+            activeLovType = type;
+            activeDetailIndex = null;
+            const head = document.getElementById('lovHeadRow');
+            const body = document.getElementById('lovBody');
+            head.innerHTML = '';
+            body.innerHTML = '';
+            document.getElementById('lovSearch').value = '';
+
+            if (type === 'groupAccount') {
+                head.innerHTML = '<td>Pilih</td><td>Group Account</td>';
+                groupAccounts.forEach(g => {
+                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="selectGroupAccount('${g}')">Pilih</button></td><td>${g}</td></tr>`;
+                });
+            } else if (type === 'supplier') {
+                const grp = document.getElementById('txtGroupAccount').value;
+                head.innerHTML = '<td>Pilih</td><td>Supplier ID</td><td>Supplier Name</td>';
+                suppliers.filter(s => !grp || s.group === grp).forEach(s => {
+                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="selectSupplier('${s.id}','${s.name.replace(/'/g, "\\'")}')">Pilih</button></td><td>${s.id}</td><td>${s.name}</td></tr>`;
+                });
+            } else if (type === 'ownerKmmd') {
+                head.innerHTML = '<td>Pilih</td><td>User ID</td><td>Nama</td><td>Role</td>';
+                users.filter(u => u.role === 'Owner KMMD').forEach(u => {
+                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="selectOwner('${u.id}','${u.name.replace(/'/g, "\\'")}')">Pilih</button></td><td>${u.id}</td><td>${u.name}</td><td>${u.role}</td></tr>`;
+                });
+            } else if (type === 'find') {
+                head.innerHTML = '<td>Pilih</td><td>ID</td><td>Group Account</td><td>Supplier</td><td>Owner KMMD</td>';
+                findData.forEach((f, idx) => {
+                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="loadFromFind(${idx})">Pilih</button></td><td>${f.id}</td><td>${f.groupAccount}</td><td>${f.supplierName}</td><td>${f.ownerName}</td></tr>`;
+                });
+            }
+            showModal('#lovModal');
+        }
+
+        function openDetailLov(index, field) {
+            activeDetailIndex = index;
+            activeLovType = field;
+            const head = document.getElementById('lovHeadRow');
+            const body = document.getElementById('lovBody');
+            head.innerHTML = '';
+            body.innerHTML = '';
+
+            if (field === 'site') {
+                head.innerHTML = '<td>Pilih</td><td>Site</td><td>Branch</td><td>Region</td>';
+                sites.forEach((s, si) => {
+                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="selectSite(${si})">Pilih</button></td><td>${s.site}</td><td>${s.branchName}</td><td>${s.regionName}</td></tr>`;
+                });
+            } else if (field === 'ass') {
+                head.innerHTML = '<td>Pilih</td><td>User ID</td><td>Nama ASS</td>';
+                users.filter(u => u.role === 'ASS').forEach(u => {
+                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="selectAss('${u.id}','${u.name.replace(/'/g, "\\'")}')">Pilih</button></td><td>${u.id}</td><td>${u.name}</td></tr>`;
+                });
+            }
+            showModal('#lovModal');
+        }
+
+        function selectGroupAccount(name) {
+            document.getElementById('txtGroupAccount').value = name;
+            document.getElementById('txtSupplierID').value = '';
+            document.getElementById('txtSupplierName').value = '';
+            hideModal('#lovModal');
+            syncStorage();
+        }
+        function selectSupplier(id, name) {
+            document.getElementById('txtSupplierID').value = id;
+            document.getElementById('txtSupplierName').value = name;
+            hideModal('#lovModal');
+            syncStorage();
+        }
+        function selectOwner(id, name) {
+            document.getElementById('txtOwnerKmmdID').value = id;
+            document.getElementById('txtOwnerKmmdName').value = name;
+            hideModal('#lovModal');
+            syncStorage();
+        }
+        function selectSite(si) {
+            const s = sites[si];
+            const row = detailRows[activeDetailIndex];
+            row.site = s.site;
+            row.branchId = s.branchId;
+            row.branchName = s.branchName;
+            row.regionId = s.regionId;
+            row.regionName = s.regionName;
+            row.distType = s.type;
+            hideModal('#lovModal');
+            renderTable();
+            syncStorage();
+        }
+        function selectAss(id, name) {
+            detailRows[activeDetailIndex].assId = id;
+            detailRows[activeDetailIndex].assName = name;
+            hideModal('#lovModal');
+            renderTable();
+            syncStorage();
+        }
+
+        function loadFromFind(idx) {
+            const f = findData[idx];
+            document.getElementById('txtID').value = f.id;
+            document.getElementById('txtGroupAccount').value = f.groupAccount;
+            document.getElementById('txtSupplierID').value = f.supplierId;
+            document.getElementById('txtSupplierName').value = f.supplierName;
+            document.getElementById('txtOwnerKmmdID').value = f.ownerId;
+            document.getElementById('txtOwnerKmmdName').value = f.ownerName;
+            document.getElementById('lblStatus').textContent = f.status;
+            detailRows = [
+                { site: 'NAN-KDS-AJEKA', branchId: '101', branchName: 'JAKARTA 1', assId: '3001', assName: 'ANDI WIJAYA', regionId: 'R01', regionName: 'JABODETABEK', distType: 'Subdist' }
+            ];
+            hideModal('#lovModal');
+            renderTable();
+            syncStorage();
+        }
+
+        function handleFind() { openLov('find'); }
+        function handleNew() {
+            bootbox.confirm('Buat form mapping baru?', (ok) => { if (ok) initiateBlank(); });
+        }
+        function handleSave() {
+            if (!document.getElementById('txtGroupAccount').value) { bootbox.alert('Group Account wajib diisi!'); return; }
+            if (!document.getElementById('txtSupplierID').value) { bootbox.alert('Supplier wajib dipilih!'); return; }
+            if (!document.getElementById('txtOwnerKmmdID').value) { bootbox.alert('Owner KMMD wajib dipilih!'); return; }
+            if (!detailRows.length) { bootbox.alert('Detail mapping minimal 1 baris!'); return; }
+            for (let i = 0; i < detailRows.length; i++) {
+                if (!detailRows[i].site || !detailRows[i].assName) {
+                    bootbox.alert('Baris ' + (i + 1) + ': Site dan ASS wajib diisi!');
+                    return;
+                }
+            }
+            if (!document.getElementById('txtID').value) {
+                document.getElementById('txtID').value = String(Math.floor(Math.random() * 9000) + 1000);
+            }
+            document.getElementById('lblStatus').textContent = 'ACTIVE';
+            syncStorage();
+            bootbox.alert('Data mapping ASS/Owner KMMD berhasil disimpan!');
+        }
+
+        function syncStorage() {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+                id: document.getElementById('txtID').value,
+                groupAccount: document.getElementById('txtGroupAccount').value,
+                supplierId: document.getElementById('txtSupplierID').value,
+                supplierName: document.getElementById('txtSupplierName').value,
+                ownerId: document.getElementById('txtOwnerKmmdID').value,
+                ownerName: document.getElementById('txtOwnerKmmdName').value,
+                status: document.getElementById('lblStatus').textContent,
+                detailRows: detailRows
+            }));
+        }
+
+        document.addEventListener('layoutReady', () => {
+            $('.modal').appendTo('body');
+            document.getElementById('dtmDate').value = moment().format('DD-MMM-YYYY');
+            initiateBlank();
+            $('#lovSearch').on('keyup', function () {
+                const val = $(this).val().toLowerCase();
+                $('#lovBody tr').each(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(val) > -1);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
