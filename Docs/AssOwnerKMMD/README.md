@@ -26,6 +26,7 @@ Paket ini disusun sebagai **sumber referensi tunggal** untuk penyusunan:
 | Menu navigasi | `Scripts/layout.js` → Master Data → Form ASS/Owner KMMD |
 | BRD enhancement (induk) | `Docs/BRD-KICAO-KDS-Enhancement.md` — Bagian B |
 | Integrasi data prototype | `Docs/Klaim/06-data-integration-plan.md` |
+| Workflow klaim (Owner/ASS lookup) | `Docs/Klaim/07-workflow-rbac-external-approval.md` |
 | Log progress prototype | `Docs/Klaim/05-progress-log.md` |
 
 ## Status implementasi

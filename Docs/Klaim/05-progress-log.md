@@ -4,7 +4,7 @@
 > Dokumen ini adalah **sumber kebenaran tunggal** untuk status prototype Form Klaim di repo `kicaokds.kalbenutritionals`.  
 > Ditulis sedetail mungkin agar developer **atau AI agent** yang belum pernah melihat codebase bisa melanjutkan pekerjaan tanpa menebak-nebak.
 
-> **Terakhir diperbarui:** 25 Juni 2026  
+> **Terakhir diperbarui:** 30 Juni 2026  
 > **Acuan bisnis enhancement:** `Docs/BRD-KICAO-KDS-Enhancement.md`  
 > **Status keseluruhan prototype Klaim:** ✅ Fitur inti + enhancement BRD bagian A & B sudah diimplementasi di HTML mock. ❌ Bagian C (Report) dan D (RFP/RFS merge PDF) **belum** dikerjakan.
 
@@ -31,7 +31,12 @@ Ini **bukan** aplikasi production MVC. Ini **prototype statis HTML + JavaScript*
 | `Views/Klaim/Brand.html` | Popup alokasi Brand |
 | `Views/Klaim/SKU.html` | Popup alokasi SKU |
 | `Views/Klaim/ScanFakturPajak.html` | Popup scan faktur pajak |
+| `Views/Klaim/ApprovalEmail.html` | Simulasi email approval eksternal (Owner) |
+| `Views/Klaim/ApprovalOtp.html` | Landing page OTP approval eksternal |
+| `Scripts/customs/prototype/proto-store.js` | Registry persisten klaim + ASS/Owner (`localStorage`) |
+| `Scripts/customs/prototype/rbac-prototype.js` | Role, permission, workflow matrix |
 | `Views/Master/AssOwnerKMMD/Index.html` | **Form master baru** mapping ASS & Owner KMMD (enhancement BRD bagian B) |
+| `Views/Account/ChooseRole.html` | Pemilihan role RBAC setelah login |
 | `Docs/BRD-KICAO-KDS-Enhancement.md` | BRD resmi kebutuhan enhancement |
 | `Docs/Klaim/01-overview.md` sampai `04-prototype-mapping.md` | Dokumentasi modul asli (pre-enhancement) |
 
@@ -581,8 +586,44 @@ Edit seed `KDS_PROTO_SEED_KLAIM` di `Scripts/customs/prototype/proto-store.js`, 
 - `Docs/Klaim/01-overview.md` — overview layar & workflow asli
 - `Docs/Klaim/02-data-model.md` — entitas HDR/DTL/UMB (belum di-update untuk field payment — **perlu update terpisah jika AI menyentuh data model**)
 - `Docs/Klaim/04-prototype-mapping.md` — pemetaan MVC → HTML
-- `Docs/Klaim/06-data-integration-plan.md` — rencana integrasi data persisten (Task 1–9)
+- `Docs/Klaim/07-workflow-rbac-external-approval.md` — workflow status, RBAC, OTP eksternal
+- `Docs/Klaim/08-testing-and-reset-guide.md` — skenario uji & reset data
 
 ---
 
-*Akhir dokumen. Perbarui bagian §0.5, §10, dan §11 setiap ada perubahan signifikan pada prototype.*
+## 15. Changelog — 30 Juni 2026 (Workflow RBAC Final)
+
+### 15.1 Status workflow (final prototype)
+
+```
+DRAFT  →  DRAFT WITH APPROVE  →  Ready to Submit  →  APPROVED
+         (Owner OTP + ASS auto)   (RSM)               (CF Submit)
+```
+
+| Status | Set oleh | Catatan |
+|--------|----------|---------|
+| `DRAFT` | Admin KMMD Save | Buka tab email Owner |
+| `DRAFT WITH APPROVE` | Owner OTP / Email Approve | ASS auto-approve, tanpa OTP terpisah |
+| `Ready to Submit` | RSM Ready To Submit | CF hanya lihat status ini di Find |
+| `APPROVED` | CF Submit | Final |
+
+### 15.2 Fitur yang ditambahkan / diubah
+
+| Area | Perubahan |
+|------|-----------|
+| External approval | `ApprovalEmail.html`, `ApprovalOtp.html`, OTP via email (bukan SMS) |
+| ASS | Auto approve bersama Owner — hapus langkah email/OTP ASS |
+| RSM | Edit remark + detail saat Draft With Approve; dialog konfirmasi hanya "Ready To Submit" |
+| CF | Find filter hanya `Ready to Submit` |
+| Data | `proto-store.js` registry + `protoResetDemoData()` |
+| RBAC | `klaim.rsmEdit`, filter Find per role, `normKlaimStatus()` untuk status legacy |
+| UX | `bindKlaimToolbarHandlers()` — tombol Save tidak stuck disabled setelah layout render |
+
+### 15.3 Dokumentasi baru
+
+- `Docs/Klaim/07-workflow-rbac-external-approval.md`
+- `Docs/Klaim/08-testing-and-reset-guide.md`
+
+---
+
+*Akhir dokumen. Perbarui bagian §0.5, §10, §11, dan §15 setiap ada perubahan signifikan pada prototype.*

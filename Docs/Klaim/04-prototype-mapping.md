@@ -4,8 +4,9 @@
 
 Prototype `kicaokds.kalbenutritionals` adalah **HTML statis** tanpa backend ASP.NET MVC. Semua interaksi disimulasikan dengan:
 
-- Data mock di JavaScript
-- `sessionStorage` key `klaimPrototypeData` untuk komunikasi parent ↔ popup
+- **`localStorage`** registry via `proto-store.js` (klaim + ASS/Owner KMMD)
+- **`sessionStorage`** key `klaimPrototypeData` untuk dokumen aktif & komunikasi parent ↔ popup
+- **`rbac-prototype.js`** untuk role & permission per langkah workflow
 - Bootstrap modal + iframe untuk popup (menggantikan fancybox)
 - `bootbox` untuk konfirmasi/dialog
 - `layout.js` untuk shell AdminLTE (sidebar, header, assets)
@@ -19,11 +20,17 @@ Prototype `kicaokds.kalbenutritionals` adalah **HTML statis** tanpa backend ASP.
 | `Views/Klaim/Brand.cshtml` | `Views/Klaim/Brand.html` | ✅ |
 | `Views/Klaim/SKU.cshtml` | `Views/Klaim/SKU.html` | ✅ |
 | `Views/Klaim/ScanFakturPajak.cshtml` | `Views/Klaim/ScanFakturPajak.html` | ✅ |
-| `klaimscript.js` | Inline script di `Index.html` | Simulasi |
+| Falcon SKP email / OTP landing | `Views/Klaim/ApprovalEmail.html` | ✅ Simulasi |
+| Falcon SKP OTP submit | `Views/Klaim/ApprovalOtp.html` | ✅ Simulasi |
+| `klaimscript.js` | Inline script di `Index.html` + `proto-store.js` | Simulasi + registry |
 | `umbrandscript.js` | Inline script di `Umbrand.html` | Simulasi |
 | `brandscript.js` | Inline script di `Brand.html` | Simulasi |
 | `skuscript.js` | Inline script di `SKU.html` | Simulasi |
 | `scanfakturpajakscript.js` | Inline script di `ScanFakturPajak.html` | Simulasi |
+| — | `Scripts/customs/prototype/proto-store.js` | Registry persisten |
+| — | `Scripts/customs/prototype/rbac-prototype.js` | Role & permission |
+| — | `Scripts/customs/prototype/klaim-prototype.js` | Session helper |
+| — | `Views/Account/ChooseRole.html` | Pemilihan role setelah login |
 
 ## Komunikasi Parent ↔ Popup
 
@@ -45,14 +52,18 @@ window.parent.postMessage({ type: 'klaimUpdated' }, '*');
 | Fitur Asli | Simulasi Prototype |
 |------------|-------------------|
 | LOV Group Account / Partner / Outlet | Bootstrap modal dengan data mock |
-| Save / Submit / Close / Reject | `bootbox` + update status label |
+| Save / Submit / Close / Reject | `bootbox` + update status + `proto-store` registry |
+| Workflow RBAC multi-role | `rbac-prototype.js` + handler di `Index.html` |
+| Owner/ASS approval eksternal | `ApprovalEmail.html` → `ApprovalOtp.html` |
+| Approval History | `protoAppendApprovalHistory` + modal timeline |
 | Grid detail editable | Render dinamis dengan `detailRows[]` |
 | Perhitungan PPH/PPN | JavaScript `formatCurrency` + kalkulasi |
 | Popup Umbrand → Brand → SKU | iframe modal bertingkat |
 | Scan Faktur Pajak | Parse URL mock / auto-fill sample |
 | Attachment upload | `<input type="file">` (tanpa upload server) |
 | Print / View Memo | `bootbox.alert` preview |
-| Approval History | `bootbox.alert` mock timeline |
+
+> Workflow status & RBAC lengkap: [07-workflow-rbac-external-approval.md](./07-workflow-rbac-external-approval.md)
 
 ## Data Mock Default
 

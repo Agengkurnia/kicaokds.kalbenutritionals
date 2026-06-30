@@ -12,7 +12,7 @@
 
 - Tetap **tanpa backend** — tidak menambah API MVC ke production dalam fase ini.
 - **Jangan hapus** badge `.proto-new-badge` dan kolom enhancement BRD tanpa permintaan eksplisit.
-- Status workflow mengikuti mapping terbaru: `DRAFT` → `DRAFT WITH 2 APPROVE` → `DRAFT WITH 3 APPROVE` → `APPROVED`.
+- Status workflow mengikuti mapping terbaru: `DRAFT` → `DRAFT WITH APPROVE` (+ ASS auto) → `Ready to Submit` → `APPROVED`. Detail: [07-workflow-rbac-external-approval.md](./07-workflow-rbac-external-approval.md).
 - RBAC tetap via `localStorage kds_active_role` + `rbac-prototype.js`.
 - Pola modal LOV **harus tetap di dalam** `#app-content` (pitfall layout.js).
 - Seed data awal harus tetap tersedia setelah first load (migrate dari `findData` hardcoded).
@@ -212,11 +212,11 @@ function handleFind() {
 ```
 
 - [x] **Step 3:** `selectFindByIndex` → terima `claimId` (bukan index array statis) → `protoSetActiveClaimId(id)` → `loadClaimFromRecord(protoGetKlaimById(id))`.
-- [x] **Step 4:** (Opsional) Filter Find per role — Owner hanya `DRAFT`, RSM hanya `DRAFT WITH 2 APPROVE`, CF hanya `DRAFT WITH 3 APPROVE`; Admin/IT lihat semua.
+- [x] **Step 4:** (Opsional) Filter Find per role — Owner hanya `DRAFT`, RSM hanya `DRAFT WITH APPROVE`, CF hanya `Ready to Submit`; Admin/IT lihat semua.
 
 **Verify:**
 1. Save klaim baru → Find → record **muncul** di urutan teratas.
-2. Owner approve → Find sebagai RSM → status record sudah `DRAFT WITH 2 APPROVE`.
+2. Owner approve → Find sebagai RSM → status record sudah `DRAFT WITH APPROVE`.
 
 ---
 
@@ -252,7 +252,7 @@ function persistActiveClaimToRegistry() {
 
 **Verify:**
 1. Admin Save klaim baru ID `5200` → refresh → Find → buka `5200` → data header + detail utuh.
-2. Owner approve → registry status `DRAFT WITH 2 APPROVE` + history 2 baris (Owner + ASS auto).
+2. Owner approve → registry status `DRAFT WITH APPROVE` + history 2 baris (Owner + ASS auto).
 
 ---
 
@@ -342,8 +342,8 @@ function protoImportAll(json) { ... }
 |---|----------|----------|
 | 1 | Admin buat klaim baru + Save | Muncul di Find; status DRAFT; history 1 baris |
 | 2 | Refresh halaman | Dokumen aktif tetap terbuka |
-| 3 | Ganti role → Owner → Find DRAFT → Approve | Status DRAFT WITH 2 APPROVE di registry |
-| 4 | Ganti role → RSM → Ready To Submit | Status DRAFT WITH 3 APPROVE |
+| 3 | Ganti role → Owner → Find DRAFT → Approve | Status DRAFT WITH APPROVE di registry |
+| 4 | Ganti role → RSM → Ready To Submit | Status Ready to Submit |
 | 5 | Ganti role → CF → Submit | Status APPROVED; payment fields editable |
 | 6 | Approval History | Semua step tercatat dengan role & timestamp |
 | 7 | Master Owner mapping | Email/alert sebut nama Owner dari master |

@@ -156,6 +156,16 @@ stateDiagram-v2
 - `BIT_REJECTED = Y` → ditolak, form read-only
 - `BIT_CLOSED = Y` → banner merah dengan `TXT_REASON_CLOSE`
 
+### Alur Enhancement (Prototype RBAC — Jun 2026)
+
+Untuk enhancement KICAO KDS (Owner/ASS approval eksternal, RSM Ready to Submit, CF Submit), prototype menggunakan alur status berbeda dari production di atas:
+
+```
+DRAFT → DRAFT WITH APPROVE → Ready to Submit → APPROVED
+```
+
+Dokumentasi lengkap: [07-workflow-rbac-external-approval.md](./07-workflow-rbac-external-approval.md)
+
 ## Integrasi Modul Lain
 
 | Modul | Hubungan |
