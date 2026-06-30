@@ -960,6 +960,35 @@
             });
         }
 
+        /** Isi Group Account / Partner / Supplier dari site (mirror loadClaimFromFindSummary) */
+        function enrichKlaimFormFromSite(site) {
+            if (!site) return;
+            const outlet = outletsData.find(o =>
+                o.site === site || site.includes(o.site) || o.site.includes(site)
+            );
+            const partnerRec = partnersData.find(p =>
+                p.site === site || site.includes(p.site) || p.site.includes(site)
+            );
+            const groupAccount = outlet ? outlet.group_account : (partnerRec ? partnerRec.group_account : '');
+            if (groupAccount) {
+                document.getElementById('txtGroupAccount').value = groupAccount;
+            }
+            document.getElementById('txtOutlet').value = site;
+            if (outlet) {
+                document.getElementById('txtSupplierCode').value = outlet.supplier_id;
+                document.getElementById('txtSupplierID').value = outlet.supplier_id;
+                document.getElementById('txtSupplierName').value = outlet.supplier_name;
+                document.getElementById('txtSupplierSiteID').value = outlet.supplier_site_id;
+                document.getElementById('txtSupplierSiteName').value = outlet.supplier_site_name;
+                document.getElementById('txtBranchName').value = outlet.branch;
+            }
+            if (groupAccount.toUpperCase() === 'ENSEVAL' && partnerRec) {
+                document.getElementById('txtPartner').value = partnerRec.site || partnerRec.supplier_name;
+            } else if (groupAccount.toUpperCase() !== 'ENSEVAL') {
+                document.getElementById('txtPartner').value = '';
+            }
+        }
+
         /** Mirror p_txtGroupAccount_TextChanged — Partner LOV hanya untuk ENSEVAL */
         function applyGroupAccountRules(clearDependentsOnNonEnseval) {
             const groupAcc = (document.getElementById('txtGroupAccount').value || '').trim().toUpperCase();
@@ -1257,7 +1286,12 @@
 
                 klaimSetData(h);
                 syncFromStorage();
-                document.getElementById('txtOutlet').value = h.TXT_SITE || '';
+                const siteName = h.TXT_SITE || h.TXT_OUTLET || summary.site || '';
+                document.getElementById('txtOutlet').value = siteName;
+                if (!h.TXT_GROUP_ACCOUNT || (h.TXT_GROUP_ACCOUNT.toUpperCase() === 'ENSEVAL' && !h.TXT_PARTNER)) {
+                    enrichKlaimFormFromSite(siteName);
+                    syncToStorage();
+                }
                 applyGroupAccountRules(false);
                 lockKlaimReadonlyHeaderFields();
                 enableKlaimControls();
@@ -1295,31 +1329,7 @@
             document.getElementById('txtID').value = item.id;
             document.getElementById('txtDocNo').value = item.dokNo;
 
-            const outlet = outletsData.find(o =>
-                item.site && (o.site === item.site || item.site.includes(o.site) || o.site.includes(item.site))
-            );
-            const partner = partnersData.find(p =>
-                item.site && (p.site === item.site || item.site.includes(p.site) || p.site.includes(item.site))
-            );
-
-            const groupAccount = outlet ? outlet.group_account : (partner ? partner.group_account : 'ENSEVAL');
-            document.getElementById('txtGroupAccount').value = groupAccount;
-            document.getElementById('txtOutlet').value = item.site || '';
-
-            if (outlet) {
-                document.getElementById('txtSupplierCode').value = outlet.supplier_id;
-                document.getElementById('txtSupplierID').value = outlet.supplier_id;
-                document.getElementById('txtSupplierName').value = outlet.supplier_name;
-                document.getElementById('txtSupplierSiteID').value = outlet.supplier_site_id;
-                document.getElementById('txtSupplierSiteName').value = outlet.supplier_site_name;
-                document.getElementById('txtBranchName').value = outlet.branch;
-            }
-
-            if (groupAccount.toUpperCase() === 'ENSEVAL' && partner) {
-                document.getElementById('txtPartner').value = partner.site || partner.supplier_name;
-            } else {
-                document.getElementById('txtPartner').value = '';
-            }
+            enrichKlaimFormFromSite(item.site || '');
 
             document.getElementById('txtRemark').value = item.description || '';
             const sourceDoc = (item.source || 'PORTAL KDS').toUpperCase();
