@@ -818,8 +818,8 @@
         const KLAIM_STATUS = {
             NEW: 'NEW',
             DRAFT: 'DRAFT',
-            DRAFT_WITH_2_APPROVE: 'DRAFT WITH 2 APPROVE',
-            DRAFT_WITH_3_APPROVE: 'DRAFT WITH 3 APPROVE',
+            DRAFT_WITH_APPROVE: 'DRAFT WITH APPROVE',
+            READY_TO_SUBMIT: 'Ready to Submit',
             APPROVED: 'APPROVED'
         };
 
@@ -926,8 +926,8 @@
         function updateEMateraiButton() {
             const btn = document.getElementById('btnEMaterai');
             if (!btn) return;
-            const status = (claimFormState.TXT_STATUSFLOW || 'NEW').toUpperCase();
-            const eligibleStatus = [KLAIM_STATUS.DRAFT, KLAIM_STATUS.DRAFT_WITH_2_APPROVE, KLAIM_STATUS.DRAFT_WITH_3_APPROVE, 'SUBMITTED', KLAIM_STATUS.APPROVED].includes(status)
+            const status = normKlaimStatus(claimFormState.TXT_STATUSFLOW);
+            const eligibleStatus = [KLAIM_STATUS.DRAFT, KLAIM_STATUS.DRAFT_WITH_APPROVE, KLAIM_STATUS.READY_TO_SUBMIT, 'SUBMITTED', KLAIM_STATUS.APPROVED].includes(status)
                 || status.indexOf('DRAFT') >= 0;
             const total = getIncludedGrandTotal();
             btn.disabled = !(eligibleStatus && total >= EMATERAI_THRESHOLD);
@@ -1025,20 +1025,29 @@
         }
 
         function updateStatusLabel(status) {
+            status = normKlaimStatus(status);
             const lbl = document.getElementById('lblStatusFlow');
             lbl.textContent = status || 'NEW';
             lbl.className = 'control-label text-blue';
             if (status === 'DRAFT') lbl.className = 'control-label text-yellow';
             if (status === 'SUBMITTED') lbl.className = 'control-label text-orange';
-            if (status === KLAIM_STATUS.DRAFT_WITH_2_APPROVE) lbl.className = 'control-label text-teal';
-            if (status === KLAIM_STATUS.DRAFT_WITH_3_APPROVE) lbl.className = 'control-label text-purple';
+            if (status === KLAIM_STATUS.DRAFT_WITH_APPROVE) lbl.className = 'control-label text-teal';
+            if (status === KLAIM_STATUS.READY_TO_SUBMIT) lbl.className = 'control-label text-purple';
             if (status === 'APPROVED') lbl.className = 'control-label text-blue';
             if (status === 'CLOSED') lbl.className = 'control-label text-muted';
             if (status === 'REJECTED') lbl.className = 'control-label text-red';
         }
 
         function normKlaimStatus(s) {
-            return (s || 'NEW').toUpperCase().trim();
+            const n = (s || 'NEW').toUpperCase().trim();
+            if (n === 'DRAFT WITH 2 APPROVE' || n === 'APPROVE 1 - DRAFT' || n === 'APPROVE 2 - DRAFT') {
+                return KLAIM_STATUS.DRAFT_WITH_APPROVE;
+            }
+            if (n === 'DRAFT WITH 3 APPROVE' || n === 'READY TO SUBMIT') {
+                return KLAIM_STATUS.READY_TO_SUBMIT;
+            }
+            if (n === 'DRAFT WITH APPROVE') return KLAIM_STATUS.DRAFT_WITH_APPROVE;
+            return n;
         }
 
         function canEditReadySubmitFields() {
@@ -1046,8 +1055,14 @@
             const adminOnDraft = (typeof rbacHasPermission === 'function' ? rbacHasPermission('klaim.editHeader') : false)
                 && (status === KLAIM_STATUS.NEW || status === KLAIM_STATUS.DRAFT);
             const rsmOnQueue = (typeof rbacHasPermission === 'function' ? rbacHasPermission('klaim.readySubmit.edit') : false)
-                && status === KLAIM_STATUS.DRAFT_WITH_2_APPROVE;
+                && status === KLAIM_STATUS.DRAFT_WITH_APPROVE;
             return adminOnDraft || rsmOnQueue;
+        }
+
+        function canRsmEditKlaimData() {
+            const status = normKlaimStatus(claimFormState.TXT_STATUSFLOW);
+            return (typeof rbacHasPermission === 'function' ? rbacHasPermission('klaim.rsmEdit') : false)
+                && status === KLAIM_STATUS.DRAFT_WITH_APPROVE;
         }
 
         function ensureDefaultReadySubmitReason() {
@@ -1092,11 +1107,13 @@
 
             const adminCanEdit = (typeof rbacHasPermission === 'function' ? rbacHasPermission('klaim.editHeader') : true)
                 && (status === KLAIM_STATUS.NEW || status === KLAIM_STATUS.DRAFT);
+            const rsmCanEdit = canRsmEditKlaimData();
+            const formCanEdit = adminCanEdit || rsmCanEdit;
 
             const canEditReady = canEditReadySubmitFields();
 
             lockKlaimReadonlyHeaderFields();
-            document.getElementById('txtRemark').disabled = !adminCanEdit;
+            document.getElementById('txtRemark').disabled = !formCanEdit;
 
             document.querySelectorAll('input[name="ReadySubmit"]').forEach(r => { r.disabled = !canEditReady; });
             const reasonEl = document.getElementById('txtReasonReadySubmit');
@@ -1110,11 +1127,11 @@
 
             setLovButtonsVisible(adminCanEdit);
             applyGroupAccountRules(false);
-            setDetailFieldsDisabled(!adminCanEdit);
+            setDetailFieldsDisabled(!formCanEdit);
 
             const btnAdd = document.getElementById('btnAddDetail');
             if (btnAdd) {
-                const showAdd = adminCanEdit && (typeof rbacHasPermission !== 'function' || rbacHasPermission('klaim.addDetail'));
+                const showAdd = formCanEdit && (typeof rbacHasPermission !== 'function' || rbacHasPermission('klaim.addDetail') || rsmCanEdit);
                 btnAdd.style.display = showAdd ? 'inline-block' : 'none';
             }
         }
@@ -1126,7 +1143,7 @@
             const bitApproved = claimFormState.BIT_APPROVED === 'Y';
             const bitClosed = claimFormState.BIT_CLOSED === 'Y';
             const bitRejected = claimFormState.BIT_REJECTED === 'Y';
-            const inApproval = status.indexOf('DRAFT WITH') >= 0;
+            const inApproval = status.indexOf('DRAFT WITH') >= 0 || status === KLAIM_STATUS.READY_TO_SUBMIT;
 
             ['btnSave', 'btnNew', 'btnSubmit', 'btnOwnerApprove', 'btnRsmReadySubmit', 'btnCopy', 'btnClose', 'btnReject', 'btnFind', 'btnPrintout', 'btnViewMemo', 'btnApprovalHistory'].forEach(id => showKlaimBtn(id, false));
 
@@ -1154,10 +1171,10 @@
             if (rbacHasPermission('klaim.ownerApprove') && status === KLAIM_STATUS.DRAFT && hasId && !bitApproved && !bitRejected) {
                 showKlaimBtn('btnOwnerApprove', true);
             }
-            if (rbacHasPermission('klaim.rsmReadySubmit') && status === KLAIM_STATUS.DRAFT_WITH_2_APPROVE) {
+            if (rbacHasPermission('klaim.rsmReadySubmit') && status === KLAIM_STATUS.DRAFT_WITH_APPROVE) {
                 showKlaimBtn('btnRsmReadySubmit', true);
             }
-            if (rbacHasPermission('klaim.cfSubmit') && status === KLAIM_STATUS.DRAFT_WITH_3_APPROVE) {
+            if (rbacHasPermission('klaim.cfSubmit') && status === KLAIM_STATUS.READY_TO_SUBMIT) {
                 showKlaimBtn('btnSubmit', true);
             }
         }
@@ -1223,9 +1240,9 @@
             if (role === 'OWNER_KMMD') {
                 rows = rows.filter(r => normKlaimStatus(r.findSummary.status) === KLAIM_STATUS.DRAFT);
             } else if (role === 'RSM') {
-                rows = rows.filter(r => normKlaimStatus(r.findSummary.status) === KLAIM_STATUS.DRAFT_WITH_2_APPROVE);
+                rows = rows.filter(r => normKlaimStatus(r.findSummary.status) === KLAIM_STATUS.DRAFT_WITH_APPROVE);
             } else if (role === 'CF') {
-                rows = rows.filter(r => normKlaimStatus(r.findSummary.status) === KLAIM_STATUS.DRAFT_WITH_3_APPROVE);
+                rows = rows.filter(r => normKlaimStatus(r.findSummary.status) === KLAIM_STATUS.READY_TO_SUBMIT);
             }
             return rows;
         }
@@ -2544,7 +2561,7 @@
                         : '<em class="text-warning">Mapping Owner KMMD tidak ditemukan — simpan mapping di Master ASS/Owner KMMD</em>';
                     bootbox.alert(
                         'Data berhasil disimpan. Status tetap <strong>DRAFT</strong>.<br>' +
-                        '<small class="text-muted">Tab simulasi email ke Owner KMMD telah dibuka: ' + ownerMsg + '</small>'
+                        '<small class="text-muted">Tab simulasi email ke Owner KMMD telah dibuka: ' + ownerMsg + '<br>ASS akan di-approve otomatis setelah Owner OTP.</small>'
                     );
                 }
             });
@@ -2576,33 +2593,39 @@
             bootbox.confirm('Konfirmasi approval Owner KMMD? (ASS akan auto-approve)', (ok) => {
                 if (!ok) return;
                 const fromStatus = claimFormState.TXT_STATUSFLOW;
-                claimFormState.TXT_STATUSFLOW = KLAIM_STATUS.DRAFT_WITH_2_APPROVE;
+                const claimId = document.getElementById('txtID').value;
+                if (claimId && typeof protoApplyKlaimStatus === 'function') {
+                    protoApplyKlaimStatus(claimId, KLAIM_STATUS.DRAFT_WITH_APPROVE, {
+                        BIT_APPLY: 'Y',
+                        BIT_APPROVED: 'N'
+                    });
+                }
+                claimFormState.TXT_STATUSFLOW = KLAIM_STATUS.DRAFT_WITH_APPROVE;
                 claimFormState.BIT_APPLY = 'Y';
                 claimFormState.BIT_APPROVED = 'N';
                 claimLoadedFromFind = true;
                 enableKlaimControls();
                 syncToStorage();
                 persistActiveClaimToRegistry();
-                appendWorkflowHistory('Email / Approve', fromStatus, KLAIM_STATUS.DRAFT_WITH_2_APPROVE);
+                appendWorkflowHistory('Email / Approve', fromStatus, KLAIM_STATUS.DRAFT_WITH_APPROVE);
                 const ga = document.getElementById('txtGroupAccount').value;
                 const outlet = document.getElementById('txtOutlet').value;
                 const sid = document.getElementById('txtSupplierID').value;
                 const ass = (typeof protoFindAssBySite === 'function') ? protoFindAssBySite(ga, outlet, sid) : null;
                 const assName = ass ? ass.assName : 'ASS (auto)';
-                const claimId = document.getElementById('txtID').value;
                 if (claimId && typeof protoAppendApprovalHistory === 'function') {
                     protoAppendApprovalHistory(claimId, {
                         roleId: 'ASS',
                         roleLabel: assName,
                         action: 'Auto Approve',
-                        fromStatus: KLAIM_STATUS.DRAFT_WITH_2_APPROVE,
-                        toStatus: KLAIM_STATUS.DRAFT_WITH_2_APPROVE
+                        fromStatus: KLAIM_STATUS.DRAFT_WITH_APPROVE,
+                        toStatus: KLAIM_STATUS.DRAFT_WITH_APPROVE
                     });
                 }
                 bootbox.alert(
                     '<p><i class="fa fa-envelope text-info"></i> <strong>Owner KMMD</strong> — approval tercatat.</p>' +
                     '<p><i class="fa fa-check text-success"></i> <strong>' + assName + '</strong> — auto approve.</p>' +
-                    '<p>Status dokumen: <strong>Draft With 2 Approve</strong></p>'
+                    '<p>Status dokumen: <strong>Draft With Approve</strong></p>'
                 );
             });
         }
@@ -2612,22 +2635,27 @@
                 bootbox.alert('Akses ditolak. Hanya <strong>RSM</strong> yang dapat Ready To Submit.');
                 return;
             }
-            if (normKlaimStatus(claimFormState.TXT_STATUSFLOW) !== KLAIM_STATUS.DRAFT_WITH_2_APPROVE) {
-                bootbox.alert('Ready To Submit hanya untuk dokumen <strong>Draft With 2 Approve</strong>.');
+            if (normKlaimStatus(claimFormState.TXT_STATUSFLOW) !== KLAIM_STATUS.DRAFT_WITH_APPROVE) {
+                bootbox.alert('Ready To Submit hanya untuk dokumen <strong>Draft With Approve</strong>.');
                 return;
             }
             if (!validateKlaimInput(true)) return;
-            bootbox.confirm('Set klaim Ready To Submit → status <strong>Draft With 3 Approve</strong>?', (ok) => {
+            bootbox.confirm('Ready To Submit', (ok) => {
                 if (!ok) return;
+                persistActiveClaimToRegistry();
                 const fromStatus = claimFormState.TXT_STATUSFLOW;
-                claimFormState.TXT_STATUSFLOW = KLAIM_STATUS.DRAFT_WITH_3_APPROVE;
+                const claimId = document.getElementById('txtID').value;
+                if (claimId && typeof protoApplyKlaimStatus === 'function') {
+                    protoApplyKlaimStatus(claimId, KLAIM_STATUS.READY_TO_SUBMIT, { BIT_APPLY: 'Y' });
+                }
+                claimFormState.TXT_STATUSFLOW = KLAIM_STATUS.READY_TO_SUBMIT;
                 claimFormState.BIT_APPLY = 'Y';
                 claimLoadedFromFind = true;
                 enableKlaimControls();
                 syncToStorage();
                 persistActiveClaimToRegistry();
-                appendWorkflowHistory('Ready To Submit', fromStatus, KLAIM_STATUS.DRAFT_WITH_3_APPROVE);
-                bootbox.alert('Status berubah menjadi <strong>Draft With 3 Approve</strong>. Menunggu submit oleh <strong>CF</strong>.');
+                appendWorkflowHistory('Ready To Submit', fromStatus, KLAIM_STATUS.READY_TO_SUBMIT);
+                bootbox.alert('Status berubah menjadi <strong>Ready to Submit</strong>. Menunggu submit oleh <strong>CF</strong>.');
             });
         }
 
@@ -2636,8 +2664,8 @@
                 bootbox.alert('Akses ditolak. Hanya <strong>CF</strong> yang dapat Submit final.');
                 return;
             }
-            if (normKlaimStatus(claimFormState.TXT_STATUSFLOW) !== KLAIM_STATUS.DRAFT_WITH_3_APPROVE) {
-                bootbox.alert('Submit CF hanya untuk dokumen <strong>Draft With 3 Approve</strong>.');
+            if (normKlaimStatus(claimFormState.TXT_STATUSFLOW) !== KLAIM_STATUS.READY_TO_SUBMIT) {
+                bootbox.alert('Submit CF hanya untuk dokumen <strong>Ready to Submit</strong>.');
                 return;
             }
             if (!validateKlaimInput(true)) return;

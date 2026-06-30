@@ -248,15 +248,12 @@
                 document.getElementById('errorBox').textContent = msg;
             }
 
-            function applyOwnerApproval(ownerName) {
+            function applyExternalApproval(ownerName, assName) {
                 if (typeof protoApplyKlaimStatus === 'function') {
-                    protoApplyKlaimStatus(claimId, 'APPROVE 1 - DRAFT', {
-                        BIT_APPLY: 'N',
+                    protoApplyKlaimStatus(claimId, 'DRAFT WITH APPROVE', {
+                        BIT_APPLY: 'Y',
                         BIT_APPROVED: 'N'
                     });
-                }
-                if (typeof protoEnsureKlaimOtp === 'function') {
-                    protoEnsureKlaimOtp(claimId, 'ass');
                 }
                 if (typeof protoAppendApprovalHistory === 'function') {
                     protoAppendApprovalHistory(claimId, {
@@ -264,25 +261,14 @@
                         roleLabel: ownerName,
                         action: 'OTP Approve (External)',
                         fromStatus: 'DRAFT',
-                        toStatus: 'APPROVE 1 - DRAFT'
+                        toStatus: 'DRAFT WITH APPROVE'
                     });
-                }
-            }
-
-            function applyAssApproval(assName) {
-                if (typeof protoApplyKlaimStatus === 'function') {
-                    protoApplyKlaimStatus(claimId, 'DRAFT WITH 2 APPROVE', {
-                        BIT_APPLY: 'Y',
-                        BIT_APPROVED: 'N'
-                    });
-                }
-                if (typeof protoAppendApprovalHistory === 'function') {
                     protoAppendApprovalHistory(claimId, {
                         roleId: 'ASS',
                         roleLabel: assName,
-                        action: 'OTP Approve (External)',
-                        fromStatus: 'APPROVE 1 - DRAFT',
-                        toStatus: 'DRAFT WITH 2 APPROVE'
+                        action: 'Auto Approve',
+                        fromStatus: 'DRAFT WITH APPROVE',
+                        toStatus: 'DRAFT WITH APPROVE'
                     });
                 }
             }
@@ -309,10 +295,22 @@
             const ass = typeof protoFindAssBySite === 'function'
                 ? protoFindAssBySite(ga, outlet, sid) : null;
 
-            const approverName = isOwner
-                ? (owner ? owner.ownerName : 'Owner KMMD')
-                : (ass ? ass.assName : 'ASS');
-            const approverRole = isOwner ? 'OWNER KMMD' : 'ASS';
+            const approverName = owner ? owner.ownerName : 'Owner KMMD';
+            const assName = ass ? ass.assName : 'ASS (auto)';
+            const approverRole = 'OWNER KMMD';
+
+            if (!isOwner) {
+                document.getElementById('docRef').textContent = 'Klaim ID: ' + claimId;
+                document.getElementById('roleTitle').textContent = 'ASS';
+                document.getElementById('docPanel').style.display = 'block';
+                document.getElementById('signFirst').innerHTML = systemSignHtml();
+                document.getElementById('signName').textContent = assName;
+                document.getElementById('signRole').textContent = 'ASS';
+                document.getElementById('btnSubmit').style.display = 'none';
+                document.getElementById('txtOtp').disabled = true;
+                showError('ASS di-approve otomatis bersama Owner KMMD. Tidak perlu OTP terpisah.');
+                return;
+            }
 
             document.getElementById('docRef').textContent = 'Klaim ID: ' + claimId;
             document.getElementById('roleTitle').textContent = approverRole;
@@ -333,9 +331,7 @@
                 rec = protoGetKlaimById(claimId);
 
                 if (isOwner) {
-                    applyOwnerApproval(approverName);
-                } else {
-                    applyAssApproval(approverName);
+                    applyExternalApproval(approverName, assName);
                 }
 
                 document.getElementById('signSecondCol').innerHTML =
@@ -350,19 +346,12 @@
                 result.style.display = 'block';
 
                 if (isOwner) {
-                    const assEmailUrl = 'ApprovalEmail.html?claimId=' + encodeURIComponent(claimId) + '&step=ass';
-                    document.getElementById('resultTitle').textContent = 'Owner — Approve 1 Berhasil';
-                    document.getElementById('resultMessage').textContent =
-                        'OTP diterima. Status klaim diperbarui menjadi APPROVE 1 - DRAFT.';
+                    document.getElementById('resultTitle').textContent = 'Owner — Approval Berhasil';
+                    document.getElementById('resultMessage').innerHTML =
+                        'OTP diterima. Status klaim diperbarui menjadi <strong>Draft With Approve</strong>.<br>' +
+                        '<strong>' + assName + '</strong> telah di-approve otomatis.';
                     document.getElementById('resultNext').innerHTML =
-                        'Langkah berikutnya: notifikasi email ke <strong>ASS</strong> untuk Approve 2.<br>' +
-                        '<a href="' + assEmailUrl + '">Buka simulasi email ASS &rarr;</a>';
-                } else {
-                    document.getElementById('resultTitle').textContent = 'ASS — Approve 2 Berhasil';
-                    document.getElementById('resultMessage').textContent =
-                        'OTP diterima. Status klaim sekarang <strong>Draft With 2 Approve</strong>.';
-                    document.getElementById('resultNext').innerHTML =
-                        'Silakan kembali ke KICAO KDS, login sebagai <strong>RSM</strong> untuk langkah Ready To Submit.';
+                        'Silakan kembali ke KICAO KDS, login sebagai <strong>RSM</strong> untuk review/edit data dan langkah Ready To Submit.';
                 }
             });
         })();

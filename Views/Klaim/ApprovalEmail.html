@@ -266,7 +266,7 @@
             document.getElementById('greetName').textContent = greet;
             document.getElementById('mailIntro').textContent =
                 'Anda menerima permintaan approval sebagai ' + roleLabel +
-                ' untuk dokumen klaim berikut. Mohon tinjau dan lakukan verifikasi OTP.';
+                ' untuk dokumen klaim berikut. Setelah OTP diverifikasi, ASS akan di-approve otomatis dan status menjadi Draft With Approve.';
             document.getElementById('sumDocNo').textContent = rec.dokNo || summary.dokNo || '-';
             document.getElementById('sumSite').textContent = summary.site || outlet || '-';
             document.getElementById('sumDesc').textContent = summary.description || header.TXT_REMARK || '-';

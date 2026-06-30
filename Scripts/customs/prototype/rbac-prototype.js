@@ -8,18 +8,18 @@ const KDS_ROLE_RETURN_KEY = 'kds_role_return_url';
 const RBAC_ROLES = [
     { id: 'IT_ADMIN', label: 'IT Admin', shortLabel: 'IT', description: 'Akses penuh (demo / testing)', icon: 'fa-cogs', color: '#605ca8' },
     { id: 'ADMIN_KMMD', label: 'Admin KMMD', shortLabel: 'Admin', description: 'Save klaim → status Draft', icon: 'fa-pencil-square-o', color: '#00a65a' },
-    { id: 'OWNER_KMMD', label: 'Owner KMMD', shortLabel: 'Owner', description: 'Email / Approve (+ ASS auto) → Draft With 2 Approve', icon: 'fa-envelope', color: '#3c8dbc' },
-    { id: 'ASS', label: 'ASS', shortLabel: 'ASS', description: 'Auto approve → Draft With 2 Approve (tanpa aksi manual)', icon: 'fa-user-circle', color: '#00c0ef' },
-    { id: 'RSM', label: 'RSM', shortLabel: 'RSM', description: 'Ready To Submit → Draft With 3 Approve', icon: 'fa-flag', color: '#f39c12' },
-    { id: 'CF', label: 'CF (Finance)', shortLabel: 'CF', description: 'Submit → Approve + payment', icon: 'fa-money', color: '#dd4b39' }
+    { id: 'OWNER_KMMD', label: 'Owner KMMD', shortLabel: 'Owner', description: 'Email / Approve (+ ASS auto) → Draft With Approve', icon: 'fa-envelope', color: '#3c8dbc' },
+    { id: 'ASS', label: 'ASS', shortLabel: 'ASS', description: 'Auto approve bersama Owner (tanpa aksi manual)', icon: 'fa-user-circle', color: '#00c0ef' },
+    { id: 'RSM', label: 'RSM', shortLabel: 'RSM', description: 'Edit klaim (Draft With Approve) + Ready To Submit', icon: 'fa-flag', color: '#f39c12' },
+    { id: 'CF', label: 'CF (Finance)', shortLabel: 'CF', description: 'Find Ready to Submit → Submit Approve', icon: 'fa-money', color: '#dd4b39' }
 ];
 
 /** Matrix User → Action → Status Klaim */
 const RBAC_KLAIM_WORKFLOW = [
     { roleId: 'ADMIN_KMMD', action: 'Save', resultStatus: 'DRAFT' },
-    { roleId: 'OWNER_KMMD', action: 'Email', resultStatus: 'DRAFT WITH 2 APPROVE' },
-    { roleId: 'ASS', action: '(Auto)', resultStatus: 'DRAFT WITH 2 APPROVE' },
-    { roleId: 'RSM', action: 'Ready To Submit', resultStatus: 'DRAFT WITH 3 APPROVE' },
+    { roleId: 'OWNER_KMMD', action: 'Email', resultStatus: 'DRAFT WITH APPROVE' },
+    { roleId: 'ASS', action: '(Auto)', resultStatus: 'DRAFT WITH APPROVE' },
+    { roleId: 'RSM', action: 'Ready To Submit', resultStatus: 'Ready to Submit' },
     { roleId: 'CF', action: 'Submit', resultStatus: 'APPROVED' }
 ];
 
@@ -38,6 +38,7 @@ const RBAC_PERMISSIONS = {
     'klaim.ownerApprove': ['IT_ADMIN', 'OWNER_KMMD'],
     'klaim.rsmReadySubmit': ['IT_ADMIN', 'RSM'],
     'klaim.readySubmit.edit': ['IT_ADMIN', 'RSM'],
+    'klaim.rsmEdit': ['IT_ADMIN', 'RSM'],
     'klaim.cfSubmit': ['IT_ADMIN', 'CF'],
     'klaim.ematerai': ['IT_ADMIN', 'ADMIN_KMMD', 'CF'],
     'klaim.payment.edit': ['IT_ADMIN', 'CF'],
