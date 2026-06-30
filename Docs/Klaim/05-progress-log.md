@@ -4,7 +4,7 @@
 > Dokumen ini adalah **sumber kebenaran tunggal** untuk status prototype Form Klaim di repo `kicaokds.kalbenutritionals`.  
 > Ditulis sedetail mungkin agar developer **atau AI agent** yang belum pernah melihat codebase bisa melanjutkan pekerjaan tanpa menebak-nebak.
 
-> **Terakhir diperbarui:** 26 Juni 2026  
+> **Terakhir diperbarui:** 25 Juni 2026  
 > **Acuan bisnis enhancement:** `Docs/BRD-KICAO-KDS-Enhancement.md`  
 > **Status keseluruhan prototype Klaim:** ✅ Fitur inti + enhancement BRD bagian A & B sudah diimplementasi di HTML mock. ❌ Bagian C (Report) dan D (RFP/RFS merge PDF) **belum** dikerjakan.
 
@@ -37,10 +37,13 @@ Ini **bukan** aplikasi production MVC. Ini **prototype statis HTML + JavaScript*
 
 ### 0.3 Storage — JANGAN SALAH BACA
 
-- **Key storage:** `klaimPrototypeData` (konstanta `KLAIM_STORAGE_KEY` di `klaim-prototype.js`)
-- **API:** `sessionStorage` (bukan `localStorage`)
-- **Kapan di-reset:** Setiap refresh halaman Klaim, `layoutReady` memanggil `sessionStorage.removeItem('klaimPrototypeData')` lalu `initiateBlankForm()` — form **selalu kosong** saat buka halaman.
-- **Sinkronisasi:** `syncToStorage()` menulis state form → sessionStorage. `syncFromStorage()` membaca kembali (jarang dipakai di load awal karena sengaja di-reset).
+- **Session (dokumen aktif):** key `klaimPrototypeData` — `klaimGetData()` / `klaimSetData()` di `klaim-prototype.js`
+- **Persistent (registry mock DB):** `localStorage` via `Scripts/customs/prototype/proto-store.js`
+  - `kds_proto_klaim_registry` — semua klaim + approval history
+  - `kds_proto_ass_owner_registry` — mapping ASS/Owner KMMD
+  - `kds_proto_active_claim_id` — id klaim terbuka (resume setelah refresh)
+- **Load halaman:** `bootstrapKlaimPageOnLoad()` — **tidak** reset session; resume dari `?claimId=` atau active claim id
+- **Sinkronisasi:** `syncToStorage()` → sessionStorage; `persistActiveClaimToRegistry()` → localStorage registry
 
 ### 0.4 Penanda visual field baru (PENTING)
 
@@ -59,7 +62,7 @@ Semua kolom/fitur **enhancement BRD Jun 2026** ditandai di UI dengan:
 |--------|-------|--------|---------------------|
 | A.1 | Kolom payment + DPP+PPN di grid detail | ✅ Selesai | `Index.html` — kolom setelah **Include** |
 | A.2 | Tombol E-Materai + generate PDF mock | ✅ Selesai (mock jsPDF, bukan Excel template asli) | `Index.html` — `handleEMaterai()` |
-| A.3 | Approval upgrade (Owner KMMD, ASS auto) | ✅ Simulasi UI | `handleSubmit()`, `handleApprovalHistory()` |
+| A.3 | Approval upgrade (Owner KMMD, ASS auto) | ✅ Simulasi UI + registry history | `handleOwnerApprove()`, `handleApprovalHistory()` |
 | A.4 | Validasi silang PPN ↔ Faktur Pajak | ✅ Selesai | `validateKlaimInput()` |
 | A.5 | BosNet period quartal | ✅ Selesai (mock Find) | `loadClaimFromFind()`, `getBosnetQuarterPeriod()` |
 | B | Form Master ASS/Owner KMMD | ✅ Selesai | `Views/Master/AssOwnerKMMD/Index.html` |
@@ -78,8 +81,7 @@ User buka Index.html
     → dispatch event 'layoutReady'
     → Index.html listener:
          $('.modal').appendTo('body')
-         sessionStorage.removeItem('klaimPrototypeData')  // SELALU kosong
-         initiateBlankForm()                            // form NEW
+         bootstrapKlaimPageOnLoad()   // resume active claim / ?claimId= / session / blank
 ```
 
 ### 1.1 Variabel state penting di `Index.html`
@@ -343,29 +345,23 @@ Saat gagal: `validationErrorRows = [index]` lalu `renderTable()` — baris menda
 
 **File:** `Views/Master/AssOwnerKMMD/Index.html`  
 **Menu:** `Scripts/layout.js` → Master Data → **Form ASS/Owner KMMD** (`#menu-master-ass-owner`)  
-**Storage:** `sessionStorage` key `assOwnerKmmdPrototypeData`
+**Storage:** `localStorage` key `kds_proto_ass_owner_registry` via `protoUpsertAssOwner()` / `protoGetAssOwnerRegistry()`
 
-**Struktur form:**
+**PENTING — bug modal LOV kosong (diperbaiki 26 Jun 2026):**  
+Modal `#lovModal` **harus berada di dalam** `<div id="app-content">`. Jika diletakkan di luar, `layout.js` (`renderMainStructure`) hanya mengambil innerHTML `#app-content` sehingga modal hilang dari DOM dan LOV tampil kosong.
 
-*Header:*
-- ID (Find LOV)
-- Group Account (LOV)
-- Supplier ID + Name (LOV, filter by group)
-- Owner KMMD (LOV user) — **field baru, badge NEW**
+**Data LOV yang tersedia (mock, selaras Form Klaim):**
 
-*Detail grid (per site/branch):*
-- Site (LOV)
-- Branch ID, Branch Name (auto dari site)
-- **ASS** (LOV user) — **kolom baru, badge NEW**
-- Region ID, Region Name (auto)
-- Tipe Distributor (dropdown: Subdist / Direct / MT)
-- Delete
+| LOV | Jumlah | Sumber array |
+|-----|--------|--------------|
+| Group Account | 4 | KMMD, ENSEVAL, BRAVO, RM VI JATENG |
+| Supplier | 12 | Filter by group account |
+| Owner KMMD | 6 | User ID 2001–2006 |
+| ASS | 8 | User ID 3001–3008, filter by region branch |
+| Site (detail) | 16 | Filter by supplier ID |
+| Find | 6 record | Header + detail mapping lengkap |
 
-**Tombol:** Find, Save, New, Add Detail
-
-**Mock find records:** id 1001, 1002, 1003 di array `findData` dalam file tersebut.
-
-**Seluruh halaman** ditandai badge NEW + legenda di atas form.
+**Alur isi form manual:** Group Account → Supplier → Owner KMMD → Add Detail → Site LOV → ASS LOV → Save
 
 ---
 
@@ -532,15 +528,16 @@ Modal yang ada di Klaim Index:
 
 ## 12. Keterbatasan Prototype (JANGAN dikira sudah production)
 
-1. **Tidak ada API** — semua data hardcoded di array JavaScript
-2. **sessionStorage di-reset** setiap refresh halaman Klaim
+1. **Tidak ada API backend** — data persisten di `localStorage` (`proto-store.js`), bukan database
+2. **sessionStorage** hanya untuk dokumen aktif sedang diedit; registry di `localStorage` bertahan setelah refresh
 3. **E-Materai** = PDF mock jsPDF, **bukan** render template Excel asli
-4. **Role user** tidak dicek login — CF disimulasikan lewat status APPROVED saja
-5. **Email / K2 approval** tidak ada — hanya bootbox alert
+4. **Role** via `localStorage kds_active_role` + RBAC prototype — bukan login production
+5. **Email / K2 approval** tidak ada — hanya bootbox alert + approval history di registry
 6. **Report** Outstanding & Claim to Payment belum ada
 7. **RFP/RFS merge PDF ke SMART** belum ada
 8. **Attachment** upload tidak benar-benar menyimpan file ke server
 9. jsPDF membutuhkan **koneksi internet** saat pertama generate
+10. **Master ASS/Owner** form terhubung ke `proto-store` (`kds_proto_ass_owner_registry`) — perubahan Save di Master langsung dipakai lookup Owner/ASS di Form Klaim
 
 ---
 
@@ -556,14 +553,15 @@ Modal yang ada di Klaim Index:
 
 ### 13.2 Tambah record Find mock
 
-Edit array `findData` di `Index.html` — jangan buat file terpisah kecuali diminta.
+Edit seed `KDS_PROTO_SEED_KLAIM` di `Scripts/customs/prototype/proto-store.js`, atau Save klaim baru lewat form (otomatis masuk registry).
 
 ### 13.3 Jangan rusak
 
 - `hideKlaimModal` / backdrop cleanup
 - `validateKlaimInput` harus tetap dipanggil di Save/Submit
 - Activity kosong saat Add Detail
-- `selectFindByIndex` (bukan onclick string rapuh dengan quote di nama supplier)
+- `selectFindByClaimId` (bukan index array statis)
+- `persistActiveClaimToRegistry()` setelah workflow Save/Approve/Submit
 
 ### 13.4 Production reference (repo KICAO KDS)
 
@@ -583,7 +581,7 @@ Edit array `findData` di `Index.html` — jangan buat file terpisah kecuali dimi
 - `Docs/Klaim/01-overview.md` — overview layar & workflow asli
 - `Docs/Klaim/02-data-model.md` — entitas HDR/DTL/UMB (belum di-update untuk field payment — **perlu update terpisah jika AI menyentuh data model**)
 - `Docs/Klaim/04-prototype-mapping.md` — pemetaan MVC → HTML
-- `Docs/BRD-KICAO-KDS-Enhancement.md` — BRD enhancement lengkap
+- `Docs/Klaim/06-data-integration-plan.md` — rencana integrasi data persisten (Task 1–9)
 
 ---
 

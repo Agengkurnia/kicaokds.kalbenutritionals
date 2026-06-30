@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    <title>Choose Role | KICAO KDS</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+</head>
+<body>
+    <div id="app-content">
+        <form id="FormChooseRole" autocomplete="off" onsubmit="handleChooseRole(event)">
+            <fieldset>
+                <h5 class="center" style="text-align: center; margin-bottom: 20px; font-weight: 600;">Choose Role</h5>
+
+                <div class="form-group has-feedback">
+                    <select id="txtRole" class="form-control" required>
+                        <option value="">-- Pilih Role --</option>
+                    </select>
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="checkbox icheck">
+                            <label></label>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <button id="btn-login" type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <script src="../../Scripts/customs/prototype/rbac-prototype.js"></script>
+    <script src="../../Scripts/layout.js"></script>
+    <script>
+        document.addEventListener('layoutReady', () => {
+            if (!localStorage.getItem('kds_logged_in')) {
+                window.location.href = 'Login.html';
+                return;
+            }
+
+            const ddl = document.getElementById('txtRole');
+            RBAC_ROLES.forEach(role => {
+                const opt = document.createElement('option');
+                opt.value = role.id;
+                opt.textContent = role.label;
+                ddl.appendChild(opt);
+            });
+
+            const current = rbacGetRoleId();
+            if (current) ddl.value = current;
+        });
+
+        function handleChooseRole(e) {
+            e.preventDefault();
+            const roleId = document.getElementById('txtRole').value;
+            if (!roleId) return;
+            rbacSetRoleId(roleId);
+            window.location.href = rbacResolveReturnUrl('../../');
+        }
+    </script>
+</body>
+</html>

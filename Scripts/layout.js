@@ -15,25 +15,39 @@ class Layout {
         if (window.layoutInitialized) return;
         window.layoutInitialized = true;
 
-        const isLoginPage = document.getElementById('FormLogin') || window.location.pathname.endsWith('Login.html');
+        const path = window.location.pathname || '';
+        const isLoginPage = document.getElementById('FormLogin') || path.endsWith('Login.html');
+        const isChooseRolePage = document.getElementById('FormChooseRole') || path.includes('ChooseRole.html');
+        const isAuthPage = isLoginPage || isChooseRolePage;
 
-        this.loadCSS(isLoginPage);
-        await this.loadScripts(isLoginPage);
+        this.loadCSS(isAuthPage);
+        await this.loadScript('Scripts/customs/prototype/proto-store.js');
+        await this.loadScript('Scripts/customs/prototype/rbac-prototype.js');
+        if (typeof protoEnsureSeeded === 'function') {
+            protoEnsureSeeded();
+        }
+        await this.loadScripts(isAuthPage);
 
-        if (isLoginPage) {
+        if (isAuthPage) {
             this.renderLoginStructure();
         } else {
-            // Simple authentication check for prototype
-            if (!localStorage.getItem('kds_logged_in') && !window.location.pathname.includes('Login.html')) {
+            if (!localStorage.getItem('kds_logged_in')) {
                 window.location.href = this.basePath + 'Views/Account/Login.html';
+                return;
+            }
+            if (typeof rbacGetRoleId === 'function' && !rbacGetRoleId()) {
+                sessionStorage.setItem('kds_role_return_url', window.location.href);
+                window.location.href = this.basePath + 'Views/Account/ChooseRole.html';
                 return;
             }
             this.renderMainStructure();
             this.setActiveMenu();
             this.initMainHandlers();
+            if (typeof rbacApplyCurrentPage === 'function') {
+                rbacApplyCurrentPage();
+            }
         }
 
-        // Dispatch layout ready event for page scripts
         document.dispatchEvent(new Event('layoutReady'));
     }
 
@@ -322,13 +336,20 @@ class Layout {
                                 <!-- User Account -->
                                 <li class="dropdown user user-menu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <span class="hidden-xs"> Welcome, Admin KICAO </span>
+                                        <span class="hidden-xs" id="headerWelcomeText">Welcome, User</span>
+                                        <span class="label" id="headerRoleBadge" style="margin-left:6px;font-size:10px;">Role</span>
                                     </a>
-                                    <ul class="dropdown-menu"> 
-                                        <!-- Menu Footer-->
-                                        <li class="user-footer">
+                                    <ul class="dropdown-menu">
+                                        <li class="user-header bg-green" style="padding:15px;text-align:center;">
+                                            <p id="headerUserName" style="margin:0;color:#fff;font-size:16px;">User</p>
+                                            <small id="headerRoleName" style="color:#eee;">—</small>
+                                        </li>
+                                        <li class="user-footer" style="padding:10px;">
+                                            <div class="pull-left">
+                                                <a href="#" id="btnSwitchRole" class="btn btn-default btn-flat btn-sm"><i class="fa fa-users"></i> Ganti Role</a>
+                                            </div>
                                             <div class="pull-right">
-                                                <a href="#" id="btnLogout" class="btn btn-default btn-flat">Logout</a>
+                                                <a href="#" id="btnLogout" class="btn btn-default btn-flat btn-sm">Logout</a>
                                             </div>
                                         </li>
                                     </ul>
@@ -422,11 +443,27 @@ class Layout {
     }
 
     initMainHandlers() {
-        // Logout handler
         document.getElementById('btnLogout').addEventListener('click', (e) => {
             e.preventDefault();
             localStorage.removeItem('kds_logged_in');
+            localStorage.removeItem('kds_active_role');
             window.location.href = this.basePath + 'Views/Account/Login.html';
+        });
+
+        const btnSwitchRole = document.getElementById('btnSwitchRole');
+        if (btnSwitchRole) {
+            btnSwitchRole.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (typeof rbacGoChooseRole === 'function') {
+                    rbacGoChooseRole(this.basePath);
+                } else {
+                    window.location.href = this.basePath + 'Views/Account/ChooseRole.html';
+                }
+            });
+        }
+
+        document.addEventListener('rbacRoleChanged', () => {
+            if (typeof rbacApplyCurrentPage === 'function') rbacApplyCurrentPage();
         });
 
         // Toggle warnings/info system functions if needed

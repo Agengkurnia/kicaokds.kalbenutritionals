@@ -1,0 +1,79 @@
+{
+  "id": "1003",
+  "groupAccount": "ENSEVAL",
+  "supplierId": "1709",
+  "supplierName": "ENSEVAL PUTERA MEGATRADING, TBK PT",
+  "ownerId": "",
+  "ownerName": "HAFID",
+  "ownerEmail": "HAFID@KALBENUTRITIONALS.COM",
+  "status": "ACTIVE",
+  "ownerRows": [
+    {
+      "name": "HAFID",
+      "email": "HAFID@KALBENUTRITIONALS.COM",
+      "active": true
+    }
+  ],
+  "assRows": [
+    {
+      "assId": "",
+      "assName": "BAMBANG SUTRISNO",
+      "assEmail": "BAMBANG.SUTRISNO@KALBENUTRITIONALS.COM",
+      "name": "BAMBANG SUTRISNO",
+      "email": "BAMBANG.SUTRISNO@KALBENUTRITIONALS.COM",
+      "active": true
+    },
+    {
+      "assId": "",
+      "assName": "ANDI WIJAYA",
+      "assEmail": "ANDI.WIJAYA@KALBENUTRITIONALS.COM",
+      "name": "ANDI WIJAYA",
+      "email": "ANDI.WIJAYA@KALBENUTRITIONALS.COM",
+      "active": false
+    }
+  ],
+  "detailRows": [
+    {
+      "ownerId": "",
+      "ownerName": "HAFID",
+      "ownerEmail": "HAFID@KALBENUTRITIONALS.COM",
+      "assId": "",
+      "assName": "BAMBANG SUTRISNO",
+      "assEmail": "BAMBANG.SUTRISNO@KALBENUTRITIONALS.COM",
+      "active": true
+    },
+    {
+      "ownerId": "",
+      "ownerName": "HAFID",
+      "ownerEmail": "HAFID@KALBENUTRITIONALS.COM",
+      "assId": "",
+      "assName": "ANDI WIJAYA",
+      "assEmail": "ANDI.WIJAYA@KALBENUTRITIONALS.COM",
+      "active": false
+    }
+  ],
+  "changeHistory": [
+    {
+      "changedAt": "30-Jun-2026 14:30",
+      "changedBy": "IT Admin",
+      "items": [
+        {
+          "action": "add",
+          "role": "ASS #2",
+          "field": "Baris baru",
+          "oldValue": "",
+          "newValue": "ANDI WIJAYA (ANDI.WIJAYA@KALBENUTRITIONALS.COM)"
+        },
+        {
+          "action": "aktif",
+          "role": "ASS",
+          "field": "Aktif (pindah)",
+          "oldValue": "BAMBANG SUTRISNO (BAMBANG.SUTRISNO@KALBENUTRITIONALS.COM)",
+          "newValue": "ANDI WIJAYA (ANDI.WIJAYA@KALBENUTRITIONALS.COM)"
+        }
+      ]
+    }
+  ],
+  "updatedAt": "2026-06-30T07:30:00.000Z",
+  "seed": true
+}

@@ -52,7 +52,7 @@
                             <div class="progress">
                                 <div class="progress-bar" style="width: 100%"></div>
                             </div>
-                            <span class="progress-description">PT Kalbe Nutritionals</span>
+                            <span class="progress-description">Role: <strong id="welcome-role">—</strong></span>
                         </div>
                     </div>
                 </div>
@@ -91,6 +91,9 @@
         document.addEventListener('layoutReady', () => {
             const username = localStorage.getItem('kds_username') || 'Admin KICAO';
             document.getElementById('welcome-username').textContent = username;
+            const meta = (typeof rbacGetRoleMeta === 'function') ? rbacGetRoleMeta() : null;
+            const roleEl = document.getElementById('welcome-role');
+            if (roleEl && meta) roleEl.textContent = meta.label;
         });
     </script>
 </body>

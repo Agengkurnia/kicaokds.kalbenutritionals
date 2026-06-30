@@ -92,7 +92,9 @@
             if (username && password) {
                 localStorage.setItem('kds_logged_in', 'true');
                 localStorage.setItem('kds_username', username);
-                window.location.href = '../../index.html';
+                localStorage.removeItem('kds_active_role');
+                sessionStorage.setItem('kds_role_return_url', '../../index.html');
+                window.location.href = '../../Views/Account/ChooseRole.html';
             } else {
                 errorDiv.textContent = 'Username dan Password wajib diisi!';
                 errorDiv.style.display = 'block';

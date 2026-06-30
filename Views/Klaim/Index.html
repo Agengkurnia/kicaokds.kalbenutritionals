@@ -122,6 +122,7 @@
         </section>
 
         <section class="content">
+            <div id="rbacKlaimBanner" class="alert alert-info" style="display:none; padding:8px 15px; margin-bottom:0; font-size:13px;"></div>
             <div class="row" id="divClose" style="display:none;">
                 <div class="col-md-12">
                     <div class="block">
@@ -140,9 +141,11 @@
                     <div class="box box-primary">
                         <div class="box-header with-border text-right">
                             <button id="btnFind" class="btn btn-success" onclick="handleFind()"><i class="fa fa-search"></i> Find</button>
-                            <button id="btnSave" class="btn btn-success" onclick="handleSave()"><i class="fa fa-floppy-o"></i> Save</button>
-                            <button id="btnNew" class="btn btn-warning" onclick="handleNew()"><i class="fa fa-refresh"></i> New</button>
-                            <button id="btnSubmit" class="btn btn-success" onclick="handleSubmit()" style="display:none;"><i class="fa fa-send"></i> Submit</button>
+                            <button id="btnSave" class="btn btn-success" onclick="handleSave()" style="display:none;"><i class="fa fa-floppy-o"></i> Save</button>
+                            <button id="btnNew" class="btn btn-warning" onclick="handleNew()" style="display:none;"><i class="fa fa-refresh"></i> New</button>
+                            <button id="btnOwnerApprove" class="btn btn-info" onclick="handleOwnerApprove()" style="display:none;"><i class="fa fa-envelope"></i> Email / Approve</button>
+                            <button id="btnRsmReadySubmit" class="btn btn-warning" onclick="handleRsmReadySubmit()" style="display:none;"><i class="fa fa-flag-checkered"></i> Ready To Submit</button>
+                            <button id="btnSubmit" class="btn btn-success" onclick="handleCfSubmit()" style="display:none;"><i class="fa fa-send"></i> Submit</button>
                             <button id="btnEMaterai" class="btn btn-primary btn-proto-new" onclick="handleEMaterai()" disabled title="Generate E-Materai (klaim &gt;= Rp 5.000.000)"><i class="fa fa-certificate"></i> E-Materai <span class="proto-new-badge">NEW</span></button>
                             <button id="btnPrintout" class="btn btn-info" onclick="handlePrint()"><i class="fa fa-print"></i> Print</button>
                             <button id="btnViewMemo" class="btn btn-info" onclick="handleViewMemo()"><i class="fa fa-file-text-o"></i> View Memo</button>
@@ -351,7 +354,7 @@
                                              <td style="width:120px; font-weight:bold;">To <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_PERIOD_TO</b>"></i></td>
                                              <td style="width:120px; font-weight:bold;">Invoice No <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_INVOICE_NO</b>"></i></td>
                                              <td style="width:120px; font-weight:bold;">Invoice Date <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_INVOICE</b>"></i></td>
-                                             <td style="width:150px; font-weight:bold;">Faktur Pajak No <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_FKT_PJK_NO</b>"></i></td>
+                                             <td style="width:220px; font-weight:bold;">Faktur Pajak No <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_FKT_PJK_NO</b>"></i></td>
                                              <td style="width:120px; font-weight:bold;">Faktur Pajak Date <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DTM_FKT_PJK</b>"></i></td>
                                              <td style="width:130px; text-align:right; font-weight:bold;">Invoice Amount <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>DEC_INVOICE_AMT</b>"></i></td>
                                              <td style="width:120px; font-weight:bold;">PPH Type <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-html="true" title="Table: <b>XXSHP_KDS_T_KLAIM_DTL</b><br>Field: <b>TXT_PPH_JENIS</b><br>Master: <b>XXSHP_KDS_M_PPH_HDR</b>"></i></td>
@@ -740,12 +743,12 @@
                                         <th style="width: 70px; text-align: center;">Pilih</th>
                                         <th>ID</th>
                                         <th>Dok No</th>
+                                        <th>Status</th>
                                         <th>Site</th>
                                         <th>Description</th>
                                         <th>Period</th>
                                         <th>Invoice No</th>
                                         <th style="text-align: right;">Invoice Amount</th>
-                                        <th>Status</th>
                                         <th>Attachment</th>
                                         <th>Ready To Submit</th>
                                     </tr>
@@ -774,6 +777,7 @@
         </div>
     </div>
 
+    <script src="../../Scripts/customs/prototype/proto-store.js"></script>
     <script src="../../Scripts/customs/prototype/klaim-prototype.js"></script>
     <script src="../../Scripts/layout.js"></script>
     <script>
@@ -810,15 +814,16 @@
         ];
 
         // Enriched Detail LOV Mock Datasets
-        const findData = [
-            { id: '5192', dokNo: '26.03/KLAIM-BOS/001', site: 'PT. SUMBER REZEKI BERSAMA - TEBING TINGGI', description: 'MEMO PENETRATION NPD CGP 120 GR PERIODE FEB-DES 2026', period: '01-Jan-2026 - 31-Mar-2026', invoiceNo: '350203-SI-26-030118', invoiceAmount: 6500000, status: 'DRAFT', attachment: 'Yes', readyToSubmit: 'No', source: 'BOSNET', bosnetQuarter: 'Q1', bosnetYear: 2026 },
-            { id: '5191', dokNo: '26.03/KLAIM-MIM/004', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT BEKASI', description: 'BONUS SUBDIST', period: '22-JAN-26 - 24-JAN-26', invoiceNo: 'KLAIMKDS2.TFM', invoiceAmount: 80000, status: 'CLOSED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS', paymentStatus: 'PAID', paidDate: '15-MAR-2026', bank: 'BCA' },
-            { id: '5190', dokNo: '26.03/KLAIM-MIM/003', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT BEKASI', description: 'BONUS SUBDIST ABC', period: '13-MAR-26 - 31-MAR-26', invoiceNo: 'INV.13.03.36.TFM1', invoiceAmount: 20000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS', paymentStatus: 'PENDING', paidDate: '', bank: '' },
-            { id: '5189', dokNo: '26.03/KLAIM-MIM/002', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT ACEH', description: 'PROGRAM GOAL (GO JUALAN CHILGO LIQUID)', period: '11-MAR-26 - 11-MAR-26', invoiceNo: 'KLAIMKDS1', invoiceAmount: 100000, status: 'CLOSED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS', paymentStatus: 'PAID', paidDate: '10-MAR-2026', bank: 'MANDIRI' },
-            { id: '5188', dokNo: '26.03/KLAIM-MIM/001', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT', description: 'KLAIM KDS', period: '11-MAR-26 - 26-MAR-26', invoiceNo: 'KLAIM KDS', invoiceAmount: 100000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS' },
-            { id: '5187', dokNo: '25.12/KLAIM-HAI/001', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT ACEH', description: 'TEST KLAIM UNTUK MKPP SESUDAH CUTOFF', period: '22-DEC-25 - 24-DEC-25', invoiceNo: 'TEST KLAIM UNTUK MKPP SESUDAH CUTOFF', invoiceAmount: 2500002, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS' },
-            { id: '5186', dokNo: '25.12/KLAIM-MIM/004', site: 'ENSEVAL PUTERA MEGATRADING, TBK PT', description: 'BONUS SUBDIST', period: '08-DEC-25 - 31-DEC-25', invoiceNo: 'INV-ONO-SAR/00003.000', invoiceAmount: 6000000, status: 'APPROVED', attachment: 'Yes', readyToSubmit: 'Yes', source: 'PORTAL KDS', paymentStatus: 'PAID', paidDate: '20-DEC-2025', bank: 'BNI' }
-        ];
+        /** Status workflow klaim — urutan RBAC */
+        const KLAIM_STATUS = {
+            NEW: 'NEW',
+            DRAFT: 'DRAFT',
+            DRAFT_WITH_2_APPROVE: 'DRAFT WITH 2 APPROVE',
+            DRAFT_WITH_3_APPROVE: 'DRAFT WITH 3 APPROVE',
+            APPROVED: 'APPROVED'
+        };
+
+        // findData seed → proto-store.js (KDS_PROTO_SEED_KLAIM); Find baca protoGetKlaimRegistry()
 
         const paymentBankOptions = ['', 'BCA', 'MANDIRI', 'BNI', 'BRI', 'CIMB'];
         const EMATERAI_THRESHOLD = 5000000;
@@ -893,8 +898,18 @@
             return (row.ppnTarif && row.ppnTarif > 0) || (row.ppnType && row.ppnType !== 'NON PPN');
         }
 
+        function rowHasFakturNo(row) {
+            return !!(row.fakturNo && row.fakturNo.trim());
+        }
+
+        function rowHasFakturDate(row) {
+            return !!(row.fakturDate && row.fakturDate.trim());
+        }
+
         function canEditPaymentFields() {
-            return claimFormState.BIT_APPROVED === 'Y' && claimFormState.BIT_CLOSED !== 'Y';
+            const statusOk = claimFormState.BIT_APPROVED === 'Y' && claimFormState.BIT_CLOSED !== 'Y';
+            const rbacOk = (typeof rbacHasPermission === 'function') ? rbacHasPermission('klaim.payment.edit') : true;
+            return statusOk && rbacOk;
         }
 
         function getIncludedGrandTotal() {
@@ -912,7 +927,7 @@
             const btn = document.getElementById('btnEMaterai');
             if (!btn) return;
             const status = (claimFormState.TXT_STATUSFLOW || 'NEW').toUpperCase();
-            const eligibleStatus = ['DRAFT', 'APPROVE 1 - DRAFT', 'APPROVE 2 - DRAFT', 'SUBMITTED', 'APPROVED'].includes(status)
+            const eligibleStatus = [KLAIM_STATUS.DRAFT, KLAIM_STATUS.DRAFT_WITH_2_APPROVE, KLAIM_STATUS.DRAFT_WITH_3_APPROVE, 'SUBMITTED', KLAIM_STATUS.APPROVED].includes(status)
                 || status.indexOf('DRAFT') >= 0;
             const total = getIncludedGrandTotal();
             btn.disabled = !(eligibleStatus && total >= EMATERAI_THRESHOLD);
@@ -925,7 +940,46 @@
             const val = show ? '' : 'none';
             $('#btnLOVGroupAccount').closest('.input-group-btn').css('display', val);
             $('#btnLOVOutlet').closest('.input-group-btn').css('display', val);
-            $('#btnLOVPartner').closest('.input-group-btn').css('display', val);
+            const grpAcc = (document.getElementById('txtGroupAccount').value || '').trim().toUpperCase();
+            const partnerBtn = show && grpAcc === 'ENSEVAL' ? '' : 'none';
+            $('#btnLOVPartner').closest('.input-group-btn').css('display', partnerBtn);
+        }
+
+        /** Field header yang selalu read-only (diisi via LOV / server), mirror production Index.cshtml */
+        const KLAIM_READONLY_HEADER_IDS = [
+            'txtGroupAccount', 'txtPartner', 'txtOutlet',
+            'txtSupplierSiteID', 'txtSupplierSiteName',
+            'txtSupplierCode', 'txtBranchName', 'txtSupplierID', 'txtSupplierName',
+            'txtSourceDoc', 'dtmDate', 'txtID', 'txtDocNo', 'txtDocNoMkpp'
+        ];
+
+        function lockKlaimReadonlyHeaderFields() {
+            KLAIM_READONLY_HEADER_IDS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.disabled = true;
+            });
+        }
+
+        /** Mirror p_txtGroupAccount_TextChanged — Partner LOV hanya untuk ENSEVAL */
+        function applyGroupAccountRules(clearDependentsOnNonEnseval) {
+            const groupAcc = (document.getElementById('txtGroupAccount').value || '').trim().toUpperCase();
+            const txtPartner = (document.getElementById('txtPartner').value || '').trim();
+
+            if (groupAcc === 'ENSEVAL') {
+                $('#btnLOVPartner').closest('.input-group-btn').show();
+            } else {
+                $('#btnLOVPartner').closest('.input-group-btn').hide();
+                if (clearDependentsOnNonEnseval && txtPartner !== '') {
+                    document.getElementById('txtOutlet').value = '';
+                    document.getElementById('txtSupplierID').value = '';
+                    document.getElementById('txtSupplierCode').value = '';
+                    document.getElementById('txtSupplierName').value = '';
+                    document.getElementById('txtBranchName').value = '';
+                    document.getElementById('txtPartner').value = '';
+                    document.getElementById('txtSupplierSiteID').value = '';
+                    document.getElementById('txtSupplierSiteName').value = '';
+                }
+            }
         }
 
         function setDetailFieldsDisabled(disabled) {
@@ -947,68 +1001,153 @@
             lbl.className = 'control-label text-blue';
             if (status === 'DRAFT') lbl.className = 'control-label text-yellow';
             if (status === 'SUBMITTED') lbl.className = 'control-label text-orange';
-            if (status === 'APPROVE 1 - DRAFT') lbl.className = 'control-label text-aqua';
-            if (status === 'APPROVE 2 - DRAFT') lbl.className = 'control-label text-teal';
+            if (status === KLAIM_STATUS.DRAFT_WITH_2_APPROVE) lbl.className = 'control-label text-teal';
+            if (status === KLAIM_STATUS.DRAFT_WITH_3_APPROVE) lbl.className = 'control-label text-purple';
             if (status === 'APPROVED') lbl.className = 'control-label text-blue';
             if (status === 'CLOSED') lbl.className = 'control-label text-muted';
             if (status === 'REJECTED') lbl.className = 'control-label text-red';
         }
 
+        function normKlaimStatus(s) {
+            return (s || 'NEW').toUpperCase().trim();
+        }
+
+        function canEditReadySubmitFields() {
+            const status = normKlaimStatus(claimFormState.TXT_STATUSFLOW);
+            const adminOnDraft = (typeof rbacHasPermission === 'function' ? rbacHasPermission('klaim.editHeader') : false)
+                && (status === KLAIM_STATUS.NEW || status === KLAIM_STATUS.DRAFT);
+            const rsmOnQueue = (typeof rbacHasPermission === 'function' ? rbacHasPermission('klaim.readySubmit.edit') : false)
+                && status === KLAIM_STATUS.DRAFT_WITH_2_APPROVE;
+            return adminOnDraft || rsmOnQueue;
+        }
+
+        function ensureDefaultReadySubmitReason() {
+            const reasonEl = document.getElementById('txtReasonReadySubmit');
+            if (!reasonEl) return;
+            const readyNo = document.getElementById('rdoReadySubmitNo').checked;
+            if (readyNo && !reasonEl.value.trim()) {
+                reasonEl.value = 'New Document';
+            }
+        }
+
+        function showKlaimBtn(id, show) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (show) {
+                el.style.display = 'inline-block';
+                el.disabled = false;
+                el.removeAttribute('disabled');
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        function applyKlaimFieldAccessByRole() {
+            const status = normKlaimStatus(claimFormState.TXT_STATUSFLOW);
+            const bitApproved = claimFormState.BIT_APPROVED === 'Y';
+            const bitClosed = claimFormState.BIT_CLOSED === 'Y';
+            const bitRejected = claimFormState.BIT_REJECTED === 'Y';
+
+            if (bitApproved || bitClosed || bitRejected) {
+                lockKlaimReadonlyHeaderFields();
+                document.getElementById('txtRemark').disabled = true;
+                document.querySelectorAll('input[name="ReadySubmit"]').forEach(r => { r.disabled = true; });
+                const reasonEl = document.getElementById('txtReasonReadySubmit');
+                if (reasonEl) reasonEl.disabled = true;
+                setLovButtonsVisible(false);
+                setDetailFieldsDisabled(true);
+                const btnAdd = document.getElementById('btnAddDetail');
+                if (btnAdd) btnAdd.style.display = 'none';
+                return;
+            }
+
+            const adminCanEdit = (typeof rbacHasPermission === 'function' ? rbacHasPermission('klaim.editHeader') : true)
+                && (status === KLAIM_STATUS.NEW || status === KLAIM_STATUS.DRAFT);
+
+            const canEditReady = canEditReadySubmitFields();
+
+            lockKlaimReadonlyHeaderFields();
+            document.getElementById('txtRemark').disabled = !adminCanEdit;
+
+            document.querySelectorAll('input[name="ReadySubmit"]').forEach(r => { r.disabled = !canEditReady; });
+            const reasonEl = document.getElementById('txtReasonReadySubmit');
+            if (reasonEl) {
+                if (canEditReady) {
+                    updateReadySubmitUI();
+                } else {
+                    reasonEl.disabled = true;
+                }
+            }
+
+            setLovButtonsVisible(adminCanEdit);
+            applyGroupAccountRules(false);
+            setDetailFieldsDisabled(!adminCanEdit);
+
+            const btnAdd = document.getElementById('btnAddDetail');
+            if (btnAdd) {
+                const showAdd = adminCanEdit && (typeof rbacHasPermission !== 'function' || rbacHasPermission('klaim.addDetail'));
+                btnAdd.style.display = showAdd ? 'inline-block' : 'none';
+            }
+        }
+
+        /** RBAC + status klaim — mapping excel User / Action / Status Klaim */
+        function applyKlaimWorkflowByRole() {
+            const status = normKlaimStatus(claimFormState.TXT_STATUSFLOW);
+            const hasId = !!document.getElementById('txtID').value;
+            const bitApproved = claimFormState.BIT_APPROVED === 'Y';
+            const bitClosed = claimFormState.BIT_CLOSED === 'Y';
+            const bitRejected = claimFormState.BIT_REJECTED === 'Y';
+            const inApproval = status.indexOf('DRAFT WITH') >= 0;
+
+            ['btnSave', 'btnNew', 'btnSubmit', 'btnOwnerApprove', 'btnRsmReadySubmit', 'btnCopy', 'btnClose', 'btnReject', 'btnFind', 'btnPrintout', 'btnViewMemo', 'btnApprovalHistory'].forEach(id => showKlaimBtn(id, false));
+
+            const emateraiEl = document.getElementById('btnEMaterai');
+            if (emateraiEl) {
+                emateraiEl.style.display = (typeof rbacHasPermission === 'function' && rbacHasPermission('klaim.ematerai')) ? 'inline-block' : 'none';
+            }
+
+            if (typeof rbacHasPermission !== 'function') return;
+
+            showKlaimBtn('btnFind', rbacHasPermission('klaim.find'));
+            showKlaimBtn('btnPrintout', rbacHasPermission('klaim.print'));
+            showKlaimBtn('btnViewMemo', rbacHasPermission('klaim.view'));
+
+            if (!bitClosed && (bitApproved || inApproval || bitRejected)) {
+                showKlaimBtn('btnApprovalHistory', rbacHasPermission('klaim.approvalHistory'));
+            }
+
+            if (rbacHasPermission('klaim.save') && (status === KLAIM_STATUS.NEW || status === KLAIM_STATUS.DRAFT) && !bitApproved && !bitRejected && !bitClosed) {
+                showKlaimBtn('btnSave', true);
+            }
+            if (rbacHasPermission('klaim.new') && !bitApproved && !bitClosed) {
+                showKlaimBtn('btnNew', true);
+            }
+            if (rbacHasPermission('klaim.ownerApprove') && status === KLAIM_STATUS.DRAFT && hasId && !bitApproved && !bitRejected) {
+                showKlaimBtn('btnOwnerApprove', true);
+            }
+            if (rbacHasPermission('klaim.rsmReadySubmit') && status === KLAIM_STATUS.DRAFT_WITH_2_APPROVE) {
+                showKlaimBtn('btnRsmReadySubmit', true);
+            }
+            if (rbacHasPermission('klaim.cfSubmit') && status === KLAIM_STATUS.DRAFT_WITH_3_APPROVE) {
+                showKlaimBtn('btnSubmit', true);
+            }
+        }
+
+        window.getKlaimFormState = () => claimFormState;
+        window.applyKlaimWorkflowByRole = applyKlaimWorkflowByRole;
+
         /**
-         * Mirror p_EnableControl — atur visibilitas tombol & field berdasarkan status dokumen
+         * Mirror p_EnableControl — atur field & tombol berdasarkan status dokumen + RBAC
          */
         function enableKlaimControls() {
-            const bitApply = claimFormState.BIT_APPLY === 'Y';
-            const bitApproved = claimFormState.BIT_APPROVED === 'Y';
-            const bitRejected = claimFormState.BIT_REJECTED === 'Y';
             const bitClosed = claimFormState.BIT_CLOSED === 'Y';
             const status = claimFormState.TXT_STATUSFLOW || 'NEW';
 
-            // Tombol navigasi utama — selalu bisa diklik
-            ['btnFind', 'btnSave', 'btnNew'].forEach(id => {
-                document.getElementById(id).style.display = 'inline-block';
-                document.getElementById(id).disabled = false;
-            });
-
-            document.getElementById('btnSubmit').style.display = 'none';
-            document.getElementById('btnCopy').style.display = 'none';
-            document.getElementById('btnClose').style.display = 'none';
-            document.getElementById('btnReject').style.display = 'none';
-            document.getElementById('btnApprovalHistory').style.display = 'none';
-            document.getElementById('btnViewMemo').style.display = 'inline-block';
-            document.getElementById('btnAddDetail').style.display = 'inline-block';
-            document.getElementById('txtRemark').disabled = false;
-            setDetailFieldsDisabled(false);
-
-            if (bitApproved && !bitRejected) {
-                document.getElementById('btnSave').style.display = 'none';
-                document.getElementById('btnSubmit').style.display = 'none';
-                document.getElementById('btnApprovalHistory').style.display = 'inline-block';
-                if (!bitClosed) document.getElementById('btnClose').style.display = 'inline-block';
-                document.getElementById('btnAddDetail').style.display = 'none';
-                setLovButtonsVisible(false);
-                setDetailFieldsDisabled(true);
-                document.getElementById('txtRemark').disabled = true;
-            } else if (bitApply && !bitApproved && !bitRejected) {
-                document.getElementById('btnSave').style.display = 'inline-block';
-                document.getElementById('btnSubmit').style.display = 'none';
-                document.getElementById('btnApprovalHistory').style.display = 'inline-block';
-                setLovButtonsVisible(false);
-            } else if (bitRejected) {
-                document.getElementById('btnSave').style.display = 'none';
-                document.getElementById('btnSubmit').style.display = 'none';
-                document.getElementById('btnApprovalHistory').style.display = 'inline-block';
-                setLovButtonsVisible(false);
-                setDetailFieldsDisabled(true);
-                document.getElementById('txtRemark').disabled = true;
-            } else {
-                document.getElementById('btnSubmit').style.display = 'inline-block';
-                setLovButtonsVisible(!claimLoadedFromFind);
-            }
-
             updateStatusLabel(status);
             document.getElementById('divClose').style.display = bitClosed ? 'block' : 'none';
+            applyKlaimFieldAccessByRole();
             updateEMateraiButton();
+            if (window.rbacApplyKlaimPage) window.rbacApplyKlaimPage();
         }
 
         /** Mirror p_initiateData / p_showBlank — form kosong (New) */
@@ -1035,21 +1174,105 @@
             document.getElementById('txtSupplierID').value = '';
             document.getElementById('txtSupplierName').value = '';
             document.getElementById('txtRemark').value = '';
-            document.getElementById('txtReasonReadySubmit').value = '';
+            document.getElementById('txtReasonReadySubmit').value = 'New Document';
             document.getElementById('txtSourceDoc').value = 'PORTAL KDS';
             document.getElementById('rdoReadySubmitNo').checked = true;
             updateReadySubmitUI();
             document.getElementById('divClose').style.display = 'none';
 
             detailRows = [];
+            if (typeof protoSetActiveClaimId === 'function') protoSetActiveClaimId(null);
             enableKlaimControls();
             renderTable();
             syncToStorage();
         }
 
-        /** Mirror p_txtID_TextChanged → p_DataToUI setelah pilih dari Find LOV */
-        function loadClaimFromFind(item) {
+        function getFindRowsForRole() {
+            if (typeof protoGetKlaimRegistry !== 'function') return [];
+            let rows = protoGetKlaimRegistry().slice().sort((a, b) => Number(b.id) - Number(a.id));
+            const role = typeof rbacGetRoleId === 'function' ? rbacGetRoleId() : '';
+            if (role === 'OWNER_KMMD') {
+                rows = rows.filter(r => normKlaimStatus(r.findSummary.status) === KLAIM_STATUS.DRAFT);
+            } else if (role === 'RSM') {
+                rows = rows.filter(r => normKlaimStatus(r.findSummary.status) === KLAIM_STATUS.DRAFT_WITH_2_APPROVE);
+            } else if (role === 'CF') {
+                rows = rows.filter(r => normKlaimStatus(r.findSummary.status) === KLAIM_STATUS.DRAFT_WITH_3_APPROVE);
+            }
+            return rows;
+        }
+
+        function persistActiveClaimToRegistry() {
+            if (typeof protoUpsertKlaim !== 'function') return null;
+            syncToStorage();
+            const header = klaimGetData() || klaimDefaultClaimData();
+            const id = String(document.getElementById('txtID').value || header.INT_KLAIM_HDR_ID || '');
+            if (!id) return null;
+            header.INT_KLAIM_HDR_ID = id;
+            const existing = typeof protoGetKlaimById === 'function' ? protoGetKlaimById(id) : null;
+            const record = {
+                id: id,
+                dokNo: header.TXT_DOC_NO || document.getElementById('txtDocNo').value,
+                updatedAt: new Date().toISOString(),
+                findSummary: protoBuildFindSummary(header, detailRows),
+                header: header,
+                approvalHistory: existing ? (existing.approvalHistory || []) : [],
+                seed: existing ? !!existing.seed : false
+            };
+            return protoUpsertKlaim(record);
+        }
+
+        function appendWorkflowHistory(action, fromStatus, toStatus) {
+            const id = document.getElementById('txtID').value;
+            if (!id || typeof protoAppendApprovalHistory !== 'function') return;
+            const meta = typeof rbacGetRoleMeta === 'function' ? rbacGetRoleMeta() : null;
+            protoAppendApprovalHistory(id, {
+                roleId: typeof rbacGetRoleId === 'function' ? rbacGetRoleId() : '',
+                roleLabel: meta ? meta.label : '',
+                action: action,
+                fromStatus: fromStatus,
+                toStatus: toStatus
+            });
+        }
+
+        function loadClaimFromRecord(record) {
+            if (!record) return;
+            if (typeof protoSetActiveClaimId === 'function') protoSetActiveClaimId(record.id);
+
+            const header = record.header;
+            const summary = Object.assign({ id: record.id, dokNo: record.dokNo }, record.findSummary || {});
+
+            if (header && header.XXSHP_KDS_T_KLAIM_DTL && header.XXSHP_KDS_T_KLAIM_DTL.length) {
+                claimLoadedFromFind = true;
+                const h = Object.assign({}, header);
+                h.INT_KLAIM_HDR_ID = record.id;
+                h.TXT_DOC_NO = h.TXT_DOC_NO || record.dokNo;
+                h.TXT_SITE = h.TXT_SITE || h.TXT_OUTLET || summary.site || '';
+                h.TXT_STATUSFLOW = h.TXT_STATUSFLOW || summary.status || 'DRAFT';
+
+                claimFormState.TXT_STATUSFLOW = h.TXT_STATUSFLOW;
+                claimFormState.BIT_APPLY = h.BIT_APPLY || 'N';
+                claimFormState.BIT_APPROVED = h.BIT_APPROVED || 'N';
+                claimFormState.BIT_REJECTED = h.BIT_REJECTED || 'N';
+                claimFormState.BIT_CLOSED = h.BIT_CLOSED || 'N';
+
+                klaimSetData(h);
+                syncFromStorage();
+                document.getElementById('txtOutlet').value = h.TXT_SITE || '';
+                applyGroupAccountRules(false);
+                lockKlaimReadonlyHeaderFields();
+                enableKlaimControls();
+                renderTable();
+                syncToStorage();
+                return;
+            }
+
+            loadClaimFromFindSummary(summary);
+        }
+
+        /** Mirror p_txtID_TextChanged → p_DataToUI setelah pilih dari Find LOV (summary-only fallback) */
+        function loadClaimFromFindSummary(item) {
             claimLoadedFromFind = true;
+            if (typeof protoSetActiveClaimId === 'function' && item.id) protoSetActiveClaimId(String(item.id));
             const status = (item.status || 'DRAFT').toUpperCase();
 
             claimFormState.TXT_STATUSFLOW = status;
@@ -1065,7 +1288,7 @@
             if (status === 'CLOSED') {
                 claimFormState.BIT_CLOSED = 'Y';
             }
-            if (status === 'SUBMITTED') {
+            if (status.indexOf('DRAFT WITH') >= 0 || status === 'SUBMITTED') {
                 claimFormState.BIT_APPLY = 'Y';
             }
 
@@ -1093,7 +1316,7 @@
             }
 
             if (groupAccount.toUpperCase() === 'ENSEVAL' && partner) {
-                document.getElementById('txtPartner').value = partner.supplier_name;
+                document.getElementById('txtPartner').value = partner.site || partner.supplier_name;
             } else {
                 document.getElementById('txtPartner').value = '';
             }
@@ -1108,6 +1331,7 @@
                 document.getElementById('rdoReadySubmitNo').checked = true;
             }
             updateReadySubmitUI();
+            ensureDefaultReadySubmitReason();
 
             let periodFrom, periodTo;
             if (sourceDoc === 'BOSNET' && item.bosnetQuarter) {
@@ -1136,7 +1360,7 @@
                 invoiceNo: item.invoiceNo || '',
                 invoiceDate: moment().format('DD-MMM-YYYY'),
                 fakturNo: '',
-                fakturDate: moment().format('DD-MMM-YYYY'),
+                fakturDate: '',
                 invoiceAmount: invoiceAmt,
                 pphType: actMatch ? actMatch.pph_jenis : 'NON PPH',
                 pphTarif: actMatch ? actMatch.rate : 0,
@@ -1158,6 +1382,68 @@
             enableKlaimControls();
             renderTable();
             syncToStorage();
+            persistActiveClaimToRegistry();
+        }
+
+        function loadClaimFromFind(item) {
+            loadClaimFromRecord({
+                id: String(item.id),
+                dokNo: item.dokNo,
+                findSummary: item,
+                header: null
+            });
+        }
+
+        function bootstrapKlaimPageOnLoad() {
+            if (typeof protoEnsureSeeded === 'function') protoEnsureSeeded();
+
+            const urlClaimId = new URLSearchParams(window.location.search).get('claimId');
+            const activeId = urlClaimId || (typeof protoGetActiveClaimId === 'function' ? protoGetActiveClaimId() : null);
+
+            if (activeId && typeof protoGetKlaimById === 'function') {
+                const rec = protoGetKlaimById(activeId);
+                if (rec) {
+                    loadClaimFromRecord(rec);
+                    return;
+                }
+            }
+
+            const sessionData = klaimGetData();
+            if (sessionData && sessionData.INT_KLAIM_HDR_ID) {
+                syncFromStorage();
+                renderTable();
+                enableKlaimControls();
+                if (typeof protoSetActiveClaimId === 'function') {
+                    protoSetActiveClaimId(String(sessionData.INT_KLAIM_HDR_ID));
+                }
+                return;
+            }
+
+            initiateBlankForm();
+        }
+
+        function bindKlaimToolbarHandlers() {
+            const handlers = {
+                btnFind: handleFind,
+                btnSave: handleSave,
+                btnNew: handleNew,
+                btnOwnerApprove: handleOwnerApprove,
+                btnRsmReadySubmit: handleRsmReadySubmit,
+                btnSubmit: handleCfSubmit,
+                btnEMaterai: handleEMaterai,
+                btnPrintout: handlePrint,
+                btnViewMemo: handleViewMemo,
+                btnCopy: handleCopy,
+                btnApprovalHistory: handleApprovalHistory,
+                btnClose: handleClose,
+                btnReject: handleReject
+            };
+            Object.keys(handlers).forEach(id => {
+                const el = document.getElementById(id);
+                if (el && typeof handlers[id] === 'function') {
+                    el.onclick = handlers[id];
+                }
+            });
         }
 
         document.addEventListener('layoutReady', () => {
@@ -1166,14 +1452,34 @@
 
              basePath = (typeof klaimDetectBasePath === 'function') ? klaimDetectBasePath() : '../../';
              document.getElementById('dtmDate').value = moment().format('DD-MMM-YYYY');
-             
-             // Reset session storage on initial page load so it's always empty by default
-             sessionStorage.removeItem('klaimPrototypeData');
-             
-             initiateBlankForm();
+
+             bindKlaimToolbarHandlers();
+             bootstrapKlaimPageOnLoad();
              document.getElementById('dtmDate').value = moment().format('DD-MMM-YYYY');
              $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
              $('input[name="ReadySubmit"]').on('change', updateReadySubmitUI);
+
+             document.addEventListener('rbacRoleChanged', () => {
+                 enableKlaimControls();
+             });
+             document.addEventListener('rbacReady', () => {
+                 bindKlaimToolbarHandlers();
+                 enableKlaimControls();
+             });
+             if (window.cleanupModalBackdrops) window.cleanupModalBackdrops();
+             if (window.rbacApplyKlaimPage) rbacApplyKlaimPage();
+             else if (typeof applyKlaimWorkflowByRole === 'function') applyKlaimWorkflowByRole();
+
+             function reloadActiveClaimFromRegistry() {
+                 const activeId = typeof protoGetActiveClaimId === 'function' ? protoGetActiveClaimId() : null;
+                 if (!activeId || typeof protoGetKlaimById !== 'function') return;
+                 const rec = protoGetKlaimById(activeId);
+                 if (rec) loadClaimFromRecord(rec);
+             }
+             window.addEventListener('focus', reloadActiveClaimFromRegistry);
+             window.addEventListener('storage', (e) => {
+                 if (e.key === 'kds_proto_klaim_registry') reloadActiveClaimFromRegistry();
+             });
 
              // Live filtering event handlers for search inputs
              $(document).on('keyup', '#lovGroupAccountModal input[type="text"]', function() {
@@ -1242,7 +1548,7 @@
                      $(this).toggle(show);
                      if (show) visibleCount++;
                  });
-                 $('#lovFindInfo').text('Showing 1 to ' + visibleCount + ' of ' + findData.length + ' entries');
+                 $('#lovFindInfo').text('Showing 1 to ' + visibleCount + ' of ' + $('#lovFindTableBody tr').length + ' entries');
              });
         });
 
@@ -1250,6 +1556,7 @@
             if (e.data && e.data.type === 'klaimUpdated') {
                 syncFromStorage();
                 renderTable();
+                persistActiveClaimToRegistry();
             }
         });
 
@@ -1261,9 +1568,11 @@
 
         function syncToStorage() {
             const data = klaimGetData() || klaimDefaultClaimData();
+            data.INT_KLAIM_HDR_ID = document.getElementById('txtID').value || '';
             data.TXT_GROUP_ACCOUNT = document.getElementById('txtGroupAccount').value;
             data.TXT_PARTNER = document.getElementById('txtPartner').value;
             data.TXT_BRANCH = document.getElementById('txtBranchName').value;
+            data.TXT_SITE = document.getElementById('txtOutlet').value;
             data.TXT_DOC_NO = document.getElementById('txtDocNo').value;
             data.TXT_STATUSFLOW = claimFormState.TXT_STATUSFLOW;
             data.BIT_APPLY = claimFormState.BIT_APPLY;
@@ -1317,13 +1626,9 @@
 
             if (data.TXT_GROUP_ACCOUNT !== undefined) {
                 document.getElementById('txtGroupAccount').value = data.TXT_GROUP_ACCOUNT || '';
-                if (data.TXT_GROUP_ACCOUNT.trim().toUpperCase() === 'ENSEVAL') {
-                    $('#btnLOVPartner').parent().show();
-                } else {
-                    $('#btnLOVPartner').parent().hide();
-                }
             }
             if (data.TXT_PARTNER !== undefined) document.getElementById('txtPartner').value = data.TXT_PARTNER || '';
+            if (data.TXT_SITE !== undefined) document.getElementById('txtOutlet').value = data.TXT_SITE || '';
             if (data.TXT_BRANCH !== undefined) document.getElementById('txtBranchName').value = data.TXT_BRANCH || '';
             if (data.TXT_DOC_NO !== undefined) document.getElementById('txtDocNo').value = data.TXT_DOC_NO || '';
             if (data.INT_KLAIM_HDR_ID !== undefined && data.INT_KLAIM_HDR_ID !== 0) document.getElementById('txtID').value = data.INT_KLAIM_HDR_ID || '';
@@ -1345,38 +1650,17 @@
             }
 
             if (data.TXT_STATUSFLOW !== undefined) {
-                document.getElementById('lblStatusFlow').textContent = data.TXT_STATUSFLOW || 'NEW';
-                const status = data.TXT_STATUSFLOW;
-                const lbl = document.getElementById('lblStatusFlow');
-                
-                // Force only the requested buttons to be visible upon refresh, except maybe Submit which is shown unless it's CLOSED?
-                // Wait, if it's NEW or DRAFT or anything else, let's just make sure unwanted buttons are hidden.
-                document.getElementById('btnCopy').style.display = 'none';
-                document.getElementById('btnClose').style.display = 'none';
-                document.getElementById('btnReject').style.display = 'none';
-                document.getElementById('btnApprovalHistory').style.display = 'none';
-                document.getElementById('divClose').style.display = 'none';
-
-                if (status === 'DRAFT' || status === 'APPROVED' || status === 'SUBMITTED') {
-                    lbl.className = 'control-label text-yellow';
-                    if(status === 'APPROVED') lbl.className = 'control-label text-blue';
-                    if(status === 'SUBMITTED') lbl.className = 'control-label text-orange';
-                    document.getElementById('btnSubmit').style.display = 'inline-block';
-                } else if (status === 'CLOSED') {
-                    lbl.className = 'control-label text-muted';
-                    document.getElementById('divClose').style.display = 'block';
-                    document.getElementById('btnSubmit').style.display = 'none';
-                } else if (status === 'REJECTED') {
-                    lbl.className = 'control-label text-red';
-                    document.getElementById('btnSubmit').style.display = 'none';
-                } else {
-                    lbl.className = 'control-label text-blue';
-                    document.getElementById('btnSubmit').style.display = 'none';
-                }
+                claimFormState.TXT_STATUSFLOW = data.TXT_STATUSFLOW;
+                claimFormState.BIT_APPLY = data.BIT_APPLY || 'N';
+                claimFormState.BIT_APPROVED = data.BIT_APPROVED || 'N';
+                claimFormState.BIT_REJECTED = data.BIT_REJECTED || 'N';
+                claimFormState.BIT_CLOSED = data.BIT_CLOSED || 'N';
+                updateStatusLabel(data.TXT_STATUSFLOW);
             }
 
             if (!data.XXSHP_KDS_T_KLAIM_DTL || !data.XXSHP_KDS_T_KLAIM_DTL.length) {
                 detailRows = [];
+                lockKlaimReadonlyHeaderFields();
                 return;
             }
 
@@ -1388,7 +1672,7 @@
                 invoiceNo: d.TXT_INVOICE_NO || '',
                 invoiceDate: d.DTM_INVOICE || moment().format('DD-MMM-YYYY'),
                 fakturNo: d.TXT_FKT_PJK_NO || '',
-                fakturDate: d.DTM_FKT_PJK || moment().format('DD-MMM-YYYY'),
+                fakturDate: d.DTM_FKT_PJK || '',
                 invoiceAmount: d.DEC_INVOICE_AMT || 0,
                 pphType: d.TXT_PPH_JENIS || 'NON PPH',
                 pphTarif: d.DEC_PERSEN_PPH || 0,
@@ -1406,6 +1690,8 @@
                 paidDate: d.DTM_PAID_DATE || '',
                 bank: d.TXT_BANK_NAME || ''
             }));
+
+            lockKlaimReadonlyHeaderFields();
         }
 
         function formatCurrency(val) {
@@ -1511,8 +1797,8 @@
                     <td><input type="text" class="form-control input-sm txtDetailInvoiceNo" value="${item.invoiceNo}" onchange="updateCell(${index}, 'invoiceNo', this.value)"></td>
                     <td><input type="text" class="form-control input-sm datepicker-cell txtDetailInvoiceDate" style="width:100px;" value="${item.invoiceDate}" onchange="updateCell(${index}, 'invoiceDate', this.value)"></td>
                     <td>
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control txtFakturPajakNo" value="${item.fakturNo}" onkeyup="updateFakturPajakNo(${index}, this.value, this)" onchange="updateCell(${index}, 'fakturNo', this.value)">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-sm txtFakturPajakNo" style="width:190px;" value="${item.fakturNo}" onkeyup="updateFakturPajakNo(${index}, this.value, this)" onchange="updateCell(${index}, 'fakturNo', this.value)">
                             <span class="input-group-btn">
                                 <button class="btn btn-default btn-sm btnScanFakturPajak" type="button" onclick="openScanFaktur(${index})" title="Scan Faktur Pajak"><i class="fa fa-barcode"></i></button>
                             </span>
@@ -1832,7 +2118,7 @@
                 invoiceNo: '',
                 invoiceDate: moment().format('DD-MMM-YYYY'),
                 fakturNo: '',
-                fakturDate: moment().format('DD-MMM-YYYY'),
+                fakturDate: '',
                 invoiceAmount: 0,
                 pphType: 'NON PPH',
                 pphTarif: 0,
@@ -1859,32 +2145,24 @@
             (window.showKlaimModal || function(s) { $(s).modal('show'); })('#lovGroupAccountModal');
         }
 
-        function selectGroupAccount(name, code, supplierName, site) {
-            const prevName = document.getElementById('txtGroupAccount').value;
-            if (prevName !== name) {
-                // Reset dependent fields if group account changed
+        function selectGroupAccount(name) {
+            const prevName = (document.getElementById('txtGroupAccount').value || '').trim().toUpperCase();
+            const nextName = (name || '').trim().toUpperCase();
+
+            if (prevName && prevName !== nextName) {
                 document.getElementById('txtPartner').value = '';
                 document.getElementById('txtOutlet').value = '';
                 document.getElementById('txtBranchName').value = '';
+                document.getElementById('txtSupplierID').value = '';
+                document.getElementById('txtSupplierCode').value = '';
+                document.getElementById('txtSupplierName').value = '';
+                document.getElementById('txtSupplierSiteID').value = '';
+                document.getElementById('txtSupplierSiteName').value = '';
             }
 
             document.getElementById('txtGroupAccount').value = name;
-            document.getElementById('txtSupplierCode').value = code;
-            document.getElementById('txtSupplierName').value = supplierName;
-            
-            const parts = code.split('-');
-            const supCode = parts.length > 2 ? parts[2] : code;
-            document.getElementById('txtSupplierID').value = 'SUP-' + supCode;
-            
-            document.getElementById('txtSupplierSiteID').value = site;
-            document.getElementById('txtSupplierSiteName').value = site + ' OFFICE';
-
-            // Regulation: Partner search button is only shown if Group Account === "ENSEVAL"
-            if (name.trim().toUpperCase() === "ENSEVAL") {
-                $('#btnLOVPartner').parent().show();
-            } else {
-                $('#btnLOVPartner').parent().hide();
-            }
+            applyGroupAccountRules(true);
+            lockKlaimReadonlyHeaderFields();
 
             hideModal('#lovGroupAccountModal');
             syncToStorage();
@@ -1914,7 +2192,7 @@
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td style="text-align: center;">
-                            <button type="button" class="btn btn-success btn-xs" onclick="selectPartner('${p.site.replace(/'/g, "\\'")}', '${p.branch.replace(/'/g, "\\'")}', '${p.supplier_name.replace(/'/g, "\\'")}', '${p.code.replace(/'/g, "\\'")}', '${p.supplier_id.replace(/'/g, "\\'")}', '${p.site_id.replace(/'/g, "\\'")}', '${p.supplier_site_name ? p.supplier_site_name.replace(/'/g, "\\'") : ''}')"><i class="fa fa-check"></i> Pilih</button>
+                            <button type="button" class="btn btn-success btn-xs" onclick="selectPartner('${p.site.replace(/'/g, "\\'")}')"><i class="fa fa-check"></i> Pilih</button>
                         </td>
                         <td style="word-break: break-all; white-space: normal;">${p.site}</td>
                         <td>${p.branch}</td>
@@ -1928,15 +2206,9 @@
             (window.showKlaimModal || function(s) { $(s).modal('show'); })('#lovPartnerModal');
         }
 
-        function selectPartner(site, branch, supplierName, code, supplierId, siteId, siteName) {
-            document.getElementById('txtPartner').value = site;
-            document.getElementById('txtBranchName').value = branch;
-            document.getElementById('txtSupplierName').value = supplierName;
-            document.getElementById('txtSupplierCode').value = code;
-            document.getElementById('txtSupplierID').value = supplierId;
-            document.getElementById('txtSupplierSiteID').value = siteId;
-            document.getElementById('txtSupplierSiteName').value = siteName || (siteId + ' OFFICE');
-            
+        function selectPartner(partnerName) {
+            document.getElementById('txtPartner').value = partnerName;
+            lockKlaimReadonlyHeaderFields();
             hideModal('#lovPartnerModal');
             syncToStorage();
         }
@@ -1987,7 +2259,11 @@
             document.getElementById('txtBranchName').value = branch;
             document.getElementById('txtSupplierSiteID').value = supplierSiteId;
             document.getElementById('txtSupplierSiteName').value = supplierSiteName;
-            
+            if (!document.getElementById('txtSourceDoc').value) {
+                document.getElementById('txtSourceDoc').value = 'PORTAL KDS';
+            }
+            lockKlaimReadonlyHeaderFields();
+
             hideModal('#lovOutletModal');
             syncToStorage();
         }
@@ -1996,36 +2272,42 @@
         function handleFind() {
             const tbody = document.getElementById('lovFindTableBody');
             tbody.innerHTML = '';
-            
-            // Reset search
+
             $('#lovFindModal input[type="text"]').val('');
 
-            findData.forEach((item, index) => {
+            const rows = getFindRowsForRole();
+            rows.forEach((record) => {
+                const item = record.findSummary || {};
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td style="text-align: center;">
-                        <button type="button" class="btn btn-success btn-xs" onclick="selectFindByIndex(${index})"><i class="fa fa-check"></i> Pilih</button>
+                        <button type="button" class="btn btn-success btn-xs" onclick="selectFindByClaimId('${record.id}')"><i class="fa fa-check"></i> Pilih</button>
                     </td>
-                    <td>${item.id}</td>
-                    <td>${item.dokNo}</td>
-                    <td>${item.site}</td>
-                    <td>${item.description}</td>
-                    <td>${item.period}</td>
-                    <td>${item.invoiceNo}</td>
-                    <td style="text-align: right;">${item.invoiceAmount}</td>
-                    <td>${item.status}</td>
-                    <td>${item.attachment}</td>
-                    <td>${item.readyToSubmit}</td>
+                    <td>${record.id}</td>
+                    <td>${record.dokNo || item.dokNo || ''}</td>
+                    <td>${item.status || ''}</td>
+                    <td>${item.site || ''}</td>
+                    <td>${item.description || ''}</td>
+                    <td>${item.period || ''}</td>
+                    <td>${item.invoiceNo || ''}</td>
+                    <td style="text-align: right;">${item.invoiceAmount != null ? item.invoiceAmount : ''}</td>
+                    <td>${item.attachment || ''}</td>
+                    <td>${item.readyToSubmit || ''}</td>
                 `;
                 tbody.appendChild(tr);
             });
-            
-            document.getElementById('lovFindInfo').textContent = `Showing 1 to ${findData.length} of ${findData.length} entries`;
+
+            const total = rows.length;
+            document.getElementById('lovFindInfo').textContent = total
+                ? `Showing 1 to ${total} of ${total} entries`
+                : 'Showing 0 to 0 of 0 entries';
             (window.showKlaimModal || function(s) { $(s).modal('show'); })('#lovFindModal');
         }
 
-        function selectFindByIndex(index) {
-            loadClaimFromFind(findData[index]);
+        function selectFindByClaimId(claimId) {
+            if (typeof protoGetKlaimById !== 'function') return;
+            const rec = protoGetKlaimById(claimId);
+            if (rec) loadClaimFromRecord(rec);
             hideModal('#lovFindModal');
         }
 
@@ -2066,7 +2348,8 @@
                 bootbox.alert('Kolom Remark harus di isi!');
                 return false;
             }
-            if (readySubmitNo && !reasonReadySubmit) {
+            // Mirror ValidateInput: notes wajib jika Ready Submit = No — hanya untuk role yang boleh edit field ini
+            if (canEditReadySubmitFields() && readySubmitNo && !reasonReadySubmit) {
                 bootbox.alert('Notes ready submit harus di isi!');
                 return false;
             }
@@ -2098,8 +2381,8 @@
                 }
 
                 const hasPpn = rowHasPpn(row);
-                const hasFakturNo = row.fakturNo && row.fakturNo.trim();
-                const hasFakturDate = row.fakturDate && row.fakturDate.trim();
+                const hasFakturNo = rowHasFakturNo(row);
+                const hasFakturDate = rowHasFakturDate(row);
 
                 if (hasPpn && !hasFakturNo) {
                     validationErrorRows = [i];
@@ -2113,10 +2396,16 @@
                     bootbox.alert('Baris ' + line + ': Faktur Pajak Date wajib diisi jika PPN tidak 0%');
                     return false;
                 }
-                if ((hasFakturNo || hasFakturDate) && !hasPpn) {
+                if (hasFakturNo && !hasPpn) {
                     validationErrorRows = [i];
                     renderTable();
-                    bootbox.alert('Baris ' + line + ': PPN harus diisi (tarif > 0%) jika Faktur Pajak No/Date diisi');
+                    bootbox.alert('Baris ' + line + ': PPN harus diisi (tarif > 0%) jika Faktur Pajak No diisi');
+                    return false;
+                }
+                if (hasFakturDate && !hasPpn) {
+                    validationErrorRows = [i];
+                    renderTable();
+                    bootbox.alert('Baris ' + line + ': PPN harus diisi (tarif > 0%) jika Faktur Pajak Date diisi');
                     return false;
                 }
 
@@ -2191,67 +2480,169 @@
         function updateReadySubmitUI() {
             const isYes = document.getElementById('rdoReadySubmitYes').checked;
             const reasonEl = document.getElementById('txtReasonReadySubmit');
+            const canEdit = canEditReadySubmitFields();
             if (isYes) {
                 reasonEl.disabled = true;
                 reasonEl.value = '';
                 reasonEl.style.display = 'none';
             } else {
-                reasonEl.disabled = false;
                 reasonEl.style.display = '';
+                reasonEl.disabled = !canEdit;
+                if (canEdit && !reasonEl.value.trim()) {
+                    reasonEl.value = 'New Document';
+                }
             }
         }
 
         function handleSave() {
+            if (typeof rbacHasPermission === 'function' && !rbacHasPermission('klaim.save')) {
+                bootbox.alert('Akses ditolak. Hanya <strong>Admin KMMD</strong> yang dapat Save (status Draft).');
+                return;
+            }
             if (!validateKlaimInput(false)) return;
             bootbox.confirm("Save this data?", (res) => {
                 if (res) {
+                    const fromStatus = claimFormState.TXT_STATUSFLOW || 'NEW';
                     if (!document.getElementById('txtID').value) {
                         document.getElementById('txtID').value = Math.floor(Math.random() * 90000 + 10000);
                         document.getElementById('txtDocNo').value = 'CLM-2026-' + Math.floor(Math.random() * 9000 + 1000);
                     }
-                    claimFormState.TXT_STATUSFLOW = 'DRAFT';
+                    claimFormState.TXT_STATUSFLOW = KLAIM_STATUS.DRAFT;
                     claimFormState.BIT_APPLY = 'N';
+                    claimFormState.BIT_APPROVED = 'N';
                     claimLoadedFromFind = false;
                     enableKlaimControls();
                     updateEMateraiButton();
                     syncToStorage();
-                    bootbox.alert("Claim saved as DRAFT successfully!");
+                    persistActiveClaimToRegistry();
+                    appendWorkflowHistory('Save', fromStatus, KLAIM_STATUS.DRAFT);
+                    if (typeof protoSetActiveClaimId === 'function') {
+                        protoSetActiveClaimId(document.getElementById('txtID').value);
+                    }
+                    const claimId = document.getElementById('txtID').value;
+                    if (typeof protoEnsureKlaimOtp === 'function') {
+                        protoEnsureKlaimOtp(claimId, 'owner');
+                    }
+                    const emailUrl = 'ApprovalEmail.html?claimId=' + encodeURIComponent(claimId) + '&step=owner';
+                    window.open(emailUrl, '_blank');
+                    const ga = document.getElementById('txtGroupAccount').value;
+                    const sid = document.getElementById('txtSupplierID').value;
+                    const owner = (typeof protoFindOwnerBySupplier === 'function')
+                        ? protoFindOwnerBySupplier(ga, sid) : null;
+                    const ownerMsg = owner
+                        ? '<strong>' + owner.ownerName + '</strong> (' + owner.ownerId + ')'
+                        : '<em class="text-warning">Mapping Owner KMMD tidak ditemukan — simpan mapping di Master ASS/Owner KMMD</em>';
+                    bootbox.alert(
+                        'Data berhasil disimpan. Status tetap <strong>DRAFT</strong>.<br>' +
+                        '<small class="text-muted">Tab simulasi email ke Owner KMMD telah dibuka: ' + ownerMsg + '</small>'
+                    );
                 }
             });
         }
 
         function handleNew() {
+            if (typeof rbacHasPermission === 'function' && !rbacHasPermission('klaim.new')) {
+                bootbox.alert('Akses ditolak. Hanya <strong>Admin KMMD</strong> yang dapat membuat klaim baru.');
+                return;
+            }
             bootbox.confirm("Create new claim form?", (res) => {
                 if (res) initiateBlankForm();
             });
         }
 
-        function handleSubmit() {
-            if (!validateKlaimInput(true)) return;
-            bootbox.confirm("Submit klaim untuk proses approval (Owner KMMD → ASS auto → RSM → CF)?", (res) => {
-                if (res) {
-                    claimFormState.TXT_STATUSFLOW = 'APPROVE 1 - DRAFT';
-                    claimFormState.BIT_APPLY = 'Y';
-                    claimFormState.BIT_APPROVED = 'N';
-                    claimLoadedFromFind = true;
-                    enableKlaimControls();
-                    updateStatusLabel('APPROVE 1 - DRAFT');
-
-                    bootbox.alert(
-                        '<h4>Approval Upgrade — Simulasi</h4>' +
-                        '<p><strong>1. Owner KMMD</strong> — notifikasi email terkirim (Approve 1 - Draft)</p>' +
-                        '<p><strong>2. ASS</strong> — <em>auto approve</em> (Approve 2 - Draft)</p>' +
-                        '<p><strong>3. RSM</strong> — menunggu Ready to Submit</p>' +
-                        '<p><strong>4. CF</strong> — submit final untuk payment</p>' +
-                        '<p class="text-muted">Mapping ASS/Owner mengacu ke Form Master ASS/Owner KMMD.</p>',
-                        function () {
-                            claimFormState.TXT_STATUSFLOW = 'APPROVE 2 - DRAFT';
-                            updateStatusLabel('APPROVE 2 - DRAFT');
-                            syncToStorage();
-                            updateEMateraiButton();
-                        }
-                    );
+        function handleOwnerApprove() {
+            if (typeof rbacHasPermission === 'function' && !rbacHasPermission('klaim.ownerApprove')) {
+                bootbox.alert('Akses ditolak. Hanya <strong>Owner KMMD</strong> yang dapat Email / Approve.');
+                return;
+            }
+            if (normKlaimStatus(claimFormState.TXT_STATUSFLOW) !== KLAIM_STATUS.DRAFT) {
+                bootbox.alert('Approve Owner hanya untuk dokumen berstatus <strong>DRAFT</strong>.');
+                return;
+            }
+            if (!document.getElementById('txtID').value) {
+                bootbox.alert('Dokumen belum disimpan Admin KMMD.');
+                return;
+            }
+            bootbox.confirm('Konfirmasi approval Owner KMMD? (ASS akan auto-approve)', (ok) => {
+                if (!ok) return;
+                const fromStatus = claimFormState.TXT_STATUSFLOW;
+                claimFormState.TXT_STATUSFLOW = KLAIM_STATUS.DRAFT_WITH_2_APPROVE;
+                claimFormState.BIT_APPLY = 'Y';
+                claimFormState.BIT_APPROVED = 'N';
+                claimLoadedFromFind = true;
+                enableKlaimControls();
+                syncToStorage();
+                persistActiveClaimToRegistry();
+                appendWorkflowHistory('Email / Approve', fromStatus, KLAIM_STATUS.DRAFT_WITH_2_APPROVE);
+                const ga = document.getElementById('txtGroupAccount').value;
+                const outlet = document.getElementById('txtOutlet').value;
+                const sid = document.getElementById('txtSupplierID').value;
+                const ass = (typeof protoFindAssBySite === 'function') ? protoFindAssBySite(ga, outlet, sid) : null;
+                const assName = ass ? ass.assName : 'ASS (auto)';
+                const claimId = document.getElementById('txtID').value;
+                if (claimId && typeof protoAppendApprovalHistory === 'function') {
+                    protoAppendApprovalHistory(claimId, {
+                        roleId: 'ASS',
+                        roleLabel: assName,
+                        action: 'Auto Approve',
+                        fromStatus: KLAIM_STATUS.DRAFT_WITH_2_APPROVE,
+                        toStatus: KLAIM_STATUS.DRAFT_WITH_2_APPROVE
+                    });
                 }
+                bootbox.alert(
+                    '<p><i class="fa fa-envelope text-info"></i> <strong>Owner KMMD</strong> — approval tercatat.</p>' +
+                    '<p><i class="fa fa-check text-success"></i> <strong>' + assName + '</strong> — auto approve.</p>' +
+                    '<p>Status dokumen: <strong>Draft With 2 Approve</strong></p>'
+                );
+            });
+        }
+
+        function handleRsmReadySubmit() {
+            if (typeof rbacHasPermission === 'function' && !rbacHasPermission('klaim.rsmReadySubmit')) {
+                bootbox.alert('Akses ditolak. Hanya <strong>RSM</strong> yang dapat Ready To Submit.');
+                return;
+            }
+            if (normKlaimStatus(claimFormState.TXT_STATUSFLOW) !== KLAIM_STATUS.DRAFT_WITH_2_APPROVE) {
+                bootbox.alert('Ready To Submit hanya untuk dokumen <strong>Draft With 2 Approve</strong>.');
+                return;
+            }
+            if (!validateKlaimInput(true)) return;
+            bootbox.confirm('Set klaim Ready To Submit → status <strong>Draft With 3 Approve</strong>?', (ok) => {
+                if (!ok) return;
+                const fromStatus = claimFormState.TXT_STATUSFLOW;
+                claimFormState.TXT_STATUSFLOW = KLAIM_STATUS.DRAFT_WITH_3_APPROVE;
+                claimFormState.BIT_APPLY = 'Y';
+                claimLoadedFromFind = true;
+                enableKlaimControls();
+                syncToStorage();
+                persistActiveClaimToRegistry();
+                appendWorkflowHistory('Ready To Submit', fromStatus, KLAIM_STATUS.DRAFT_WITH_3_APPROVE);
+                bootbox.alert('Status berubah menjadi <strong>Draft With 3 Approve</strong>. Menunggu submit oleh <strong>CF</strong>.');
+            });
+        }
+
+        function handleCfSubmit() {
+            if (typeof rbacHasPermission === 'function' && !rbacHasPermission('klaim.cfSubmit')) {
+                bootbox.alert('Akses ditolak. Hanya <strong>CF</strong> yang dapat Submit final.');
+                return;
+            }
+            if (normKlaimStatus(claimFormState.TXT_STATUSFLOW) !== KLAIM_STATUS.DRAFT_WITH_3_APPROVE) {
+                bootbox.alert('Submit CF hanya untuk dokumen <strong>Draft With 3 Approve</strong>.');
+                return;
+            }
+            if (!validateKlaimInput(true)) return;
+            bootbox.confirm('Submit klaim final → status <strong>Approve</strong>?', (ok) => {
+                if (!ok) return;
+                const fromStatus = claimFormState.TXT_STATUSFLOW;
+                claimFormState.TXT_STATUSFLOW = KLAIM_STATUS.APPROVED;
+                claimFormState.BIT_APPLY = 'Y';
+                claimFormState.BIT_APPROVED = 'Y';
+                claimLoadedFromFind = true;
+                enableKlaimControls();
+                syncToStorage();
+                persistActiveClaimToRegistry();
+                appendWorkflowHistory('Submit', fromStatus, KLAIM_STATUS.APPROVED);
+                bootbox.alert('Klaim <strong>Approve</strong>. CF dapat mengisi field payment pada detail.');
             });
         }
 
@@ -2333,20 +2724,40 @@
             });
         }
 
+        function formatApprovalHistoryTime(iso) {
+            if (!iso) return '-';
+            if (typeof moment !== 'undefined') return moment(iso).format('DD-MMM-YYYY HH:mm');
+            return iso;
+        }
+
         function handleApprovalHistory() {
+            const claimId = document.getElementById('txtID').value;
             const docNo = document.getElementById('txtDocNo').value || '(belum disimpan)';
-            bootbox.alert(
-                '<h4>Approval History — ' + docNo + '</h4>' +
-                '<table class="table table-condensed table-bordered" style="font-size:12px;">' +
-                '<tr><th>Urutan</th><th>Role</th><th>Aksi</th><th>Status</th></tr>' +
-                '<tr><td>1</td><td>Admin KMMD</td><td>Save</td><td>Draft</td></tr>' +
-                '<tr><td>2</td><td><strong>Owner KMMD</strong> (baru)</td><td>Email / Approve</td><td>Approve 1 - Draft</td></tr>' +
-                '<tr><td>3</td><td><strong>ASS</strong> (baru)</td><td><em>Auto Approve</em></td><td>Approve 2 - Draft</td></tr>' +
-                '<tr><td>4</td><td>RSM</td><td>Ready To Submit</td><td>Draft (siap submit)</td></tr>' +
-                '<tr><td>5</td><td>CF</td><td>Submit</td><td>Approved</td></tr>' +
-                '</table>' +
-                '<p class="text-muted">Mapping Owner KMMD &amp; ASS per supplier subdist: Master &gt; Form ASS/Owner KMMD</p>'
-            );
+            if (!claimId) {
+                bootbox.alert('Dokumen belum disimpan — tidak ada riwayat approval.');
+                return;
+            }
+            const rec = (typeof protoGetKlaimById === 'function') ? protoGetKlaimById(claimId) : null;
+            const history = (rec && rec.approvalHistory) ? rec.approvalHistory : [];
+            let html = '<h4>Approval History — ' + docNo + '</h4>';
+            if (!history.length) {
+                html += '<p class="text-muted">Belum ada riwayat approval.</p>';
+            } else {
+                html += '<div style="max-height:320px;overflow:auto;"><table class="table table-condensed table-bordered" style="font-size:12px;margin-bottom:0;">' +
+                    '<tr><th>#</th><th>Waktu</th><th>Role</th><th>Aksi</th><th>Status Dari</th><th>Status Ke</th><th>User</th></tr>';
+                history.forEach((h, i) => {
+                    html += '<tr><td>' + (i + 1) + '</td>' +
+                        '<td>' + formatApprovalHistoryTime(h.at) + '</td>' +
+                        '<td>' + (h.roleLabel || h.roleId || '-') + '</td>' +
+                        '<td>' + (h.action || '-') + '</td>' +
+                        '<td>' + (h.fromStatus || '-') + '</td>' +
+                        '<td>' + (h.toStatus || '-') + '</td>' +
+                        '<td>' + (h.username || '-') + '</td></tr>';
+                });
+                html += '</table></div>';
+            }
+            html += '<p class="text-muted" style="margin-top:10px;margin-bottom:0;">Mapping Owner KMMD &amp; ASS per supplier: Master &gt; Form ASS/Owner KMMD</p>';
+            bootbox.alert(html);
         }
 
         function handleClose() {

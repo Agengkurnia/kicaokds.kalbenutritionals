@@ -7,8 +7,47 @@
     <title>Form Master ASS/Owner KMMD | KICAO KDS</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <style>
-        #dtDetail thead tr td { background: #36752d; color: #fff; font-weight: bold; }
-        #dtDetail tbody tr td { background: #eefceb; vertical-align: middle; }
+        #dtOwner thead tr td, #dtAss thead tr td, #dtHistory thead tr td { background: #36752d; color: #fff; font-weight: bold; }
+        #dtOwner tbody tr td, #dtAss tbody tr td { background: #eefceb; vertical-align: middle; }
+        #dtOwner tbody tr.row-inactive td, #dtAss tbody tr.row-inactive td { background: #f5f5f5; color: #888; }
+        #dtOwner tbody tr.row-active td, #dtAss tbody tr.row-active td { background: #fff8e6; }
+        #dtHistory tbody tr td { background: #f9f9f9; vertical-align: top; font-size: 12px; }
+        .history-change-list { list-style: none; padding: 0; margin: 0; }
+        .history-change-list > li { margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dotted #ddd; }
+        .history-change-list > li:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .history-role { display: inline-block; background: #36752d; color: #fff; font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 3px; margin-bottom: 4px; }
+        .history-role-changes { margin-top: 4px; padding-left: 4px; }
+        .history-change-row { line-height: 1.5; margin-bottom: 2px; }
+        .history-change-row .ch-field { color: #555; font-weight: 600; margin-right: 4px; }
+        .history-change-row .ch-old { color: #999; text-decoration: line-through; }
+        .history-change-row .ch-arrow { color: #bbb; margin: 0 5px; }
+        .history-change-row .ch-new { color: #2c6620; font-weight: 600; }
+        .history-action-group { margin-bottom: 10px; padding: 8px 10px 6px; border-radius: 4px; border-left: 4px solid #ccc; }
+        .history-action-group:last-child { margin-bottom: 0; }
+        .hist-act-add { border-left-color: #00a65a; background: #f4fdf6; }
+        .hist-act-del { border-left-color: #dd4b39; background: #fdf5f5; }
+        .hist-act-edit { border-left-color: #3c8dbc; background: #f5f9fc; }
+        .hist-act-aktif { border-left-color: #f39c12; background: #fffbf0; }
+        .history-action-title { font-weight: bold; font-size: 12px; margin-bottom: 6px; }
+        .history-action-title .badge { font-size: 10px; margin-left: 4px; vertical-align: middle; }
+        .hist-act-add .history-action-title { color: #00a65a; }
+        .hist-act-del .history-action-title { color: #c23321; }
+        .hist-act-edit .history-action-title { color: #367fa9; }
+        .hist-act-aktif .history-action-title { color: #db8b0b; }
+        .history-change-row .ch-add { color: #00a65a; font-weight: 600; }
+        .history-change-row .ch-del { color: #c23321; text-decoration: line-through; }
+        #boxHistory .box-header.with-border { justify-content: space-between !important; }
+        #boxHistory .box-header .box-title { flex: 1; text-align: left; margin: 0; }
+        #boxHistory .box-tools { margin-left: auto; }
+        .person-table input.form-control { font-size: 13px; text-transform: uppercase; }
+        .person-table input.email-invalid { border-color: #dd4b39; }
+        .person-table .email-err-msg { font-size: 11px; color: #dd4b39; margin-top: 2px; display: none; }
+        .person-table .email-err-msg.visible { display: block; }
+        .person-table .radio-active-wrap { margin: 0; cursor: pointer; display: block; padding: 6px 4px; }
+        .section-label { font-weight: bold; color: #36752d; margin-bottom: 4px; font-size: 14px; }
+        .section-hint { font-size: 12px; color: #777; margin: 0 0 8px 0; }
+        .active-summary { margin-bottom: 16px; padding: 10px 14px; font-size: 13px; }
+        .active-summary strong { color: #36752d; }
         .lov-modal .modal-dialog { width: 90%; max-width: 900px; margin: 15px auto !important; }
         .lov-modal .modal-header { background: #00a65a; color: #fff; border-bottom: none; }
         .lov-modal .modal-header .close { color: #fff; opacity: 1; }
@@ -24,42 +63,49 @@
             vertical-align: middle;
             letter-spacing: 0.4px;
         }
-        .proto-new-legend { font-size: 12px; color: #666; margin-bottom: 12px; }
-        #dtDetail thead td.proto-new-header { box-shadow: inset 0 -3px 0 #f39c12 !important; }
-        #dtDetail tbody td.proto-new-cell { background-color: #fff8e6 !important; box-shadow: inset 0 0 0 1px rgba(243, 156, 18, 0.45); }
-        .proto-new-label .control-label { border-left: 3px solid #f39c12; padding-left: 8px; }
-        input.proto-new-cell, .input-group.proto-new-field .form-control {
-            background-color: #fff8e6 !important;
-            box-shadow: inset 0 0 0 1px rgba(243, 156, 18, 0.35);
+        .proto-new-legend {
+            font-size: 12px; color: #666; margin-bottom: 12px;
+            padding: 8px 12px; background: #fff8e6; border: 1px solid #f39c12; border-radius: 4px;
+            position: relative; padding-right: 28px;
         }
+        .proto-new-legend .legend-dismiss {
+            position: absolute; right: 8px; top: 6px; background: none; border: none;
+            font-size: 18px; line-height: 1; color: #999; cursor: pointer; padding: 0 4px;
+        }
+        .proto-new-legend .legend-dismiss:hover { color: #333; }
+        #assOwnerHeaderActions .btn-simpan { min-width: 90px; }
+        #dtOwner thead td.proto-new-header, #dtAss thead td.proto-new-header { box-shadow: inset 0 -3px 0 #f39c12 !important; }
+        .proto-new-label .control-label { border-left: 3px solid #f39c12; padding-left: 8px; }
+        #lovModal table thead tr td { background: #36752d !important; color: #fff !important; font-weight: bold; }
+        #lovModal table tbody tr td { background: #eefceb !important; }
+        #lovModal table tbody tr:hover td { background: #dff0d8 !important; }
+        #lovModal .modal-content { min-height: 420px; }
     </style>
 </head>
 <body>
     <div id="app-content">
         <section class="content-header">
-            <h1>Form Master ASS/Owner KMMD <span class="proto-new-badge">NEW</span> <small>Mapping Supplier Subdist — ASS &amp; Owner KMMD</small></h1>
+            <h1>Form Master ASS/Owner KMMD <span class="proto-new-badge">NEW</span> <small>Mapping Supplier — Owner KMMD &amp; ASS</small></h1>
         </section>
 
         <section class="content">
-            <div class="proto-new-legend"><span class="proto-new-badge">NEW</span> Seluruh form ini adalah fitur baru — Enhancement BRD Jun 2026</div>
+            <div class="proto-new-legend" id="protoNewLegend" style="display:none;">
+                <button type="button" class="legend-dismiss" onclick="dismissProtoLegend()" title="Tutup">&times;</button>
+                <span class="proto-new-badge">NEW</span> Fitur baru — Enhancement BRD Jun 2026
+            </div>
             <div class="box box-primary">
-                <div class="box-header with-border text-right">
-                    <button type="button" class="btn btn-success" id="btnFind" onclick="handleFind()"><i class="fa fa-search"></i> Find</button>
-                    <button type="button" class="btn btn-success" id="btnSave" onclick="handleSave()"><i class="fa fa-floppy-o"></i> Save</button>
-                    <button type="button" class="btn btn-warning" id="btnNew" onclick="handleNew()"><i class="fa fa-refresh"></i> New</button>
+                <div class="box-header with-border text-right" id="assOwnerHeaderActions">
+                    <button type="button" class="btn btn-default" id="btnFind" onclick="handleFind()"><i class="fa fa-search"></i> Cari</button>
+                    <button type="button" class="btn btn-primary btn-simpan" id="btnSave" onclick="handleSave()"><i class="fa fa-floppy-o"></i> Simpan</button>
+                    <button type="button" class="btn btn-default" id="btnNew" onclick="handleNew()"><i class="fa fa-file-o"></i> Baru</button>
                 </div>
                 <div class="box-body">
                     <div class="row row-form">
                         <div class="col-md-2"><label class="control-label">ID</label></div>
                         <div class="col-md-4">
-                            <div class="input-group">
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn btn-danger" onclick="handleFind()"><i class="fa fa-search"></i></button>
-                                </div>
-                                <input type="text" class="form-control" id="txtID" disabled placeholder="[AUTO]">
-                            </div>
+                            <input type="text" class="form-control" id="txtID" disabled placeholder="[OTOMATIS]">
                         </div>
-                        <div class="col-md-2"><label class="control-label">Date</label></div>
+                        <div class="col-md-2"><label class="control-label">Tanggal</label></div>
                         <div class="col-md-4"><input type="text" class="form-control" id="dtmDate" style="width:140px;" disabled></div>
                     </div>
                     <div class="row row-form" style="margin-top:10px;">
@@ -67,39 +113,25 @@
                         <div class="col-md-4">
                             <div class="input-group">
                                 <div class="input-group-btn">
-                                    <button type="button" class="btn btn-danger" onclick="openLov('groupAccount')"><i class="fa fa-search"></i></button>
+                                    <button type="button" class="btn btn-success" onclick="openLov('groupAccount')" title="Pilih Group Account"><i class="fa fa-search"></i></button>
                                 </div>
                                 <input type="text" class="form-control" id="txtGroupAccount" disabled>
                             </div>
                         </div>
                         <div class="col-md-2"><label class="control-label">Status</label></div>
-                        <div class="col-md-4"><label id="lblStatus" class="control-label text-blue">NEW</label></div>
+                        <div class="col-md-4"><label id="lblStatus" class="control-label text-blue">BARU</label></div>
                     </div>
                     <div class="row row-form" style="margin-top:10px;">
                         <div class="col-md-2"><label class="control-label">Supplier</label></div>
                         <div class="col-md-4">
                             <div class="input-group">
                                 <div class="input-group-btn">
-                                    <button type="button" class="btn btn-danger" onclick="openLov('supplier')"><i class="fa fa-search"></i></button>
+                                    <button type="button" class="btn btn-success" onclick="openLov('supplier')" title="Pilih Supplier"><i class="fa fa-search"></i></button>
                                 </div>
                                 <div class="input-group-btn" style="width:100px;">
                                     <input type="text" class="form-control" id="txtSupplierID" disabled placeholder="ID">
                                 </div>
-                                <input type="text" class="form-control" id="txtSupplierName" disabled placeholder="Supplier Name">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row row-form" style="margin-top:10px;">
-                        <div class="col-md-2 proto-new-label"><label class="control-label">Owner KMMD <span class="proto-new-badge">NEW</span></label></div>
-                        <div class="col-md-4">
-                            <div class="input-group proto-new-field">
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn btn-danger" onclick="openLov('ownerKmmd')"><i class="fa fa-search"></i></button>
-                                </div>
-                                <div class="input-group-btn" style="width:100px;">
-                                    <input type="text" class="form-control proto-new-cell" id="txtOwnerKmmdID" disabled placeholder="ID">
-                                </div>
-                                <input type="text" class="form-control proto-new-cell" id="txtOwnerKmmdName" disabled placeholder="Nama Owner KMMD">
+                                <input type="text" class="form-control" id="txtSupplierName" disabled placeholder="Nama Supplier" title="">
                             </div>
                         </div>
                     </div>
@@ -108,86 +140,240 @@
 
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <label class="text-info">Detail Mapping per Site / Branch</label>
+                    <label class="text-info">Mapping Owner KMMD &amp; ASS</label>
                 </div>
-                <div class="box-body" style="overflow-x:auto;">
-                    <table id="dtDetail" class="table table-condensed table-striped table-bordered" style="min-width:1200px;">
+                <div class="box-body">
+                    <div class="alert alert-info active-summary" id="activeSummary">
+                        <i class="fa fa-info-circle"></i>
+                        Pilih <strong>satu Owner</strong> dan <strong>satu ASS</strong> aktif (radio). Baris lain tetap tersimpan sebagai arsip.
+                    </div>
+
+                    <div class="section-label proto-new-label">Owner KMMD <span class="proto-new-badge">NEW</span></div>
+                    <p class="section-hint">Bisa banyak baris; hanya satu yang berstatus aktif untuk notifikasi approval klaim.</p>
+                    <div style="overflow-x:auto; margin-bottom:20px;">
+                        <table id="dtOwner" class="table table-condensed table-striped table-bordered person-table" style="min-width:720px;">
+                            <thead>
+                                <tr>
+                                    <td style="width:50px; text-align:center;" class="proto-new-header">Aktif</td>
+                                    <td style="width:40px;">No</td>
+                                    <td style="width:260px;">Nama Lengkap</td>
+                                    <td style="width:280px;">Email</td>
+                                    <td style="width:70px;">Hapus</td>
+                                </tr>
+                            </thead>
+                            <tbody id="dtBodyOwner"></tbody>
+                        </table>
+                    </div>
+                    <div class="text-right" style="margin-bottom:24px;">
+                        <button type="button" class="btn btn-warning btn-sm" onclick="handleAddOwner()"><i class="fa fa-plus"></i> Tambah Owner</button>
+                    </div>
+
+                    <div class="section-label proto-new-label">ASS <span class="proto-new-badge">NEW</span></div>
+                    <p class="section-hint">Bisa banyak baris; hanya satu ASS aktif per supplier (auto-approve setelah Owner approve).</p>
+                    <div style="overflow-x:auto;">
+                        <table id="dtAss" class="table table-condensed table-striped table-bordered person-table" style="min-width:720px;">
+                            <thead>
+                                <tr>
+                                    <td style="width:50px; text-align:center;" class="proto-new-header">Aktif</td>
+                                    <td style="width:40px;">No</td>
+                                    <td style="width:260px;">Nama Lengkap</td>
+                                    <td style="width:280px;">Email</td>
+                                    <td style="width:70px;">Hapus</td>
+                                </tr>
+                            </thead>
+                            <tbody id="dtBodyAss"></tbody>
+                        </table>
+                    </div>
+                    <div class="text-right" style="margin-top:10px;">
+                        <button type="button" class="btn btn-warning btn-sm" onclick="handleAddAss()"><i class="fa fa-plus"></i> Tambah ASS</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box box-default collapsed-box" id="boxHistory">
+                <div class="box-header with-border">
+                    <h3 class="box-title text-muted">
+                        <i class="fa fa-history"></i> Riwayat Perubahan
+                        <span class="label label-default" id="historyCountBadge">0</span>
+                    </h3>
+                    <div class="box-tools">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" title="Tampilkan / sembunyikan">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="dtHistory" class="table table-condensed table-striped table-bordered" style="width:100%;">
                         <thead>
                             <tr>
-                                <td style="width:40px;">No</td>
-                                <td style="width:200px;">Site</td>
-                                <td style="width:90px;">Branch ID</td>
-                                <td style="width:150px;">Branch Name</td>
-                                <td style="width:200px;" class="proto-new-header">ASS <span class="proto-new-badge">NEW</span></td>
-                                <td style="width:90px;">Region ID</td>
-                                <td style="width:150px;">Region Name</td>
-                                <td style="width:120px;">Tipe Distributor</td>
-                                <td style="width:80px;">Delete</td>
+                                <td style="width:140px;">Tanggal</td>
+                                <td style="width:110px;">User</td>
+                                <td>Detail Perubahan</td>
                             </tr>
                         </thead>
-                        <tbody id="dtBodyDetail"></tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
-                <div class="box-footer text-right">
-                    <button type="button" class="btn btn-warning" onclick="handleAddDetail()"><i class="fa fa-plus"></i> Add Detail</button>
+            </div>
+
+            <!-- LOV modal HARUS di dalam #app-content agar tidak hilang saat layout.js render -->
+            <div class="modal lov-modal" id="lovModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title" id="lovModalTitle">Daftar Pilihan</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" class="form-control input-sm" id="lovSearch" placeholder="Cari..." style="margin-bottom:10px;">
+                            <div style="overflow-x:auto;">
+                                <table class="table table-condensed table-hover" style="width:100%;">
+                                    <thead><tr id="lovHeadRow"></tr></thead>
+                                    <tbody id="lovBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="lov-info text-muted" id="lovInfo" style="font-size:12px; margin-top:8px;">Menampilkan 0 dari 0 entri</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 
-    <div class="modal lov-modal" id="lovModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">List Of Value</h4>
-                </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control input-sm" id="lovSearch" placeholder="Search..." style="margin-bottom:10px;">
-                    <table class="table table-condensed table-hover">
-                        <thead><tr id="lovHeadRow"></tr></thead>
-                        <tbody id="lovBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <script src="../../../Scripts/customs/prototype/proto-store.js"></script>
     <script src="../../../Scripts/customs/prototype/klaim-prototype.js"></script>
     <script src="../../../Scripts/layout.js"></script>
     <script>
-        const STORAGE_KEY = 'assOwnerKmmdPrototypeData';
-
-        const findData = [
-            { id: '1001', groupAccount: 'KMMD', supplierId: '3102', supplierName: 'AGUS JUSAK KURNIAWAN (UD AJEKA ADITAMA DISTRIBUSINDO)', ownerId: '2001', ownerName: 'BUDI SANTOSO', status: 'ACTIVE' },
-            { id: '1002', groupAccount: 'KMMD', supplierId: '3105', supplierName: 'BINTANG LIMA IMADA, PT', ownerId: '2002', ownerName: 'SITI AMINAH', status: 'ACTIVE' },
-            { id: '1003', groupAccount: 'ENSEVAL', supplierId: '1709', supplierName: 'ENSEVAL PUTERA MEGATRADING, TBK PT', ownerId: '2003', ownerName: 'HAFID', status: 'ACTIVE' }
+        // --- Data LOV (selaras dengan Form Klaim / partnersData) ---
+        const groupAccounts = [
+            { code: 'KMMD', supplierCode: 'SPL-KMMD-003' },
+            { code: 'ENSEVAL', supplierCode: 'SPL-ENSEVAL-002' },
+            { code: 'BRAVO', supplierCode: 'SPL-BRAVO-001' },
+            { code: 'RM VI JATENG', supplierCode: 'SPL-RM6-004' }
         ];
 
-        const groupAccounts = ['KMMD', 'ENSEVAL', 'BRAVO', 'RM VI JATENG'];
         const suppliers = [
             { id: '3102', name: 'AGUS JUSAK KURNIAWAN (UD AJEKA ADITAMA DISTRIBUSINDO)', group: 'KMMD' },
             { id: '3103', name: 'AL IQBAL (PERMATA BUNDA MART)', group: 'KMMD' },
+            { id: '3104', name: 'ANEKA KARYA UNGGUL, CV', group: 'KMMD' },
             { id: '3105', name: 'BINTANG LIMA IMADA, PT', group: 'KMMD' },
-            { id: '1709', name: 'ENSEVAL PUTERA MEGATRADING, TBK PT', group: 'ENSEVAL' }
-        ];
-        const users = [
-            { id: '2001', name: 'BUDI SANTOSO', role: 'Owner KMMD' },
-            { id: '2002', name: 'SITI AMINAH', role: 'Owner KMMD' },
-            { id: '2003', name: 'HAFID', role: 'Owner KMMD' },
-            { id: '3001', name: 'ANDI WIJAYA', role: 'ASS' },
-            { id: '3002', name: 'DEWI LESTARI', role: 'ASS' },
-            { id: '3003', name: 'RIZKY PRATAMA', role: 'ASS' }
-        ];
-        const sites = [
-            { site: 'NAN-KDS-AJEKA', branchId: '101', branchName: 'JAKARTA 1', regionId: 'R01', regionName: 'JABODETABEK', type: 'Subdist' },
-            { site: 'NAN-KDS-BINTANG', branchId: '102', branchName: 'BATAM', regionId: 'R02', regionName: 'SUMATERA', type: 'Subdist' },
-            { site: 'NAN-KDS-EPM1A', branchId: '103', branchName: 'ACEH', regionId: 'R03', regionName: 'SUMATERA UTARA', type: 'Direct' }
+            { id: '3106', name: 'ANDARIA NIAGA, CV', group: 'KMMD' },
+            { id: '3107', name: 'DADI MAKMUR ABADI, CV', group: 'KMMD' },
+            { id: '3108', name: 'KOMPAS SEJAHTERA, CV', group: 'KMMD' },
+            { id: '3109', name: 'NAGATA WIRA WIJAYA, CV', group: 'KMMD' },
+            { id: '3110', name: 'CATUR SENTOSA ANUGERAH, PT', group: 'KMMD' },
+            { id: '1709', name: 'ENSEVAL PUTERA MEGATRADING, TBK PT', group: 'ENSEVAL' },
+            { id: '2201', name: 'PT BRAVO HUSADA', group: 'BRAVO' },
+            { id: '5501', name: 'RM VI JATENG CO', group: 'RM VI JATENG' }
         ];
 
-        let detailRows = [];
-        let activeLovType = '';
-        let activeDetailIndex = null;
+        let ownerRows = [];
+        let assRows = [];
+        let changeHistory = [];
+        let oTableHistory = null;
+        let lovPickHandler = null;
+        let lovVisibleRows = [];
+        let formDirty = false;
+        const PROTO_LEGEND_KEY = 'assowner_hide_proto_legend';
+
+        function markDirty() { formDirty = true; }
+        function clearDirty() { formDirty = false; }
+
+        function dismissProtoLegend() {
+            localStorage.setItem(PROTO_LEGEND_KEY, '1');
+            const el = document.getElementById('protoNewLegend');
+            if (el) el.style.display = 'none';
+        }
+
+        function initProtoLegend() {
+            const el = document.getElementById('protoNewLegend');
+            if (el && !localStorage.getItem(PROTO_LEGEND_KEY)) el.style.display = 'block';
+        }
+
+        function syncSupplierTooltip() {
+            const el = document.getElementById('txtSupplierName');
+            if (el) el.title = el.value || '';
+        }
+
+        function isValidEmail(email) {
+            if (!email) return true;
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function setEmailFieldState(inp, valid) {
+            if (!inp) return;
+            inp.classList.toggle('email-invalid', !valid);
+            const msg = inp.parentElement && inp.parentElement.querySelector('.email-err-msg');
+            if (msg) msg.classList.toggle('visible', !valid);
+        }
+
+        function validateEmailInput(el) {
+            const val = (el.value || '').trim();
+            if (!val) { setEmailFieldState(el, true); return true; }
+            const ok = isValidEmail(val);
+            setEmailFieldState(el, ok);
+            return ok;
+        }
+
+        function validateAllEmails() {
+            let ok = true;
+            document.querySelectorAll('.txtPersonEmail').forEach(inp => {
+                if (!validateEmailInput(inp)) ok = false;
+            });
+            return ok;
+        }
+
+        function expandHistoryPanel() {
+            const box = $('#boxHistory');
+            if (!box.length || !box.hasClass('collapsed-box')) return;
+            const btn = box.find('[data-widget="collapse"]');
+            if (window.$ && $.AdminLTE && $.AdminLTE.boxWidget) {
+                $.AdminLTE.boxWidget.collapse(btn);
+            } else {
+                btn.click();
+            }
+        }
+
+        function hasDuplicateSupplier(supplierId, excludeId) {
+            if (!supplierId || typeof protoGetAssOwnerRegistry !== 'function') return false;
+            return protoGetAssOwnerRegistry().some(r =>
+                String(r.supplierId) === String(supplierId) && String(r.id) !== String(excludeId || '')
+            );
+        }
+
+        function refreshPersonRowStyles(tbodyId, rows) {
+            document.querySelectorAll('#' + tbodyId + ' tr').forEach((tr, i) => {
+                if (!rows[i]) return;
+                tr.className = rows[i].active ? 'row-active' : 'row-inactive';
+                const radio = tr.querySelector('input[type="radio"]');
+                if (radio) radio.checked = !!rows[i].active;
+            });
+        }
+
+        function toRegistryStatus(display) {
+            if (display === 'AKTIF') return 'ACTIVE';
+            if (display === 'BARU') return 'NEW';
+            return display || 'NEW';
+        }
+
+        function toDisplayStatus(registry) {
+            if (registry === 'ACTIVE') return 'AKTIF';
+            if (registry === 'NEW') return 'BARU';
+            return registry || 'BARU';
+        }
+
+        function setStatusLabel(registryOrDisplay) {
+            const el = document.getElementById('lblStatus');
+            if (!el) return;
+            const display = (registryOrDisplay === 'ACTIVE' || registryOrDisplay === 'NEW')
+                ? toDisplayStatus(registryOrDisplay)
+                : registryOrDisplay;
+            el.textContent = display || 'BARU';
+        }
+
+        function escHtml(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
 
         function showModal(sel) {
             (window.showKlaimModal || function(s) { $(s).modal('show'); })(sel);
@@ -196,233 +382,830 @@
             (window.hideKlaimModal || function(s) { $(s).modal('hide'); if (window.cleanupModalBackdrops) window.cleanupModalBackdrops(); })(sel);
         }
 
-        function initiateBlank() {
-            document.getElementById('txtID').value = '';
-            document.getElementById('txtGroupAccount').value = '';
-            document.getElementById('txtSupplierID').value = '';
-            document.getElementById('txtSupplierName').value = '';
-            document.getElementById('txtOwnerKmmdID').value = '';
-            document.getElementById('txtOwnerKmmdName').value = '';
-            document.getElementById('lblStatus').textContent = 'NEW';
-            detailRows = [];
-            renderTable();
-            syncStorage();
+        function updateLovInfo(visible, total) {
+            const el = document.getElementById('lovInfo');
+            if (el) el.textContent = total ? ('Menampilkan ' + visible + ' dari ' + total + ' entri') : 'Menampilkan 0 dari 0 entri';
         }
 
-        function renderTable() {
-            const tbody = document.getElementById('dtBodyDetail');
-            tbody.innerHTML = '';
-            if (!detailRows.length) {
-                tbody.innerHTML = '<tr><td colspan="9" class="text-center">No data available in table</td></tr>';
+        const LOV_TITLES = {
+            groupAccount: 'Pilih Group Account',
+            supplier: 'Pilih Supplier',
+            find: 'Cari Mapping ASS/Owner'
+        };
+
+        function renderLovTable(headers, rows, onPick) {
+            const head = document.getElementById('lovHeadRow');
+            const body = document.getElementById('lovBody');
+            head.innerHTML = '<td style="width:70px;font-weight:bold;text-align:center;">Pilih</td>' +
+                headers.map(h => '<td style="font-weight:bold;">' + escHtml(h) + '</td>').join('');
+            body.innerHTML = '';
+            lovPickHandler = onPick;
+
+            if (!rows.length) {
+                body.innerHTML = '<tr><td colspan="' + (headers.length + 1) + '" class="text-center text-muted">Tidak ada data</td></tr>';
+                updateLovInfo(0, 0);
                 return;
             }
-            detailRows.forEach((row, i) => {
+
+            rows.forEach((row, idx) => {
                 const tr = document.createElement('tr');
+                let cells = '<td style="text-align:center;"><button type="button" class="btn btn-default btn-xs" onclick="pickLovRow(' + idx + ')"><i class="fa fa-check"></i> Pilih</button></td>';
+                row.forEach(col => { cells += '<td>' + escHtml(col) + '</td>'; });
+                tr.innerHTML = cells;
+                body.appendChild(tr);
+            });
+            updateLovInfo(rows.length, rows.length);
+            document.getElementById('lovSearch').value = '';
+        }
+
+        function pickLovRow(idx) {
+            if (lovPickHandler) lovPickHandler(idx);
+        }
+
+        function getCurrentUserLabel() {
+            if (typeof rbacGetRoleMeta === 'function') {
+                const m = rbacGetRoleMeta();
+                if (m && m.label) return m.label;
+            }
+            return 'Prototype User';
+        }
+
+        function formatHistoryTs() {
+            return moment().format('DD-MMM-YYYY HH:mm');
+        }
+
+        function blankPersonRow(active) {
+            return { name: '', email: '', active: !!active };
+        }
+
+        function toDetailUpperLive(val) {
+            return (val || '').toUpperCase();
+        }
+
+        function toDetailUpper(val) {
+            return (val || '').trim().toUpperCase();
+        }
+
+        function normalizePersonRow(r) {
+            return {
+                name: toDetailUpper(r.name || r.ownerName || r.assName || ''),
+                email: toDetailUpper(r.email || r.ownerEmail || r.assEmail || ''),
+                active: r.active === true
+            };
+        }
+
+        function getActiveRow(rows) {
+            return rows.find(r => r.active) || rows[0] || null;
+        }
+
+        function personRoleLabel(role, index, total) {
+            if (role === 'Owner KMMD') return total > 1 ? ('Owner #' + (index + 1)) : 'Owner KMMD';
+            return total > 1 ? ('ASS #' + (index + 1)) : 'ASS';
+        }
+
+        function migrateOwnerRowsFromRecord(rec) {
+            if (rec.ownerRows && rec.ownerRows.length) {
+                return rec.ownerRows.map(normalizePersonRow);
+            }
+            if (rec.ownerName || rec.ownerEmail) {
+                return [normalizePersonRow({ name: rec.ownerName, email: rec.ownerEmail, active: true })];
+            }
+            return [blankPersonRow(true)];
+        }
+
+        function migrateAssRowsFromRecord(rec) {
+            if (rec.assRows && rec.assRows.length) {
+                const rows = rec.assRows.map(r => normalizePersonRow({
+                    name: r.assName || r.name,
+                    email: r.assEmail || r.email,
+                    active: r.active
+                }));
+                if (!rows.some(r => r.active) && rows.length) rows[0].active = true;
+                return rows;
+            }
+            const details = rec.detailRows || rec.details || [];
+            const fromDetail = details.map((d, i) => normalizePersonRow({
+                name: d.assName, email: d.assEmail, active: i === 0
+            })).filter(r => r.name || r.email);
+            if (fromDetail.length) {
+                if (!fromDetail.some(r => r.active)) fromDetail[0].active = true;
+                return fromDetail;
+            }
+            return [blankPersonRow(true)];
+        }
+
+        function ensureSingleActive(rows) {
+            if (!rows.length) return;
+            let activeIdx = rows.findIndex(r => r.active);
+            if (activeIdx < 0) activeIdx = 0;
+            rows.forEach((r, i) => { r.active = i === activeIdx; });
+        }
+
+        function isEmptyPersonRow(r) {
+            return !((r.name || '').trim() || (r.email || '').trim());
+        }
+
+        function rowFingerprint(r) {
+            return ((r.name || '').trim() + '|' + (r.email || '').trim()).toUpperCase();
+        }
+
+        function personDisplay(r) {
+            const n = (r.name || '').trim();
+            const e = (r.email || '').trim();
+            if (n && e) return n + ' (' + e + ')';
+            return n || e || '—';
+        }
+
+        const HISTORY_ACTION_META = {
+            add: { label: 'Tambah', icon: 'fa-plus', css: 'hist-act-add' },
+            delete: { label: 'Hapus', icon: 'fa-minus', css: 'hist-act-del' },
+            edit: { label: 'Ubah', icon: 'fa-pencil', css: 'hist-act-edit' },
+            aktif: { label: 'Aktifkan', icon: 'fa-check-circle', css: 'hist-act-aktif' }
+        };
+        const HISTORY_ACTION_ORDER = ['add', 'delete', 'edit', 'aktif'];
+
+        function inferHistoryAction(it) {
+            if (it.action) return it.action;
+            if (it.field === 'Aktif' || it.field === 'Aktif (pindah)') return 'aktif';
+            if (it.field === 'Baris baru' || (it.field === 'Baris' && it.newValue && !it.oldValue)) return 'add';
+            if (it.field === 'Baris' && it.oldValue && !it.newValue) return 'delete';
+            return 'edit';
+        }
+
+        function makeAddHistoryItem(rolePrefix, index, r, total) {
+            return {
+                action: 'add',
+                role: personRoleLabel(rolePrefix, index, total),
+                field: 'Baris baru',
+                oldValue: '',
+                newValue: personDisplay(r)
+            };
+        }
+
+        function makeDeleteHistoryItem(rolePrefix, index, r, total) {
+            return {
+                action: 'delete',
+                role: personRoleLabel(rolePrefix, index, total),
+                field: 'Baris',
+                oldValue: personDisplay(r),
+                newValue: ''
+            };
+        }
+
+        function diffPersonList(oldRows, newRows, rolePrefix) {
+            const items = [];
+            const oldUsed = new Set();
+            const newUsed = new Set();
+            const pairs = [];
+
+            for (let oi = 0; oi < oldRows.length; oi++) {
+                if (isEmptyPersonRow(oldRows[oi])) continue;
+                const fp = rowFingerprint(oldRows[oi]);
+                for (let ni = 0; ni < newRows.length; ni++) {
+                    if (newUsed.has(ni) || isEmptyPersonRow(newRows[ni])) continue;
+                    if (rowFingerprint(newRows[ni]) === fp) {
+                        oldUsed.add(oi);
+                        newUsed.add(ni);
+                        pairs.push({ oi, ni, oldR: oldRows[oi], newR: newRows[ni] });
+                        break;
+                    }
+                }
+            }
+
+            for (let i = 0; i < Math.min(oldRows.length, newRows.length); i++) {
+                if (oldUsed.has(i) || newUsed.has(i)) continue;
+                const oldR = oldRows[i];
+                const newR = newRows[i];
+                if (isEmptyPersonRow(oldR) && isEmptyPersonRow(newR)) continue;
+                if (isEmptyPersonRow(oldR) && !isEmptyPersonRow(newR)) {
+                    newUsed.add(i);
+                    items.push(makeAddHistoryItem(rolePrefix, i, newR, newRows.length));
+                    continue;
+                }
+                if (!isEmptyPersonRow(oldR) && !isEmptyPersonRow(newR)) {
+                    oldUsed.add(i);
+                    newUsed.add(i);
+                    pairs.push({ oi: i, ni: i, oldR, newR });
+                }
+            }
+
+            for (let oi = 0; oi < oldRows.length; oi++) {
+                if (oldUsed.has(oi) || isEmptyPersonRow(oldRows[oi])) continue;
+                items.push(makeDeleteHistoryItem(rolePrefix, oi, oldRows[oi], oldRows.length));
+            }
+
+            for (let ni = 0; ni < newRows.length; ni++) {
+                if (newUsed.has(ni) || isEmptyPersonRow(newRows[ni])) continue;
+                items.push(makeAddHistoryItem(rolePrefix, ni, newRows[ni], newRows.length));
+            }
+
+            const labelTotal = Math.max(oldRows.length, newRows.length);
+            pairs.forEach(({ ni, oldR, newR }) => {
+                const label = personRoleLabel(rolePrefix, ni, labelTotal);
+                if (oldR.name !== newR.name) {
+                    items.push({ action: 'edit', role: label, field: 'Nama', oldValue: oldR.name, newValue: newR.name });
+                }
+                if (oldR.email !== newR.email) {
+                    items.push({ action: 'edit', role: label, field: 'Email', oldValue: oldR.email, newValue: newR.email });
+                }
+                if (!!oldR.active !== !!newR.active && newR.active) {
+                    items.push({
+                        action: 'aktif', role: label, field: 'Aktif',
+                        oldValue: oldR.active ? 'Ya' : 'Tidak', newValue: 'Ya'
+                    });
+                }
+            });
+
+            const oldActive = getActiveRow(oldRows);
+            const newActive = getActiveRow(newRows);
+            if (oldActive && newActive && rowFingerprint(oldActive) !== rowFingerprint(newActive)) {
+                const hadAktif = items.some(e => e.action === 'aktif');
+                if (!hadAktif && !isEmptyPersonRow(oldActive)) {
+                    items.push({
+                        action: 'aktif',
+                        role: rolePrefix,
+                        field: 'Aktif (pindah)',
+                        oldValue: personDisplay(oldActive),
+                        newValue: personDisplay(newActive)
+                    });
+                }
+            }
+            return items;
+        }
+
+        function normalizeHistoryItem(i) {
+            return {
+                action: inferHistoryAction(i),
+                role: i.role || '',
+                field: i.field || '',
+                oldValue: i.oldValue || '',
+                newValue: i.newValue || ''
+            };
+        }
+
+        function normalizeChangeHistoryBatches(raw) {
+            if (!raw || !raw.length) return [];
+            if (raw[0].items) {
+                return raw.map(b => ({
+                    changedAt: b.changedAt || '',
+                    changedBy: b.changedBy || '',
+                    items: (b.items || []).map(normalizeHistoryItem)
+                }));
+            }
+            const batches = [];
+            const seen = {};
+            raw.forEach(h => {
+                const key = (h.changedAt || '') + '\0' + (h.changedBy || '');
+                if (!seen[key]) {
+                    seen[key] = { changedAt: h.changedAt || '', changedBy: h.changedBy || '', items: [] };
+                    batches.push(seen[key]);
+                }
+                seen[key].items.push(normalizeHistoryItem(h));
+            });
+            return batches;
+        }
+
+        function formatOneChangeHtml(it) {
+            const action = inferHistoryAction(it);
+            if (action === 'add') {
+                return '<span class="ch-field">' + escHtml(it.field) + '</span> <span class="ch-add">+ ' + escHtml(it.newValue || '—') + '</span>';
+            }
+            if (action === 'delete') {
+                return '<span class="ch-field">' + escHtml(it.field) + '</span> <span class="ch-del">− ' + escHtml(it.oldValue || '—') + '</span>';
+            }
+            if (it.field === 'Aktif (pindah)') {
+                return '<span class="ch-field">Aktif</span> <span class="ch-old">' + escHtml(it.oldValue || '—') + '</span><span class="ch-arrow">→</span><span class="ch-new">' + escHtml(it.newValue || '—') + '</span>';
+            }
+            if (it.field === 'Aktif') {
+                return '<span class="ch-field">Aktif</span> <span class="ch-arrow">→</span><span class="ch-new">' + escHtml(it.newValue || 'Ya') + '</span>';
+            }
+            const oldV = it.oldValue || '—';
+            const newV = it.newValue || '—';
+            return '<span class="ch-field">' + escHtml(it.field) + '</span> <span class="ch-old">' + escHtml(oldV) + '</span><span class="ch-arrow">→</span><span class="ch-new">' + escHtml(newV) + '</span>';
+        }
+
+        function formatItemsByRole(items) {
+            const byRole = {};
+            items.forEach(it => {
+                if (!byRole[it.role]) byRole[it.role] = [];
+                byRole[it.role].push(it);
+            });
+            let html = '<ul class="history-change-list">';
+            Object.keys(byRole).forEach(role => {
+                html += '<li><span class="history-role">' + escHtml(role) + '</span><div class="history-role-changes">';
+                byRole[role].forEach(it => {
+                    html += '<div class="history-change-row">' + formatOneChangeHtml(it) + '</div>';
+                });
+                html += '</div></li>';
+            });
+            html += '</ul>';
+            return html;
+        }
+
+        function formatHistoryChangesHtml(items) {
+            if (!items || !items.length) return '<span class="text-muted">—</span>';
+            const normalized = items.map(normalizeHistoryItem);
+            const byAction = { add: [], delete: [], edit: [], aktif: [] };
+            normalized.forEach(it => {
+                const act = it.action || 'edit';
+                if (byAction[act]) byAction[act].push(it);
+            });
+
+            let html = '';
+            HISTORY_ACTION_ORDER.forEach(act => {
+                const list = byAction[act];
+                if (!list.length) return;
+                const meta = HISTORY_ACTION_META[act];
+                html += '<div class="history-action-group ' + meta.css + '">';
+                html += '<div class="history-action-title"><i class="fa ' + meta.icon + '"></i> ' + meta.label;
+                html += ' <span class="badge">' + list.length + '</span></div>';
+                html += formatItemsByRole(list);
+                html += '</div>';
+            });
+            return html || '<span class="text-muted">—</span>';
+        }
+
+        function historySearchText(batch) {
+            const parts = [batch.changedAt, batch.changedBy];
+            (batch.items || []).forEach(i => {
+                const act = inferHistoryAction(i);
+                const meta = HISTORY_ACTION_META[act];
+                if (meta) parts.push(meta.label);
+                parts.push(i.role, i.field, i.oldValue, i.newValue);
+            });
+            return parts.join(' ').toLowerCase();
+        }
+
+        function diffAndAppendHistory(existing) {
+            const oldOwners = existing ? migrateOwnerRowsFromRecord(existing) : [];
+            const oldAss = existing ? migrateAssRowsFromRecord(existing) : [];
+            const items = diffPersonList(oldOwners, ownerRows, 'Owner KMMD')
+                .concat(diffPersonList(oldAss, assRows, 'ASS'));
+            if (!items.length) return 0;
+            changeHistory = [{
+                changedAt: formatHistoryTs(),
+                changedBy: getCurrentUserLabel(),
+                items: items
+            }].concat(changeHistory);
+            return items.length;
+        }
+
+        function readFormToState() {
+            document.querySelectorAll('#dtBodyOwner tr').forEach((tr, i) => {
+                if (!ownerRows[i]) return;
+                const nameInp = tr.querySelector('.txtPersonName');
+                const emailInp = tr.querySelector('.txtPersonEmail');
+                const radio = tr.querySelector('input[name="ownerActive"]');
+                if (nameInp) ownerRows[i].name = toDetailUpper(nameInp.value);
+                if (emailInp) ownerRows[i].email = toDetailUpper(emailInp.value);
+                if (radio) ownerRows[i].active = radio.checked;
+            });
+            document.querySelectorAll('#dtBodyAss tr').forEach((tr, i) => {
+                if (!assRows[i]) return;
+                const nameInp = tr.querySelector('.txtPersonName');
+                const emailInp = tr.querySelector('.txtPersonEmail');
+                const radio = tr.querySelector('input[name="assActive"]');
+                if (nameInp) assRows[i].name = toDetailUpper(nameInp.value);
+                if (emailInp) assRows[i].email = toDetailUpper(emailInp.value);
+                if (radio) assRows[i].active = radio.checked;
+            });
+            ensureSingleActive(ownerRows);
+            ensureSingleActive(assRows);
+        }
+
+        function updatePersonCell(kind, index, field, val) {
+            const rows = kind === 'owner' ? ownerRows : assRows;
+            if (!rows[index]) return;
+            rows[index][field] = toDetailUpper(val);
+        }
+
+        function onDetailPersonInput(kind, index, field, el) {
+            const upper = toDetailUpperLive(el.value);
+            if (el.value !== upper) el.value = upper;
+            const rows = kind === 'owner' ? ownerRows : assRows;
+            if (rows[index]) rows[index][field] = upper;
+            markDirty();
+        }
+
+        function onDetailPersonBlur(kind, index, field, el) {
+            const normalized = toDetailUpper(el.value);
+            el.value = normalized;
+            updatePersonCell(kind, index, field, normalized);
+            if (field === 'email') validateEmailInput(el);
+            markDirty();
+        }
+
+        function onEmailBlur(el) {
+            validateEmailInput(el);
+        }
+
+        function setActiveOwner(index) {
+            ownerRows.forEach((r, i) => { r.active = i === index; });
+            refreshPersonRowStyles('dtBodyOwner', ownerRows);
+            updateActiveSummary();
+            markDirty();
+        }
+
+        function setActiveAss(index) {
+            assRows.forEach((r, i) => { r.active = i === index; });
+            refreshPersonRowStyles('dtBodyAss', assRows);
+            updateActiveSummary();
+            markDirty();
+        }
+
+        function updateActiveSummary() {
+            const o = getActiveRow(ownerRows);
+            const a = getActiveRow(assRows);
+            const el = document.getElementById('activeSummary');
+            if (!el) return;
+            const oTxt = o && o.name ? ('<strong>' + escHtml(o.name) + '</strong> (' + escHtml(o.email) + ')') : '<em>belum diisi</em>';
+            const aTxt = a && a.name ? ('<strong>' + escHtml(a.name) + '</strong> (' + escHtml(a.email) + ')') : '<em>belum diisi</em>';
+            el.innerHTML = '<i class="fa fa-check-circle text-success"></i> Aktif sekarang — Owner: ' + oTxt + ' &nbsp;|&nbsp; ASS: ' + aTxt;
+        }
+
+        function renderPersonTableBody(tbodyId, rows, radioName, kind) {
+            const tbody = document.getElementById(tbodyId);
+            tbody.innerHTML = '';
+            if (!rows.length) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Belum ada data</td></tr>';
+                return;
+            }
+            rows.forEach((row, i) => {
+                const tr = document.createElement('tr');
+                tr.className = row.active ? 'row-active' : 'row-inactive';
+                const setActiveFn = kind === 'owner' ? 'setActiveOwner' : 'setActiveAss';
+                const deleteFn = kind === 'owner' ? 'deleteOwnerRow' : 'deleteAssRow';
                 tr.innerHTML = `
-                    <td>${i + 1}</td>
+                    <td class="text-center" style="vertical-align:middle;">
+                        <label class="radio-active-wrap" title="Jadikan aktif">
+                            <input type="radio" name="${radioName}" ${row.active ? 'checked' : ''} onchange="${setActiveFn}(${i})">
+                        </label>
+                    </td>
+                    <td style="vertical-align:middle;">${i + 1}</td>
                     <td>
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control" value="${row.site}" disabled>
-                            <span class="input-group-btn"><button type="button" class="btn btn-danger btn-xs" onclick="openDetailLov(${i}, 'site')"><i class="fa fa-search"></i></button></span>
-                        </div>
+                        <input type="text" class="form-control input-sm txtPersonName" value="${escHtml(row.name)}"
+                            oninput="onDetailPersonInput('${kind}', ${i}, 'name', this)"
+                            onchange="onDetailPersonBlur('${kind}', ${i}, 'name', this)" placeholder="Nama lengkap">
                     </td>
-                    <td><input type="text" class="form-control input-sm" value="${row.branchId}" readonly></td>
-                    <td><input type="text" class="form-control input-sm" value="${row.branchName}" readonly></td>
-                    <td class="proto-new-cell">
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control" value="${row.assName}" disabled>
-                            <span class="input-group-btn"><button type="button" class="btn btn-danger btn-xs" onclick="openDetailLov(${i}, 'ass')"><i class="fa fa-search"></i></button></span>
-                        </div>
-                    </td>
-                    <td><input type="text" class="form-control input-sm" value="${row.regionId}" readonly></td>
-                    <td><input type="text" class="form-control input-sm" value="${row.regionName}" readonly></td>
                     <td>
-                        <select class="form-control input-sm" onchange="detailRows[${i}].distType=this.value; syncStorage();">
-                            <option value="Subdist" ${row.distType === 'Subdist' ? 'selected' : ''}>Subdist</option>
-                            <option value="Direct" ${row.distType === 'Direct' ? 'selected' : ''}>Direct</option>
-                            <option value="MT" ${row.distType === 'MT' ? 'selected' : ''}>MT</option>
-                        </select>
+                        <input type="text" class="form-control input-sm txtPersonEmail" value="${escHtml(row.email)}"
+                            oninput="onDetailPersonInput('${kind}', ${i}, 'email', this)"
+                            onchange="onDetailPersonBlur('${kind}', ${i}, 'email', this)"
+                            onblur="onEmailBlur(this)" placeholder="email@domain.com">
+                        <div class="email-err-msg">Format email tidak valid</div>
                     </td>
-                    <td><button type="button" class="btn btn-warning btn-xs btn-block" onclick="deleteRow(${i})">Delete</button></td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-xs btn-block" onclick="${deleteFn}(${i})"
+                            ${rows.length <= 1 ? 'disabled' : ''} title="Hapus baris">Hapus</button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function handleAddDetail() {
-            if (!document.getElementById('txtGroupAccount').value) {
-                bootbox.alert('Group Account harus diisi terlebih dahulu!');
-                return;
-            }
-            detailRows.push({ site: '', branchId: '', branchName: '', assId: '', assName: '', regionId: '', regionName: '', distType: 'Subdist' });
-            renderTable();
-            syncStorage();
+        function renderOwnerTable() {
+            renderPersonTableBody('dtBodyOwner', ownerRows, 'ownerActive', 'owner');
+            updateActiveSummary();
         }
 
-        function deleteRow(i) {
-            bootbox.confirm('Hapus baris detail?', (ok) => {
-                if (ok) { detailRows.splice(i, 1); renderTable(); syncStorage(); }
-            });
+        function renderAssTable() {
+            renderPersonTableBody('dtBodyAss', assRows, 'assActive', 'ass');
+            updateActiveSummary();
         }
 
-        function openLov(type) {
-            activeLovType = type;
-            activeDetailIndex = null;
-            const head = document.getElementById('lovHeadRow');
-            const body = document.getElementById('lovBody');
-            head.innerHTML = '';
-            body.innerHTML = '';
-            document.getElementById('lovSearch').value = '';
-
-            if (type === 'groupAccount') {
-                head.innerHTML = '<td>Pilih</td><td>Group Account</td>';
-                groupAccounts.forEach(g => {
-                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="selectGroupAccount('${g}')">Pilih</button></td><td>${g}</td></tr>`;
-                });
-            } else if (type === 'supplier') {
-                const grp = document.getElementById('txtGroupAccount').value;
-                head.innerHTML = '<td>Pilih</td><td>Supplier ID</td><td>Supplier Name</td>';
-                suppliers.filter(s => !grp || s.group === grp).forEach(s => {
-                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="selectSupplier('${s.id}','${s.name.replace(/'/g, "\\'")}')">Pilih</button></td><td>${s.id}</td><td>${s.name}</td></tr>`;
-                });
-            } else if (type === 'ownerKmmd') {
-                head.innerHTML = '<td>Pilih</td><td>User ID</td><td>Nama</td><td>Role</td>';
-                users.filter(u => u.role === 'Owner KMMD').forEach(u => {
-                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="selectOwner('${u.id}','${u.name.replace(/'/g, "\\'")}')">Pilih</button></td><td>${u.id}</td><td>${u.name}</td><td>${u.role}</td></tr>`;
-                });
-            } else if (type === 'find') {
-                head.innerHTML = '<td>Pilih</td><td>ID</td><td>Group Account</td><td>Supplier</td><td>Owner KMMD</td>';
-                findData.forEach((f, idx) => {
-                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="loadFromFind(${idx})">Pilih</button></td><td>${f.id}</td><td>${f.groupAccount}</td><td>${f.supplierName}</td><td>${f.ownerName}</td></tr>`;
-                });
-            }
-            showModal('#lovModal');
-        }
-
-        function openDetailLov(index, field) {
-            activeDetailIndex = index;
-            activeLovType = field;
-            const head = document.getElementById('lovHeadRow');
-            const body = document.getElementById('lovBody');
-            head.innerHTML = '';
-            body.innerHTML = '';
-
-            if (field === 'site') {
-                head.innerHTML = '<td>Pilih</td><td>Site</td><td>Branch</td><td>Region</td>';
-                sites.forEach((s, si) => {
-                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="selectSite(${si})">Pilih</button></td><td>${s.site}</td><td>${s.branchName}</td><td>${s.regionName}</td></tr>`;
-                });
-            } else if (field === 'ass') {
-                head.innerHTML = '<td>Pilih</td><td>User ID</td><td>Nama ASS</td>';
-                users.filter(u => u.role === 'ASS').forEach(u => {
-                    body.innerHTML += `<tr><td><button class="btn btn-default btn-xs" onclick="selectAss('${u.id}','${u.name.replace(/'/g, "\\'")}')">Pilih</button></td><td>${u.id}</td><td>${u.name}</td></tr>`;
-                });
-            }
-            showModal('#lovModal');
-        }
-
-        function selectGroupAccount(name) {
-            document.getElementById('txtGroupAccount').value = name;
-            document.getElementById('txtSupplierID').value = '';
-            document.getElementById('txtSupplierName').value = '';
-            hideModal('#lovModal');
-            syncStorage();
-        }
-        function selectSupplier(id, name) {
-            document.getElementById('txtSupplierID').value = id;
-            document.getElementById('txtSupplierName').value = name;
-            hideModal('#lovModal');
-            syncStorage();
-        }
-        function selectOwner(id, name) {
-            document.getElementById('txtOwnerKmmdID').value = id;
-            document.getElementById('txtOwnerKmmdName').value = name;
-            hideModal('#lovModal');
-            syncStorage();
-        }
-        function selectSite(si) {
-            const s = sites[si];
-            const row = detailRows[activeDetailIndex];
-            row.site = s.site;
-            row.branchId = s.branchId;
-            row.branchName = s.branchName;
-            row.regionId = s.regionId;
-            row.regionName = s.regionName;
-            row.distType = s.type;
-            hideModal('#lovModal');
-            renderTable();
-            syncStorage();
-        }
-        function selectAss(id, name) {
-            detailRows[activeDetailIndex].assId = id;
-            detailRows[activeDetailIndex].assName = name;
-            hideModal('#lovModal');
-            renderTable();
-            syncStorage();
-        }
-
-        function loadFromFind(idx) {
-            const f = findData[idx];
-            document.getElementById('txtID').value = f.id;
-            document.getElementById('txtGroupAccount').value = f.groupAccount;
-            document.getElementById('txtSupplierID').value = f.supplierId;
-            document.getElementById('txtSupplierName').value = f.supplierName;
-            document.getElementById('txtOwnerKmmdID').value = f.ownerId;
-            document.getElementById('txtOwnerKmmdName').value = f.ownerName;
-            document.getElementById('lblStatus').textContent = f.status;
-            detailRows = [
-                { site: 'NAN-KDS-AJEKA', branchId: '101', branchName: 'JAKARTA 1', assId: '3001', assName: 'ANDI WIJAYA', regionId: 'R01', regionName: 'JABODETABEK', distType: 'Subdist' }
-            ];
-            hideModal('#lovModal');
-            renderTable();
-            syncStorage();
-        }
-
-        function handleFind() { openLov('find'); }
-        function handleNew() {
-            bootbox.confirm('Buat form mapping baru?', (ok) => { if (ok) initiateBlank(); });
-        }
-        function handleSave() {
-            if (!document.getElementById('txtGroupAccount').value) { bootbox.alert('Group Account wajib diisi!'); return; }
-            if (!document.getElementById('txtSupplierID').value) { bootbox.alert('Supplier wajib dipilih!'); return; }
-            if (!document.getElementById('txtOwnerKmmdID').value) { bootbox.alert('Owner KMMD wajib dipilih!'); return; }
-            if (!detailRows.length) { bootbox.alert('Detail mapping minimal 1 baris!'); return; }
-            for (let i = 0; i < detailRows.length; i++) {
-                if (!detailRows[i].site || !detailRows[i].assName) {
-                    bootbox.alert('Baris ' + (i + 1) + ': Site dan ASS wajib diisi!');
-                    return;
-                }
-            }
-            if (!document.getElementById('txtID').value) {
-                document.getElementById('txtID').value = String(Math.floor(Math.random() * 9000) + 1000);
-            }
-            document.getElementById('lblStatus').textContent = 'ACTIVE';
-            syncStorage();
-            bootbox.alert('Data mapping ASS/Owner KMMD berhasil disimpan!');
-        }
-
-        function syncStorage() {
-            sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+        function buildAssOwnerRecordFromForm() {
+            const activeOwner = getActiveRow(ownerRows) || { name: '', email: '' };
+            const activeAss = getActiveRow(assRows) || { name: '', email: '' };
+            const owners = ownerRows.map(r => Object.assign({}, r));
+            const asses = assRows.map(r => ({
+                assId: '',
+                assName: r.name,
+                assEmail: r.email,
+                name: r.name,
+                email: r.email,
+                active: r.active
+            }));
+            return {
                 id: document.getElementById('txtID').value,
                 groupAccount: document.getElementById('txtGroupAccount').value,
                 supplierId: document.getElementById('txtSupplierID').value,
                 supplierName: document.getElementById('txtSupplierName').value,
-                ownerId: document.getElementById('txtOwnerKmmdID').value,
-                ownerName: document.getElementById('txtOwnerKmmdName').value,
-                status: document.getElementById('lblStatus').textContent,
-                detailRows: detailRows
-            }));
+                ownerId: '',
+                ownerName: activeOwner.name,
+                ownerEmail: activeOwner.email,
+                status: toRegistryStatus(document.getElementById('lblStatus').textContent || 'BARU'),
+                ownerRows: owners,
+                assRows: asses,
+                detailRows: asses.map(a => ({
+                    ownerId: '',
+                    ownerName: activeOwner.name,
+                    ownerEmail: activeOwner.email,
+                    assId: '',
+                    assName: a.assName,
+                    assEmail: a.assEmail,
+                    active: a.active
+                })),
+                changeHistory: changeHistory.slice()
+            };
+        }
+
+        function loadAssOwnerFromRecord(rec) {
+            if (!rec) return;
+            document.getElementById('txtID').value = rec.id;
+            document.getElementById('txtGroupAccount').value = rec.groupAccount || '';
+            document.getElementById('txtSupplierID').value = rec.supplierId || '';
+            document.getElementById('txtSupplierName').value = rec.supplierName || '';
+            setStatusLabel(rec.status || 'ACTIVE');
+            ownerRows = migrateOwnerRowsFromRecord(rec);
+            assRows = migrateAssRowsFromRecord(rec);
+            ensureSingleActive(ownerRows);
+            ensureSingleActive(assRows);
+            changeHistory = normalizeChangeHistoryBatches(rec.changeHistory || []);
+            renderOwnerTable();
+            renderAssTable();
+            renderHistoryTable();
+            syncSupplierTooltip();
+            clearDirty();
+        }
+
+        function persistAssOwnerToRegistry() {
+            if (typeof protoUpsertAssOwner !== 'function') return null;
+            const id = document.getElementById('txtID').value;
+            if (!id) return null;
+            const existing = typeof protoGetAssOwnerById === 'function' ? protoGetAssOwnerById(id) : null;
+            const record = buildAssOwnerRecordFromForm();
+            record.seed = existing ? !!existing.seed : false;
+            return protoUpsertAssOwner(record);
+        }
+
+        function initiateBlank() {
+            document.getElementById('txtID').value = '';
+            document.getElementById('txtGroupAccount').value = '';
+            document.getElementById('txtSupplierID').value = '';
+            document.getElementById('txtSupplierName').value = '';
+            setStatusLabel('NEW');
+            ownerRows = [blankPersonRow(true)];
+            assRows = [blankPersonRow(true)];
+            changeHistory = [];
+            renderOwnerTable();
+            renderAssTable();
+            renderHistoryTable();
+            syncSupplierTooltip();
+            clearDirty();
+        }
+
+        function updateHistoryBadge() {
+            const badge = document.getElementById('historyCountBadge');
+            if (badge) badge.textContent = String(changeHistory.length);
+        }
+
+        function initHistoryTable() {
+            if (oTableHistory) return;
+            oTableHistory = $('#dtHistory').DataTable({
+                data: [],
+                columns: [
+                    { data: 'changedAt', width: '140px', render: function (d) { return escHtml(d); } },
+                    { data: 'changedBy', width: '110px', render: function (d) { return escHtml(d); } },
+                    {
+                        data: 'items',
+                        orderable: false,
+                        render: function (items, type, row) {
+                            if (type === 'sort' || type === 'filter') return historySearchText(row);
+                            return formatHistoryChangesHtml(items);
+                        }
+                    }
+                ],
+                order: [[0, 'desc']],
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'Semua']],
+                searching: true,
+                bSort: true,
+                language: {
+                    emptyTable: 'Belum ada riwayat perubahan',
+                    zeroRecords: 'Tidak ada data yang cocok',
+                    search: 'Cari:',
+                    lengthMenu: 'Tampilkan _MENU_ simpan',
+                    info: 'Menampilkan _START_–_END_ dari _TOTAL_ simpan',
+                    infoEmpty: 'Menampilkan 0 simpan',
+                    paginate: { previous: '‹', next: '›' }
+                }
+            });
+            $('#boxHistory [data-widget="collapse"]').on('click', function () {
+                setTimeout(function () {
+                    if (oTableHistory) oTableHistory.columns.adjust();
+                }, 350);
+            });
+        }
+
+        function renderHistoryTable() {
+            if (!oTableHistory) initHistoryTable();
+            oTableHistory.clear();
+            if (changeHistory.length) oTableHistory.rows.add(changeHistory);
+            oTableHistory.draw();
+            updateHistoryBadge();
+        }
+
+        function handleAddOwner() {
+            if (!document.getElementById('txtGroupAccount').value) {
+                bootbox.alert('Group Account harus diisi terlebih dahulu!');
+                return;
+            }
+            ownerRows.push(blankPersonRow(false));
+            renderOwnerTable();
+            markDirty();
+        }
+
+        function handleAddAss() {
+            if (!document.getElementById('txtGroupAccount').value) {
+                bootbox.alert('Group Account harus diisi terlebih dahulu!');
+                return;
+            }
+            assRows.push(blankPersonRow(false));
+            renderAssTable();
+            markDirty();
+        }
+
+        function deleteOwnerRow(i) {
+            if (ownerRows.length <= 1) return;
+            const wasActive = ownerRows[i].active;
+            const msg = wasActive
+                ? 'Baris ini sedang <strong>AKTIF</strong>. Setelah dihapus, baris pertama akan menjadi aktif.<br><br>Hapus baris Owner?'
+                : 'Hapus baris Owner?';
+            bootbox.confirm(msg, (ok) => {
+                if (!ok) return;
+                ownerRows.splice(i, 1);
+                if (wasActive && ownerRows.length) ownerRows[0].active = true;
+                ensureSingleActive(ownerRows);
+                renderOwnerTable();
+                markDirty();
+            });
+        }
+
+        function deleteAssRow(i) {
+            if (assRows.length <= 1) return;
+            const wasActive = assRows[i].active;
+            const msg = wasActive
+                ? 'Baris ini sedang <strong>AKTIF</strong>. Setelah dihapus, baris pertama akan menjadi aktif.<br><br>Hapus baris ASS?'
+                : 'Hapus baris ASS?';
+            bootbox.confirm(msg, (ok) => {
+                if (!ok) return;
+                assRows.splice(i, 1);
+                if (wasActive && assRows.length) assRows[0].active = true;
+                ensureSingleActive(assRows);
+                renderAssTable();
+                markDirty();
+            });
+        }
+
+        function getAssOwnerFindRows() {
+            if (typeof protoGetAssOwnerRegistry !== 'function') return [];
+            return protoGetAssOwnerRegistry().slice().sort((a, b) => Number(b.id) - Number(a.id));
+        }
+
+        function openLov(type) {
+            const titleEl = document.getElementById('lovModalTitle');
+            if (titleEl) titleEl.textContent = LOV_TITLES[type] || 'Daftar Pilihan';
+
+            if (type === 'groupAccount') {
+                lovVisibleRows = groupAccounts;
+                renderLovTable(['Group Account', 'Kode Supplier'], groupAccounts.map(g => [g.code, g.supplierCode]), (idx) => {
+                    document.getElementById('txtGroupAccount').value = groupAccounts[idx].code;
+                    document.getElementById('txtSupplierID').value = '';
+                    document.getElementById('txtSupplierName').value = '';
+                    syncSupplierTooltip();
+                    markDirty();
+                    hideModal('#lovModal');
+                });
+            } else if (type === 'supplier') {
+                const grp = document.getElementById('txtGroupAccount').value;
+                if (!grp) {
+                    bootbox.alert('Pilih Group Account terlebih dahulu!');
+                    return;
+                }
+                const filtered = suppliers.filter(s => s.group === grp);
+                lovVisibleRows = filtered;
+                renderLovTable(['ID Supplier', 'Nama Supplier', 'Group Account'], filtered.map(s => [s.id, s.name, s.group]), (idx) => {
+                    const s = filtered[idx];
+                    document.getElementById('txtSupplierID').value = s.id;
+                    document.getElementById('txtSupplierName').value = s.name;
+                    syncSupplierTooltip();
+                    markDirty();
+                    hideModal('#lovModal');
+                });
+            } else if (type === 'find') {
+                const rows = getAssOwnerFindRows();
+                lovVisibleRows = rows;
+                renderLovTable(['ID', 'Group Account', 'ID Supplier', 'Nama Supplier'], rows.map(f => [f.id, f.groupAccount, f.supplierId, f.supplierName]), (idx) => {
+                    loadAssOwnerFromRecord(rows[idx]);
+                    hideModal('#lovModal');
+                });
+            }
+            showModal('#lovModal');
+        }
+
+        function handleFind() {
+            if (formDirty) {
+                bootbox.confirm('Ada perubahan yang belum disimpan. Buka data lain?', (ok) => {
+                    if (ok) openLov('find');
+                });
+            } else {
+                openLov('find');
+            }
+        }
+
+        function handleNew() {
+            const msg = formDirty
+                ? 'Ada perubahan yang belum disimpan. Buat form mapping baru?'
+                : 'Buat form mapping baru?';
+            bootbox.confirm(msg, (ok) => { if (ok) initiateBlank(); });
+        }
+        function validateActivePerson(rows, roleLabel) {
+            const active = rows.filter(r => r.active);
+            if (active.length !== 1) {
+                bootbox.alert('Harus ada tepat satu ' + roleLabel + ' aktif (pilih radio).');
+                return false;
+            }
+            if (!active[0].name) {
+                bootbox.alert('Nama ' + roleLabel + ' aktif wajib diisi!');
+                return false;
+            }
+            if (!active[0].email) {
+                bootbox.alert('Email ' + roleLabel + ' aktif wajib diisi!');
+                return false;
+            }
+            if (!isValidEmail(active[0].email)) {
+                bootbox.alert('Format email ' + roleLabel + ' aktif tidak valid!');
+                return false;
+            }
+            return true;
+        }
+
+        function handleSave() {
+            readFormToState();
+            if (!document.getElementById('txtGroupAccount').value) { bootbox.alert('Group Account wajib diisi!'); return; }
+            if (!document.getElementById('txtSupplierID').value) { bootbox.alert('Supplier wajib dipilih!'); return; }
+            if (!validateAllEmails()) {
+                bootbox.alert('Periksa format email yang ditandai merah.');
+                return;
+            }
+            if (!validateActivePerson(ownerRows, 'Owner KMMD')) return;
+            if (!validateActivePerson(assRows, 'ASS')) return;
+
+            const currentId = document.getElementById('txtID').value;
+            const isNew = !currentId;
+            const supplierId = document.getElementById('txtSupplierID').value;
+
+            if (hasDuplicateSupplier(supplierId, isNew ? '' : currentId)) {
+                bootbox.alert('Supplier ini sudah memiliki mapping ASS/Owner.<br>Gunakan <strong>Cari</strong> untuk membuka data yang ada.');
+                return;
+            }
+
+            if (isNew) {
+                document.getElementById('txtID').value = String(Math.floor(Math.random() * 9000) + 1000);
+            }
+            if (typeof protoEnsureSeeded === 'function') protoEnsureSeeded();
+
+            const existing = (!isNew && typeof protoGetAssOwnerById === 'function')
+                ? protoGetAssOwnerById(document.getElementById('txtID').value)
+                : null;
+            const addedCount = diffAndAppendHistory(existing);
+
+            setStatusLabel('ACTIVE');
+            persistAssOwnerToRegistry();
+            renderHistoryTable();
+            clearDirty();
+
+            if (addedCount > 0) expandHistoryPanel();
+
+            const histMsg = addedCount
+                ? '<br><small class="text-muted">' + addedCount + ' field diubah — tercatat 1 baris riwayat.</small>'
+                : '<br><small class="text-muted">Tidak ada perubahan pada Owner/ASS.</small>';
+            bootbox.alert('Data mapping Owner KMMD &amp; ASS berhasil disimpan!' + histMsg);
         }
 
         document.addEventListener('layoutReady', () => {
             $('.modal').appendTo('body');
+            initProtoLegend();
+            if (window.$ && $.AdminLTE && $.AdminLTE.boxWidget) {
+                $.AdminLTE.boxWidget.activate(document.getElementById('boxHistory'));
+            }
             document.getElementById('dtmDate').value = moment().format('DD-MMM-YYYY');
+            initHistoryTable();
             initiateBlank();
+            if (window.rbacApplyAssOwnerPage) rbacApplyAssOwnerPage();
+            document.addEventListener('rbacRoleChanged', () => {
+                if (window.rbacApplyAssOwnerPage) rbacApplyAssOwnerPage();
+            });
             $('#lovSearch').on('keyup', function () {
                 const val = $(this).val().toLowerCase();
+                let visible = 0;
+                const total = $('#lovBody tr').length;
                 $('#lovBody tr').each(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(val) > -1);
+                    const show = $(this).text().toLowerCase().indexOf(val) > -1;
+                    $(this).toggle(show);
+                    if (show) visible++;
                 });
+                updateLovInfo(visible, total);
             });
         });
     </script>
